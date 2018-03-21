@@ -138,6 +138,9 @@ export class InferModuleComponent implements OnInit {
       stepper.next();
     }
   }
+  clickNextThird(stepper: any): void {
+          stepper.next();
+  }
   setSecondFormGroupValid() {
     if (this.countSelected > 0 && this.countSelected !== null) {
       this.algorithmCtrl.setErrors(null);
