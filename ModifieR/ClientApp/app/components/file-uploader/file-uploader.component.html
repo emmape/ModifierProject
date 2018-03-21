@@ -1,0 +1,26 @@
+<!-- <link href="https://file.myfontastic.com/SLzQsLcd7FmmzjBYTcyVW3/icons.css" rel="stylesheet"> -->
+<label class="uploader" ondragover="return false;" [class.loaded]="loaded" [style.outlineColor]="dragging ? activeColor : baseColor"
+    (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()" (drop)="handleDrop($event)">
+
+<i class="icon icon-upload" 
+    [style.color]="dragging 
+        ? ((inputFile.length > 0) ? overlayColor : activeColor)
+        : ((inputFile.length > 0) ? overlayColor : baseColor)"></i>
+
+        <section *ngIf="fileLoaded == false">
+        <mat-icon class="fileIcon" (load)="handleFileLoad()" 
+        [class.loaded]="fileLoaded">file_upload</mat-icon>
+        </section>
+        <section *ngIf="fileLoaded == true">
+        <mat-icon class="fileIcon" (load)="handleFileLoad()" 
+                [class.loaded]="fileLoaded">insert_drive_file</mat-icon>
+                </section>
+<!-- <img 
+    [src]="imageSrc" 
+    (load)="handleImageLoad()" 
+    [class.loaded]="imageLoaded"/> -->
+    <section *ngIf="fileLoaded == true">
+<div class=filenameLabel>{{filename}}</div>
+    </section>
+<input type="file" name="file" (change)="handleInputChange($event)">
+</label>

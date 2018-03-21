@@ -1,0 +1,73 @@
+.info-picture{
+    background-image: url("../../Images/modifier.jpg");
+    height: 340px;;
+    width: 500px;;
+
+}
+.infoTitle{
+    margin-top: 50px;
+    /* padding-left: auto;
+    padding-right: auto; */
+    justify-content: center;
+    display: flex;
+    font-weight: bold;
+    color: rgb(80, 80, 80);
+    font-size: 46px;
+    /* background-color: #209F80; */
+}
+.infoText{
+    justify-content: center;
+    display: flex;
+    color: rgb(80, 80, 80);
+    /* color: rgba(0,0,0,.54); */
+}
+.massiveInfoText{
+    justify-content: center;
+    display: flex;
+    color: rgb(80, 80, 80);
+    /* color: rgba(0,0,0,.54); */
+    margin-top: 70px;
+    margin-bottom: 20px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.infoCard{
+    background-image: url("../../Images/dna4.png");
+    display: flex;
+    flex-flow: column;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* .infoCard::after {
+    content: "";
+    /* background: url(image.jpg); */
+    /* background: url("../../network2.png");
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;    */
+  /* } */ 
+.analysisButton{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    width: 150px;
+    /* background-color: rgba(192, 192, 192, 0.54); */
+    background-color: #209F80;
+    color: white;
+}
+.prefilledButton{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    width: 200px;
+    /* background-color: rgba(192, 192, 192, 0.54); */
+    background-color: #209F80;
+    color: white;
+}

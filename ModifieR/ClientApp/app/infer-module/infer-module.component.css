@@ -1,0 +1,57 @@
+.label{
+    margin-top: 30px;
+    padding-top: 30px;
+}
+.checkbox-div{
+    width: 300px;
+}
+.checkbox-div-top{
+  width: 150px;
+}
+.card-title{
+    padding-bottom: 20px;
+}
+.leftCheckboxDiv {
+    display: flex;
+    flex-flow: column;
+    width: 200px;
+}
+.row-div {
+    display: flex;
+    flex-flow: row;
+}
+.checkbox{
+    font-size: 14px;
+    font-weight: normal;
+}
+.sliderErrorDiv {
+    height: 80px;
+    margin-bottom: 10px;
+    margin-top:10px;
+}
+.selector-content-card {
+    /*height: 400px;*/
+    /* padding-top: 20px; */
+}
+.next-button{
+    margin-top: 20px;
+    background-color:rgba(222, 222, 222, 0.54);
+}
+.instruction{
+    margin-top: 20px;
+}
+.stepper-divider{
+    margin-top: 15px;
+}
+.combine-slide{
+    margin-top: 20px;
+}
+
+.network-selector{
+    margin-top: 20px;
+    width: 250px;
+}
+.errorText{
+    margin-top: 20px;
+    font-size: 12px;
+}

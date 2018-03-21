@@ -1,0 +1,63 @@
+
+.example-icon {
+    padding: 0 14px;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.title {
+    font-size: 30px;
+}
+
+    .title:hover {
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+.main-toolbar {
+    /* background-color: #209F80; */
+    color: white;
+}
+
+.toolbar-icon {
+    font-size: 40px;
+    padding-right: 40px;
+    margin-bottom: 20px;
+}
+
+    .toolbar-icon:hover {
+        font-size: 40px;
+        padding-right: 40px;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+.content-card {
+    /* width: 800px; */
+    width: 80vw;
+    /* height: 78vh; */
+    height: 88vh;
+    margin-left: auto;
+    margin-right: auto;
+    /* margin-top: 10px; */
+    overflow-y: scroll;
+    padding-top: 5px;
+    /* justify-content: center;
+    display: flex; */
+}
+
+.background {
+    /* background-image: url("../gray.jpg"); */
+    background-image: url("../../Images/triangulation6.png");
+    height: 89vh;
+    width: 99vw;
+    /* background-color: rgba(190, 255, 226, 0.17); */
+    /* background-blend-mode: lighten; */
+}
+ 
+  
+
+ 
+ 
