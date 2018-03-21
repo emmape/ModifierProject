@@ -21,6 +21,7 @@ export class InferModuleComponent implements OnInit {
   comboChoice= false;
   countSelected= 0;
   geneFile: any = '';
+  probeMapFile: any = '';
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   networkFile: any = '';
@@ -41,6 +42,8 @@ export class InferModuleComponent implements OnInit {
           this.geneFile = file.file;
         }else if (file.fileType === 'network') {
           this.networkFile = file.file;
+        } else if (file.fileType === 'probeMap') {
+            this.probeMapFile = file.file;
         }
       });
       this.setSecondFormGroupValid();

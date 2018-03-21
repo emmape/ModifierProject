@@ -55,3 +55,14 @@
     margin-top: 20px;
     font-size: 12px;
 }
+.fileDesc{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.fileDescSmall {
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
+.helpSign{
+    font-size: 14px;
+}

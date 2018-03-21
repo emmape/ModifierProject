@@ -6,29 +6,35 @@
         <ng-template matStepLabel>Upload Data</ng-template>
         <mat-card class="selector-content-card">
             <mat-card-title>Upload Data</mat-card-title>
-            <mat-card-subtitle>Choose a file of input genes</mat-card-subtitle>
-                <app-file-uploader filetype="genes"></app-file-uploader>
-                <!-- <div formControlName="geneFileCtrl"></div>
-                    <mat-form-field  >
-                      <input formControlName="geneFileCtrl" [hidden]="true" matInput placeholder="File Upload">
-                    </mat-form-field>
-                <mat-error *ngIf="geneFileCtrl.invalid">Please, upload a file of inut genes</mat-error>   -->
-            <br>
-            <mat-form-field  class="network-selector">
+            <mat-card-subtitle class="fileDesc">
+                Choose an expression matrix for input genes 
+                <mat-icon class="helpSign" matTooltip="Upload a normalized expression matrix with samples as columns and probes as rows">help_outline</mat-icon>
+            </mat-card-subtitle>
+            
+            <app-file-uploader filetype="genes"></app-file-uploader>
+
+            <mat-card-subtitle class="fileDesc">
+                Choose a probe map
+                <mat-icon class="helpSign" matTooltip="Upload a table with three columns, ProbeID, Gene symbol and Entrez ID">help_outline</mat-icon>
+            </mat-card-subtitle>
+            <app-file-uploader filetype="probeMap"></app-file-uploader>
+
+            <mat-form-field class="network-selector">
                 <mat-select placeholder="Choose a PPI-Network" [(value)]="selectedNetwork" formControlName="networkCtrl" required>
                     <mat-option *ngFor="let network of networks" [value]="network.value">
                         {{ network.viewValue }}
                     </mat-option>
                 </mat-select>
-                <mat-error *ngIf="networkCtrl.invalid">Please, choose a network</mat-error>  
+                <mat-error *ngIf="networkCtrl.invalid">Please, choose a network</mat-error>
             </mat-form-field>
             <section *ngIf="selectedNetwork == 'upload'">
-                <mat-card-subtitle >Choose a network</mat-card-subtitle> 
-                <app-file-uploader filetype="network"></app-file-uploader>         
+                <mat-card-subtitle class="fileDescSmall">Choose a network</mat-card-subtitle>
+                <app-file-uploader filetype="network"></app-file-uploader>
             </section>
-            <br>
-           <!-- <mat-divider class="stepper-divider"></mat-divider>-->
-            <button class="next-button" mat-button (click)="clickNextFirst(stepper)">Next</button>
+            <div>
+                <!-- <mat-divider class="stepper-divider"></mat-divider>-->
+                <button class="next-button" mat-button (click)="clickNextFirst(stepper)">Next</button>
+            </div>
         </mat-card>
             </form>
     </mat-step>
