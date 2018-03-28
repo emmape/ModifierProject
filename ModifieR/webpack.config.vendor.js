@@ -25,7 +25,8 @@ const nonTreeShakableModules = [
     'jquery',
     'babel-polyfill',
     'array.from',
-    './ClientApp/CSS/customTheme.css'
+    './ClientApp/CSS/customTheme.css',
+    'ng-drag-drop/style.css'
 ];
 const allModules = treeShakableModules.concat(nonTreeShakableModules);
 

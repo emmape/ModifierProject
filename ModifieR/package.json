@@ -64,7 +64,8 @@
     "webpack": "^3.10.0",
     "webpack-hot-middleware": "^2.21.0",
     "webpack-merge": "^4.1.1",
-    "zone.js": "^0.8.18"
+    "zone.js": "^0.8.18",
+    "ng-drag-drop": "^4.0.0"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",

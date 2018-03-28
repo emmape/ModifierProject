@@ -2,73 +2,113 @@
 
     <!-- Upload files -->
     <mat-step [stepControl]="firstFormGroup">
-            <form [formGroup]="firstFormGroup">
-        <ng-template matStepLabel>Upload Data</ng-template>
-        <mat-card class="selector-content-card">
-            <mat-card-title>Upload Data</mat-card-title>
-            <mat-card-subtitle class="fileDesc">
-                Choose an expression matrix for input genes 
-                <mat-icon class="helpSign" matTooltip="Upload a normalized expression matrix with samples as columns and probes as rows">help_outline</mat-icon>
-            </mat-card-subtitle>
-            
-            <app-file-uploader filetype="genes"></app-file-uploader>
+        <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>Upload Data</ng-template>
+            <mat-card class="selector-content-card">
+                <mat-card-title>Upload Data</mat-card-title>
+                <mat-card-subtitle class="fileDesc">
+                    Choose an expression matrix for input genes
+                    <mat-icon class="helpSign" matTooltip="Upload a normalized expression matrix with samples as columns and probes as rows">help_outline</mat-icon>
+                </mat-card-subtitle>
 
-            <mat-card-subtitle class="fileDesc">
-                Choose a probe map
-                <mat-icon class="helpSign" matTooltip="Upload a table with three columns, ProbeID, Gene symbol and Entrez ID">help_outline</mat-icon>
-            </mat-card-subtitle>
-            <app-file-uploader filetype="probeMap"></app-file-uploader>
+                <app-file-uploader filetype="genes"></app-file-uploader>
 
-            <mat-form-field class="network-selector">
-                <mat-select placeholder="Choose a PPI-Network" [(value)]="selectedNetwork" formControlName="networkCtrl" required>
-                    <mat-option *ngFor="let network of networks" [value]="network.value">
-                        {{ network.viewValue }}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="networkCtrl.invalid">Please, choose a network</mat-error>
-            </mat-form-field>
-            <section *ngIf="selectedNetwork == 'upload'">
-                <mat-card-subtitle class="fileDescSmall">Choose a network</mat-card-subtitle>
-                <app-file-uploader filetype="network"></app-file-uploader>
-            </section>
-            <div>
-                <!-- <mat-divider class="stepper-divider"></mat-divider>-->
-                <button class="next-button" mat-button (click)="clickNextFirst(stepper)">Next</button>
-            </div>
-        </mat-card>
+                <mat-card-subtitle class="fileDesc">
+                    Choose a probe map
+                    <mat-icon class="helpSign" matTooltip="Upload a table with three columns, ProbeID, Gene symbol and Entrez ID">help_outline</mat-icon>
+                </mat-card-subtitle>
+                <app-file-uploader filetype="probeMap"></app-file-uploader>
+
+                <mat-form-field class="network-selector">
+                    <mat-select placeholder="Choose a PPI-Network" [(value)]="selectedNetwork" formControlName="networkCtrl" required>
+                        <mat-option *ngFor="let network of networks" [value]="network.value">
+                            {{ network.viewValue }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="networkCtrl.invalid">Please, choose a network</mat-error>
+                </mat-form-field>
+                <section *ngIf="selectedNetwork == 'upload'">
+                    <mat-card-subtitle class="fileDescSmall">Choose a network</mat-card-subtitle>
+                    <app-file-uploader filetype="network"></app-file-uploader>
+                </section>
+                <div>
+                    <!-- <mat-divider class="stepper-divider"></mat-divider>-->
+                    <button class="next-button" mat-button (click)="clickNextFirst(stepper)">Next</button>
+                </div>
+            </mat-card>
+        </form>
+    </mat-step>
+
+    <!--set groups-->
+    <mat-step [stepControl]="thirdFormGroup">
+        <form [formGroup]="thirdFormGroup">
+            <ng-template matStepLabel>Set groups</ng-template>
+            <mat-card class="selector-content-card">
+                <mat-card-title>Set groups for expression matrix samples</mat-card-title>
+                <mat-card-subtitle>Drag your samples to the correct group</mat-card-subtitle>
+                <br>
+                <div class="row-div">
+                    <div class="dropArea">
+                        <mat-card-subtitle class="sampleLabel">Your Samples</mat-card-subtitle>
+                        <mat-chip-list role="list">
+                            <mat-chip class="sampleChip" draggable (dragleave)="dragSample(item)" *ngFor="let item of samples">{{item}}</mat-chip>
+                        </mat-chip-list>
+                    </div>
+                    <div class="dropArea" droppable (drop)="recieveDropG1($event)">
+                        <mat-form-field class="sampleInput">
+                            <input formControlName="groupName1Ctrl" matInput placeholder="Insert Name for Group 1" [(value)]="groupName1">
+                            <mat-error *ngIf="groupName1Ctrl.invalid">Please, enter a group name</mat-error>
+                        </mat-form-field>
+                        <mat-chip-list role="list">
+                            <mat-chip class="sampleChip" *ngFor="let drop of droppedG1">{{drop}}</mat-chip>
+                        </mat-chip-list>
+                    </div>
+                    <div class="dropArea" droppable (drop)="recieveDropG2($event)">
+                        <mat-form-field class="sampleInput">
+                            <input formControlName="groupName2Ctrl" matInput placeholder="Insert Name for Group 2" [(value)]="groupName2">
+                            <mat-error *ngIf="groupName2Ctrl.invalid">Please, enter a group name</mat-error>
+                        </mat-form-field>
+                        <mat-chip-list role="list">
+                            <mat-chip class="sampleChip" *ngFor="let drop of droppedG2">{{drop}}</mat-chip>
+                        </mat-chip-list>
+                    </div>
+                </div>
+                <button class="next-button" mat-button matStepperPrevious>Back</button>
+                <button class="next-button" mat-button (click)="clickNextThird(stepper)">Next</button>
+            </mat-card>
             </form>
     </mat-step>
 
     <!-- Choose algorithms -->
     <mat-step [stepControl]="secondFormGroup">
-            <form [formGroup]="secondFormGroup">
-        <ng-template matStepLabel>Choose Algorithms</ng-template>
-        <mat-card class="selector-content-card">
-            <mat-card-title>Choose algorithms for module inference</mat-card-title>
-            <div class="row-div">
-                <div class="leftCheckboxDiv">
-                    <mat-checkbox formControlName="algorithmCtrl" [(checked)]="diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD</mat-checkbox>
-                    <mat-checkbox [(checked)]="mcode" (change)="mcodeChbChanged()" color="primary" class="checkbox">MCODE</mat-checkbox>
+        <form [formGroup]="secondFormGroup">
+            <ng-template matStepLabel>Choose Algorithms</ng-template>
+            <mat-card class="selector-content-card">
+                <mat-card-title>Choose algorithms for module inference</mat-card-title>
+                <div class="row-div">
+                    <div class="leftCheckboxDiv">
+                        <mat-checkbox formControlName="algorithmCtrl" [(checked)]="diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD</mat-checkbox>
+                        <mat-checkbox [(checked)]="mcode" (change)="mcodeChbChanged()" color="primary" class="checkbox">MCODE</mat-checkbox>
+                    </div>
+                    <div class="leftCheckboxDiv">
+                        <mat-checkbox [(checked)]="md" (change)="mdChbChanged()" color="primary" class="checkbox">Module Discoverer</mat-checkbox>
+                        <mat-checkbox [(checked)]="barrenas" (change)="barrenasChbChanged()" color="primary" class="checkbox">Barrenäs</mat-checkbox>
+                    </div>
                 </div>
-                <div class="leftCheckboxDiv">
-                    <mat-checkbox [(checked)]="md" (change)="mdChbChanged()" color="primary" class="checkbox">Module Discoverer</mat-checkbox>
-                    <mat-checkbox [(checked)]="barrenas" (change)="barrenasChbChanged()" color="primary" class="checkbox">Barrenäs</mat-checkbox>
+                <div class="sliderErrorDiv">
+                    <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">Create a Combined Result</mat-slide-toggle>
+                    <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
                 </div>
-            </div>
-            <div class="sliderErrorDiv">
-                <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">Create a Combined Result</mat-slide-toggle>
-                <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
-            </div>
-            
-            <!--<mat-divider class="stepper-divider"></mat-divider>-->
-            <button class="next-button" mat-button matStepperPrevious>Back</button>
-            <button class="next-button" mat-button (click)="clickNextSecond(stepper)">Next</button>
-        </mat-card>
-            </form>
+
+                <!--<mat-divider class="stepper-divider"></mat-divider>-->
+                <button class="next-button" mat-button matStepperPrevious>Back</button>
+                <button class="next-button" mat-button (click)="clickNextSecond(stepper)">Next</button>
+            </mat-card>
+        </form>
     </mat-step>
 
     <!-- Set parameters -->
-    <mat-step [stepControl]="thirdFormGroup">
+    <mat-step [stepControl]="fourthFormGroup">
         <ng-template matStepLabel>Set parameters</ng-template>
         <mat-card class="selector-content-card">
             <mat-card-title>Set additional parameters</mat-card-title>
@@ -76,7 +116,7 @@
             <br>
             <mat-divider class="stepper-divider"></mat-divider>
             <button class="next-button" mat-button matStepperPrevious>Back</button>
-            <button class="next-button" mat-button (click)="clickNextThird(stepper)">Perform Analysis</button>
+            <button class="next-button" mat-button (click)="clickNextFourth(stepper)">Perform Analysis</button>
         </mat-card>
     </mat-step>
 

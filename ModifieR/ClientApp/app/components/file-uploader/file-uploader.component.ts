@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ReadFileService} from '../../services/readFile.service';
 import { ReadFile } from '../../models/readFile.model';
+import { InputParametersService } from '../../services/inputParameters.service';
 
 @Component({
     selector: 'app-file-uploader',
@@ -23,7 +24,7 @@ export class FileUploaderComponent implements OnInit {
     iconColor: any;
     filename= 'Drag a file here';
 
-    constructor(private readFileService: ReadFileService) { }
+    constructor(private readFileService: ReadFileService, public inputParametersService: InputParametersService) { }
     ngOnInit() {
 
           }
@@ -47,16 +48,22 @@ export class FileUploaderComponent implements OnInit {
     }
 
     handleInputChange(e: any) {
+        console.log(this.filetype);
         const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
-        const pattern = /image-*/;
+        const pattern = /.csv*/;
         const reader = new FileReader();
-        // if (!file.type.match(pattern)) {
-        //     alert('invalid format');
-        //     return;
-        // }
-        this.loaded = false;
+         if (!file.name.match(pattern)) {
+             alert('Invalid File Format, please upload a '+pattern +' file');
+             return;
+         }
+         this.loaded = false;
+
+         if (this.filetype === 'genes') {
+                      this.inputParametersService.inputExpressionMatrix(file);
+         }
+
         reader.onload = this._handleReaderLoaded.bind(this);
-        reader.readAsDataURL(file);
+        reader.readAsText(file);
         this.filename = file.name;
         this.fileLoaded = true;
     }
