@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ReadFileService} from '../../services/readFile.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { ReadFileService } from '../../services/readFile.service';
 import { ReadFile } from '../../models/readFile.model';
 import { InputParametersService } from '../../services/inputParameters.service';
 
@@ -22,12 +22,12 @@ export class FileUploaderComponent implements OnInit {
     fileColor: any;
     borderColor: any;
     iconColor: any;
-    filename= 'Drag a file here';
+    filename = 'Drag a file here';
 
     constructor(private readFileService: ReadFileService, public inputParametersService: InputParametersService) { }
     ngOnInit() {
 
-          }
+    }
     handleDragEnter() {
         this.dragging = true;
     }
@@ -47,20 +47,23 @@ export class FileUploaderComponent implements OnInit {
         this.iconColor = this.overlayColor;
     }
 
-    handleInputChange(e: any) {
+    async handleInputChange(e: any) {
         console.log(this.filetype);
         const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
         const pattern = /.csv*/;
         const reader = new FileReader();
-         if (!file.name.match(pattern)) {
-             alert('Invalid File Format, please upload a '+pattern +' file');
-             return;
-         }
-         this.loaded = false;
+        if (!file.name.match(pattern)) {
+            alert('Invalid File Format, please upload a ' + pattern + ' file');
+            return;
+        }
+        this.loaded = false;
 
-         if (this.filetype === 'genes') {
-                      this.inputParametersService.inputExpressionMatrix(file);
-         }
+        //if (this.filetype === 'genes') {
+        //    var resp = await this.inputParametersService.inputExpressionMatrix(file);
+        //    this.readFileService.samplesRecieved(resp);
+        //} else if (this.filetype === 'probeMap') {
+        //    var resp = await this.inputParametersService.inputProbeMap(file);
+        //}
 
         reader.onload = this._handleReaderLoaded.bind(this);
         reader.readAsText(file);
@@ -68,11 +71,11 @@ export class FileUploaderComponent implements OnInit {
         this.fileLoaded = true;
     }
 
-    _handleReaderLoaded(e:any) {
+    _handleReaderLoaded(e: any) {
         const reader = e.target;
         this.inputFile = reader.result;
         this.loaded = true;
-        const f: ReadFile = {fileType: this.filetype, file: this.inputFile};
+        const f: ReadFile = { fileType: this.filetype, file: this.inputFile };
         this.readFileService.fileUploaded(f);
     }
 

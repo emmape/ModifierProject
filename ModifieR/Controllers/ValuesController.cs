@@ -3,37 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-//using SecuritiesGiftCard.Models;
 using Microsoft.EntityFrameworkCore;
-//using SecuritiesGiftCard.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-//using ModifieR.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using ModifieR.Models;
 
 namespace ModifieR
 {
     [AllowAnonymous]
-    [Route("api/ExpressionMatrix")]
+    [Route("api/input")]
     public class ValuesController : Controller
     {
-        //        private readonly SecuritiesGiftCardContext _context;
-        //        private string _user;
+        // Input variables
+        ModifierInputObject modifierInputObject = new ModifierInputObject();
 
-        //        public ValuesController(SecuritiesGiftCardContext context)
-        //        {
-        //            _context = context;
-        //        }
-        //        // GET: api/values
-        [HttpGet("data")]
-        public async Task<IActionResult> getTest()
+        //Input expression matrix, returns sample names
+        [HttpPost("expressionMatrix")]
+        public async Task<IActionResult> InputExpressionMatrix(IFormFile file)
         {
-            return Ok("Here is an API response!");
+            string filename = file.FileName;
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                modifierInputObject.expressionMatrixContent = reader.ReadToEnd();
+            }
+            string sampleNames = modifierInputObject.expressionMatrixContent.Split(Environment.NewLine.ToCharArray())[0];
+            return Ok(sampleNames);
+        }
+        [HttpPost("probeMap")]
+        public async Task<IActionResult> InputProbeMap(IFormFile file)
+        {
+            string filename = file.FileName;
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                modifierInputObject.probeMapContent = reader.ReadToEnd();
+            }
+            return Ok("ProbeMap uploaded");
         }
 
         //        // GET: api/values
@@ -77,91 +85,92 @@ namespace ModifieR
         //        }
 
 
-        [HttpPost]
-        public async Task<IActionResult> InputExpressionMatrix(IFormFile file)
-        {
-            string filename = file.FileName;
-            string fileContent = "";
-            using (var reader = new StreamReader(file.OpenReadStream()))
-            {
-                fileContent = reader.ReadToEnd();
-            }
-  
+        //[HttpPost]
+        //public async Task<IActionResult> InputExpressionMatrix(IFormFile file)
+        //{
+        //    string filename = file.FileName;
+        //    string fileContent = "";
+        //    using (var reader = new StreamReader(file.OpenReadStream()))
+        //    {
+        //        fileContent = reader.ReadToEnd();
+        //    }
 
-            return Ok(fileContent.Substring(0, 10));
-
-            
-            //System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            //string user = currentUser.Identity.Name.Substring(currentUser.Identity.Name.IndexOf("\\") + 1);
-            //if (_context.Users.Where(c => c.UserId.Equals(user)).FirstOrDefault() != null)
-            //{
-            //giftCard.BuyingDate = DateTime.Now;
-            //    giftCard.ValueCode = GetValueCode();
-            //    _context.GiftCards.Add(giftCard);
-            //    await _context.SaveChangesAsync();
-            
-                //return Ok(_context.GiftCards.Where(c => c.ValueCode.Equals(giftCard.ValueCode)).FirstOrDefault());
-            //}
-            //else
-            //{
-            //    return null;
-            //}
+        //    string columnNames = fileContent.Split(Environment.NewLine.ToCharArray())[0];
+        //    //return Ok(fileContent.Substring(0, 10));
+        //    return Ok(columnNames);
 
 
-            }
+        //    //System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+        //    //string user = currentUser.Identity.Name.Substring(currentUser.Identity.Name.IndexOf("\\") + 1);
+        //    //if (_context.Users.Where(c => c.UserId.Equals(user)).FirstOrDefault() != null)
+        //    //{
+        //    //giftCard.BuyingDate = DateTime.Now;
+        //    //    giftCard.ValueCode = GetValueCode();
+        //    //    _context.GiftCards.Add(giftCard);
+        //    //    await _context.SaveChangesAsync();
 
-            //        public string GetValueCode()
-            //        {
-            //            Random random = new Random();
-            //            string chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-            //            string code = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-
-            //            while (_context.GiftCards.Where(c => c.ValueCode.Equals(code)).FirstOrDefault() != null)
-            //            {
-            //                random = new Random();
-            //                chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-            //                code = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-            //            }
-
-            //            return code;
-
-            //        }
-
-            //        [HttpGet("user")]
-
-            //        public string GetUser()
-            //        {
-            //            string user = _user;
-            //            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            //            user = currentUser.Identity.Name.Substring(currentUser.Identity.Name.IndexOf("\\")+1);
-            //            return "User: " + user;
-
-            //        }
+        //    //return Ok(_context.GiftCards.Where(c => c.ValueCode.Equals(giftCard.ValueCode)).FirstOrDefault());
+        //    //}
+        //    //else
+        //    //{
+        //    //    return null;
+        //    //}
 
 
-            //        //// GET api/values/5
-            //        //[HttpGet("{id}")]
-            //        //public string Get(int id)
-            //        //{
-            //        //    return "value";
-            //        //}
+        //}
 
-            //        //// POST api/values
-            //        //[HttpPost]
-            //        //public void Post([FromBody]string value)
-            //        //{
-            //        //}
+        //        public string GetValueCode()
+        //        {
+        //            Random random = new Random();
+        //            string chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+        //            string code = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
 
-            //        //// PUT api/values/5
-            //        //[HttpPut("{id}")]
-            //        //public void Put(int id, [FromBody]string value)
-            //        //{
-            //        //}
+        //            while (_context.GiftCards.Where(c => c.ValueCode.Equals(code)).FirstOrDefault() != null)
+        //            {
+        //                random = new Random();
+        //                chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+        //                code = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+        //            }
 
-            //        //// DELETE api/values/5
-            //        //[HttpDelete("{id}")]
-            //        //public void Delete(int id)
-            //        //{
-            //        //}
-        }
+        //            return code;
+
+        //        }
+
+        //        [HttpGet("user")]
+
+        //        public string GetUser()
+        //        {
+        //            string user = _user;
+        //            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+        //            user = currentUser.Identity.Name.Substring(currentUser.Identity.Name.IndexOf("\\")+1);
+        //            return "User: " + user;
+
+        //        }
+
+
+        //        //// GET api/values/5
+        //        //[HttpGet("{id}")]
+        //        //public string Get(int id)
+        //        //{
+        //        //    return "value";
+        //        //}
+
+        //        //// POST api/values
+        //        //[HttpPost]
+        //        //public void Post([FromBody]string value)
+        //        //{
+        //        //}
+
+        //        //// PUT api/values/5
+        //        //[HttpPut("{id}")]
+        //        //public void Put(int id, [FromBody]string value)
+        //        //{
+        //        //}
+
+        //        //// DELETE api/values/5
+        //        //[HttpDelete("{id}")]
+        //        //public void Delete(int id)
+        //        //{
+        //        //}
+    }
 }

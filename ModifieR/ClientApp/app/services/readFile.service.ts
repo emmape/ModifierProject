@@ -14,5 +14,10 @@ export class ReadFileService {
   fileUploaded(f: ReadFile) {
     this.file.next(f);
   }
+  private samples = new Subject<string>();
+  samples$ = this.samples.asObservable();
+  samplesRecieved(s: string) {
+      this.samples.next(s);
+  }
 
 }

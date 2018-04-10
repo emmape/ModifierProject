@@ -5,6 +5,8 @@ import { InputParametersService } from '../services/inputParameters.service';
 import { MissingDialog } from '../components/dialog/missingDialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ModifierInput } from '../models/ModifierInput';
+import { Algorithms } from '../models/Algorithms';
 
 
 @Component({
@@ -13,31 +15,28 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
     styleUrls: ['./infer-module.component.css']
 })
 export class InferModuleComponent implements OnInit {
-    isLinear = true;
+
+    modifierInputObject: ModifierInput = new ModifierInput();
+    algorithms: Algorithms = new Algorithms();
+    result: string = '';
+
     selectedNetwork = '';
-    diamond = false;
-    mcode = false;
-    md = false;
-    barrenas = false;
+    //diamond = false;
+    //mcode = false;
+    //md = false;
+    //barrenas = false;
     comboChoice = false;
     countSelected = 0;
-    geneFile: any = '';
-    probeMapFile: any = '';
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
     thirdFormGroup: FormGroup;
     networkFile: any = '';
-    // geneFileCtrl = new FormControl('');
     networkCtrl = new FormControl('', [Validators.required]);
     groupName1Ctrl = new FormControl('', [Validators.required]);
     groupName2Ctrl = new FormControl('', [Validators.required]);
     algorithmCtrl = new FormControl('');
-    droppedG1: string[] = [];
-    droppedG2: string[] = [];
     samples: string[] = ['S1', 'S2', 'S3', 'S4'];
     dragItem: any = null;
-    groupName1: string = '';
-    groupName2: string = '';
 
     networks = [
         { value: 'upload', viewValue: 'Upload a New Network' },
@@ -50,14 +49,19 @@ export class InferModuleComponent implements OnInit {
         readFileService.file$.subscribe(
             file => {
                 if (file.fileType === 'genes') {
-                    this.geneFile = file.file;
-                    this.getSamples(this.geneFile);
+                    this.modifierInputObject.expressionMatrixContent = file.file;
+                    console.log(this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' '));
+                    this.samples = this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' ');
                 } else if (file.fileType === 'network') {
                     this.networkFile = file.file;
                 } else if (file.fileType === 'probeMap') {
-                    this.probeMapFile = file.file;
+                    this.modifierInputObject.probeMapContent = file.file;
                 }
             });
+        //readFileService.samples$.subscribe(
+        //    sample => {
+        //        this.samples = sample.split(' ');
+        //    });
         this.setSecondFormGroupValid();
     }
 
@@ -76,18 +80,12 @@ export class InferModuleComponent implements OnInit {
         });
     }
 
-    getSamples(file: any) {
-        let sampleRow = file.split('\n')[0];
-        this.samples = sampleRow.split(' ');
-    }
-
     recieveDropG1(e: any) {
-        this.droppedG1.push(this.dragItem);
+        this.modifierInputObject.sampleGroup1.push(this.dragItem);
         this.dragItem = null;
     }
     recieveDropG2(e: any) {
-        console.log(e);
-        this.droppedG2.push(this.dragItem);
+        this.modifierInputObject.sampleGroup2.push(this.dragItem);
         this.dragItem = null;
     }
     dragSample(e: any) {
@@ -98,15 +96,14 @@ export class InferModuleComponent implements OnInit {
                 this.samples.splice(index, 1);
             }
         }
-
     }
 
     diamondChbChanged() {
-        if (this.diamond === false) {
-            this.diamond = true;
+        if (this.algorithms.diamond === false) {
+            this.algorithms.diamond = true;
             this.countSelected++;
         } else {
-            this.diamond = false;
+            this.algorithms.diamond = false;
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -117,11 +114,11 @@ export class InferModuleComponent implements OnInit {
         this.setSecondFormGroupValid();
     }
     mcodeChbChanged() {
-        if (this.mcode === false) {
-            this.mcode = true;
+        if (this.algorithms.mcode === false) {
+            this.algorithms.mcode = true;
             this.countSelected++;
         } else {
-            this.mcode = false;
+            this.algorithms.mcode = false;
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -132,11 +129,11 @@ export class InferModuleComponent implements OnInit {
         this.setSecondFormGroupValid();
     }
     mdChbChanged() {
-        if (this.md === false) {
-            this.md = true;
+        if (this.algorithms.md === false) {
+            this.algorithms.md = true;
             this.countSelected++;
         } else {
-            this.md = false;
+            this.algorithms.md = false;
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -147,11 +144,11 @@ export class InferModuleComponent implements OnInit {
         this.setSecondFormGroupValid();
     }
     barrenasChbChanged() {
-        if (this.barrenas === false) {
-            this.barrenas = true;
+        if (this.algorithms.barrenas === false) {
+            this.algorithms.barrenas = true;
             this.countSelected++;
         } else {
-            this.barrenas = false;
+            this.algorithms.barrenas = false;
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -162,7 +159,7 @@ export class InferModuleComponent implements OnInit {
         this.setSecondFormGroupValid();
     }
     clickNextFirst(stepper: any): void {
-        if (this.geneFile === '' || (this.networkFile === '' && this.selectedNetwork === 'upload')) {
+        if (this.modifierInputObject.expressionMatrixContent === '' || this.modifierInputObject.probeMapContent === '' || (this.networkFile === '' && this.selectedNetwork === 'upload')) {
             const dialogRef = this.dialog.open(MissingDialog, {
                 width: '380px',
                 data: 'You need to upload the required files before moving to the next step.'
@@ -173,11 +170,10 @@ export class InferModuleComponent implements OnInit {
             stepper.next();
         }
     }
-    clickNextSecond(stepper: any): void {
+    async clickNextSecond(stepper: any) {
         this.setSecondFormGroupValid();
-        console.log('Second form group is:' + this.secondFormGroup.valid + ' Count: ' + this.countSelected);
-
         if (this.secondFormGroup.valid) {
+            this.result = await this.inputParametersService.performAnalysis(this.modifierInputObject, this.algorithms);
             stepper.next();
         }
     }

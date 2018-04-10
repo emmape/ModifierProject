@@ -1,4 +1,4 @@
-<mat-horizontal-stepper #stepper="matHorizontalStepper" [linear]="isLinear">
+<mat-horizontal-stepper #stepper="matHorizontalStepper" [linear]="true">
 
     <!-- Upload files -->
     <mat-step [stepControl]="firstFormGroup">
@@ -56,20 +56,20 @@
                     </div>
                     <div class="dropArea" droppable (drop)="recieveDropG1($event)">
                         <mat-form-field class="sampleInput">
-                            <input formControlName="groupName1Ctrl" matInput placeholder="Insert Name for Group 1" [(value)]="groupName1">
+                            <input formControlName="groupName1Ctrl" matInput placeholder="Enter Name for Group 1" [(ngModel)]="modifierInputObject.group1Label">
                             <mat-error *ngIf="groupName1Ctrl.invalid">Please, enter a group name</mat-error>
                         </mat-form-field>
                         <mat-chip-list role="list">
-                            <mat-chip class="sampleChip" *ngFor="let drop of droppedG1">{{drop}}</mat-chip>
+                            <mat-chip class="sampleChip" *ngFor="let drop of modifierInputObject.sampleGroup1">{{drop}}</mat-chip>
                         </mat-chip-list>
                     </div>
                     <div class="dropArea" droppable (drop)="recieveDropG2($event)">
                         <mat-form-field class="sampleInput">
-                            <input formControlName="groupName2Ctrl" matInput placeholder="Insert Name for Group 2" [(value)]="groupName2">
+                            <input formControlName="groupName2Ctrl" matInput placeholder="Enter Name for Group 2" [(ngModel)]="modifierInputObject.group2Label">
                             <mat-error *ngIf="groupName2Ctrl.invalid">Please, enter a group name</mat-error>
                         </mat-form-field>
                         <mat-chip-list role="list">
-                            <mat-chip class="sampleChip" *ngFor="let drop of droppedG2">{{drop}}</mat-chip>
+                            <mat-chip class="sampleChip" *ngFor="let drop of modifierInputObject.sampleGroup2">{{drop}}</mat-chip>
                         </mat-chip-list>
                     </div>
                 </div>
@@ -87,12 +87,12 @@
                 <mat-card-title>Choose algorithms for module inference</mat-card-title>
                 <div class="row-div">
                     <div class="leftCheckboxDiv">
-                        <mat-checkbox formControlName="algorithmCtrl" [(checked)]="diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD</mat-checkbox>
-                        <mat-checkbox [(checked)]="mcode" (change)="mcodeChbChanged()" color="primary" class="checkbox">MCODE</mat-checkbox>
+                        <mat-checkbox formControlName="algorithmCtrl" [(checked)]="algorithms.diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD</mat-checkbox>
+                        <mat-checkbox [(checked)]="algorithms.mcode" (change)="mcodeChbChanged()" color="primary" class="checkbox">MCODE</mat-checkbox>
                     </div>
                     <div class="leftCheckboxDiv">
-                        <mat-checkbox [(checked)]="md" (change)="mdChbChanged()" color="primary" class="checkbox">Module Discoverer</mat-checkbox>
-                        <mat-checkbox [(checked)]="barrenas" (change)="barrenasChbChanged()" color="primary" class="checkbox">Barrenäs</mat-checkbox>
+                        <mat-checkbox [(checked)]="algorithms.md" (change)="mdChbChanged()" color="primary" class="checkbox">Module Discoverer</mat-checkbox>
+                        <mat-checkbox [(checked)]="algorithms.barrenas" (change)="barrenasChbChanged()" color="primary" class="checkbox">Barrenäs</mat-checkbox>
                     </div>
                 </div>
                 <div class="sliderErrorDiv">
@@ -108,7 +108,7 @@
     </mat-step>
 
     <!-- Set parameters -->
-    <mat-step [stepControl]="fourthFormGroup">
+    <!--<mat-step [stepControl]="fourthFormGroup">
         <ng-template matStepLabel>Set parameters</ng-template>
         <mat-card class="selector-content-card">
             <mat-card-title>Set additional parameters</mat-card-title>
@@ -118,7 +118,7 @@
             <button class="next-button" mat-button matStepperPrevious>Back</button>
             <button class="next-button" mat-button (click)="clickNextFourth(stepper)">Perform Analysis</button>
         </mat-card>
-    </mat-step>
+    </mat-step>-->
 
     <!-- Results -->
     <mat-step>
@@ -126,6 +126,7 @@
         <mat-card>
             <mat-card-title>Analysis is done!</mat-card-title>
             <br>
+            {{result}}
             <mat-divider class="stepper-divider"></mat-divider>
             <button class="next-button" mat-button matStepperPrevious>Back</button>
         </mat-card>

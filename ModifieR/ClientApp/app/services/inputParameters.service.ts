@@ -2,61 +2,59 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Http } from '@angular/http'
+import { ModifierInput } from '../models/ModifierInput';
+import { Algorithms } from '../models/Algorithms';
 
 
 @Injectable()
 export class InputParametersService {
-  //giftCard: GiftCard[] = [];
-  ValueCode: string;
-  Amount: string;
-  Buyer: string;
-  BuyingDate: string;
-  Redeemer: string;
-  RedeemingDate: string;
-  Redeemed: string;
-  RecieverName: string;
-
   constructor(private _httpService: Http) { }
 
-
-   inputExpressionMatrix(file: any) {
-      console.log('inputting expression matrix' + file);
+   inputExpressionMatrix(file: any): Promise<string> {
       let formData = new FormData();
       formData.append("file", file);
-      this._httpService.post("/api/ExpressionMatrix", formData).subscribe(r => console.log(r));
+      let sampleNames: any;
+      const post: any = this._httpService.post("/api/input/expressionMatrix", formData)
+      return post.toPromise()
+        .then((response: any)=> response.text());
   }
-  //getGiftCards(): GiftCard[] {
-  //  //this.giftCard = [];
-  //  this._httpService.get('/api/GiftCard/data').subscribe(values => {
+   inputProbeMap(file: any): Promise<string> {
+       console.log('uploading probe map!!!');
+       let formData = new FormData();
+       formData.append("file", file);
+       const post: any = this._httpService.post("/api/input/probeMap", formData)
+       return post.toPromise()
+           .then((response: any) => response.text());
+   }
 
-  //    for (let i of values.json()) {
-  //      this.ValueCode =i.valueCode;
-  //      this.Amount = i.amount;
-  //      this.Buyer = i.buyerId;
-  //      this.BuyingDate = i.valueCode;
-  //      this.Redeemer = i.redeemerId;
-  //      this.RedeemingDate =i.redeemingDate;
-  //      this.Redeemed = i.redeemed;
-  //      this.RecieverName = i.recieverName;
-  //      //this.giftCard.push({ valueCode: this.ValueCode, amount: Number(this.Amount), buyerID: Number(this.Buyer), buyingDate: this.BuyingDate, redeemerID: Number(this.Redeemer), redeemingDate: this.RedeemingDate, redeemed: Boolean(this.Redeemed), recieverName: this.RecieverName })
-  //    }
-  //  });
+   performAnalysis(modifierInput: ModifierInput, algorithms: Algorithms): Promise<string> {
+       console.log('Uploading input data :)' + modifierInput.group1Label);
+       //let formData = new FormData();
+       //formData.append("file", file);
+       let resp: string = '';
+       if (algorithms.diamond === true) {
+           const post: any = this._httpService.post("/api/analysis/diamond", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       } else if (algorithms.barrenas === true) {
+           const post: any = this._httpService.post("/api/analysis/barrenas", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       } else if (algorithms.mcode === true) {
+           const post: any = this._httpService.post("/api/analysis/mcode", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       } else if (algorithms.md === true) {
+           const post: any = this._httpService.post("/api/analysis/md", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       } else {
+           const post: any = this._httpService.post("/api/input/probeMap", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       }
+       
+   }
 
-  //  return this.giftCard;
-  //}
-  //getGiftCard(valueCode: string): Promise<GiftCard>  {
-  //  ////console.log(User.Identity.Name);
-  //    const post: any = this._httpService.get('/api/GiftCard/' + valueCode);
-  //  return post.toPromise()
-  //      .then((response: any)=> response.json());
-  //}
-  //async setRedeemed(valueCode: string) {
-  //  const req = await this._httpService.post('/api/GiftCard/redeem/' + valueCode, null);
-  //  req.subscribe();
-  //}
-
-  //async addNewGiftCard(giftCard: GiftCard): Promise<string> {
-  //  const req:any = await this._httpService.post('/api/GiftCard', giftCard);
-  //  return req.toPromise().then((response: any) => response.json().valueCode);
-  //}
+ 
 }
