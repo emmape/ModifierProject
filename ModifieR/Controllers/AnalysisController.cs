@@ -18,7 +18,8 @@ namespace ModifieR.Controllers
         [HttpPost("diamond")]
         public async Task<IActionResult> analyseDiamond([FromBody] ModifierInputObject input)
         {
-            string result = RScriptRunner.RunFromCmd();
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input);
             return Ok("ResultFrom R-script: " + result);
         }
 
