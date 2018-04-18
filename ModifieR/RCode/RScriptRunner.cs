@@ -10,7 +10,7 @@ namespace ModifieR.RCode
 {
     public class RScriptRunner
     {
-        public static string RunFromCmd(string filename, ModifierInputObject modifierInputObject)
+        public static string RunFromCmd(string filename, ModifierInputObject modifierInputObject, string methodOfAnalysis)
         {
             string sampleGroup1="";
             string sampleGroup2="";
@@ -23,10 +23,11 @@ namespace ModifieR.RCode
                 var info = new ProcessStartInfo();
                 info.FileName = @"C:\Program Files\R\R-3.4.1\bin\Rscript.exe";
                 info.WorkingDirectory = @"C:\Program Files\R\R-3.4.1\bin";
-                info.Arguments = Directory.GetCurrentDirectory() + @"\RCode\"+filename+" "
-                    //+ modifierInputObject.expressionMatrixContent+" "+modifierInputObject.probeMapContent+" "
+                info.Arguments = 
+                    Directory.GetCurrentDirectory() + @"\RCode\"+filename+" "
                     + sampleGroup1 + " " + sampleGroup2 + " "
                     + modifierInputObject.group1Label + " " + modifierInputObject.group2Label + " " 
+                    + methodOfAnalysis + " "
                     + Directory.GetCurrentDirectory() + @"\RCode\";
 
                 info.RedirectStandardInput = false;

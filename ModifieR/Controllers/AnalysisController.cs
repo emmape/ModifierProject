@@ -19,26 +19,58 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseDiamond([FromBody] ModifierInputObject input)
         {
             RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond");
             return Ok("ResultFrom R-script: " + result);
         }
 
-        [HttpPost("barrenas")]
-        public async Task<IActionResult> analyseBarrenas([FromBody] ModifierInputObject input)
+        [HttpPost("cliquesum")]
+        public async Task<IActionResult> analyseCliquesum([FromBody] ModifierInputObject input)
         {
-            return Ok("Got some input!: " + input.group1Label);
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "cliqueSum");
+            return Ok("ResultFrom R-script: " + result);
         }
-
+        [HttpPost("correlationclique")]
+        public async Task<IActionResult> analysecorrelationClique([FromBody] ModifierInputObject input)
+        {
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "correlationClique");
+            return Ok("ResultFrom R-script: " + result);
+        }
+        [HttpPost("diffcoex")]
+        public async Task<IActionResult> analysediffCoEx([FromBody] ModifierInputObject input)
+        {
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "diffCoEx");
+            return Ok("ResultFrom R-script: " + result);
+        }
+        [HttpPost("dime")]
+        public async Task<IActionResult> analyseDime([FromBody] ModifierInputObject input)
+        {
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "dime");
+            return Ok("ResultFrom R-script: " + result);
+        }
+        [HttpPost("moda")]
+        public async Task<IActionResult> analyseModa([FromBody] ModifierInputObject input)
+        {
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "moda");
+            return Ok("ResultFrom R-script: " + result);
+        }
         [HttpPost("mcode")]
         public async Task<IActionResult> analyseMcode([FromBody] ModifierInputObject input)
         {
-            return Ok("Got some input!: " + input.group1Label);
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "mcode");
+            return Ok("ResultFrom R-script: " + result);
         }
-
-        [HttpPost("md")]
+        [HttpPost("modulediscoverer")]
         public async Task<IActionResult> analyseMd([FromBody] ModifierInputObject input)
         {
-            return Ok("Got some input!: " + input.group1Label);
+            RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "moduleDiscoverer");
+            return Ok("ResultFrom R-script: " + result);
         }
     }
 }

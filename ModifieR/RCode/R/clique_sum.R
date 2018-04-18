@@ -10,16 +10,20 @@
 #' @param min_deg_clique Numeric Minimum degree of the clique
 #' @return A MODifieR class object with disease module and settings
 #' @export
-clique_sum <- function(deg_genes, ppi_network, simplify_graph = T, n_iter = 10000,
-                       cutoff = 0.05, min_clique_size = 5, min_deg_clique =3){
+clique_sum <- function(MODifieR_input, ppi_network, simplify_graph = T, n_iter = 10000,
+                       cutoff = 0.05, min_clique_size = 5, min_deg_clique = 3, dataset_name = NULL){
   # Retrieve settings
   default_args <- formals()
   user_args <- as.list(match.call(expand.dots = T)[-1])
   settings <- c(user_args, default_args[!names(default_args) %in% names(user_args)])
-
-
-  PPi_HGNC <- as.matrix(na.omit(
-    read.table(ppi_network, header=FALSE,sep = "," , stringsAsFactors=FALSE)))
+  
+  if (!is.null(dataset_name)){
+    settings$MODifieR_input <- dataset_name
+  }
+  
+  if (class(MODifieR_input)[1] == "MODifieR_input"){
+    deg_genes <- MODifieR_input$diff_genes
+  }
 
   if (is.data.frame(deg_genes)){
     deg_genes <- dataframe_to_vector(as.data.frame(deg_genes))
@@ -30,7 +34,7 @@ clique_sum <- function(deg_genes, ppi_network, simplify_graph = T, n_iter = 1000
   deg_genes <- -log10(deg_genes)
 
 
-  graphed_frame <- graph.data.frame(unique(PPi_HGNC) , directed = FALSE)
+  graphed_frame <- igraph::graph.data.frame(unique(ppi_network) , directed = FALSE)
 
   deg_genes <- deg_genes[intersect(names(deg_genes), V(graphed_frame)$name)]
 
@@ -64,7 +68,7 @@ clique_sum <- function(deg_genes, ppi_network, simplify_graph = T, n_iter = 1000
 
   class(new_clique_sum_module) <- c("MODifieR_module", "Clique_Sum")
 
-  new_clique_sum_module <- symbol_to_entrez(new_clique_sum_module)
+  #new_clique_sum_module <- symbol_to_entrez(new_clique_sum_module)
 
   return(new_clique_sum_module)
 }

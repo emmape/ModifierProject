@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ModifieR
@@ -27,17 +26,9 @@ namespace ModifieR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc(config =>
             {
-                //var policy = new AuthorizationPolicyBuilder()
-                //                 .RequireAuthenticatedUser()
-                //                 .Build();
-                //config.Filters.Add(new AuthorizeFilter(policy));
             });
-
-        //    var connection = @"Server=WSP6574D;Database=; User Id=; Password=";
-        //    services.AddDbContext<SecuritiesGiftCardContext>(options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,8 +48,6 @@ namespace ModifieR
             }
 
             app.UseStaticFiles();
-            //app.UseAuthentication();
-            //app.UseIdentity();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

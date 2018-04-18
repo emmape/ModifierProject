@@ -5,257 +5,155 @@
 #'@param pval_matrix A nx2 dataframe of the entrez ids and their respective p-values
 #'@param correlation_matrix A nxn matrix of Correlated p-values of n genes 
 #'@param ppi_network A dataframe of PPI network of your choice
-#'@param perturbation Number of iterations to be performed
+#'@param iteration Number of iterations to be performed
 #'@param cutoffRank Score cutoff of the string PPI network
 #'@param cliquetestCriteria type of test to be perfomed for enrichment of cliques (default = "FisherTest")
 #'@param probabailitySacleFactor Scale for enriched cliques 
 #'@param frequency_cutoff Numeric significance out of number of iterations performed (default = 0.05) 
-#' @return A MODifieR class object with disease module and settings
+#'@param signif_cutoff Cutoff for Fisher exact test for cliques
+#'@param gene_significance Cutoff for significant genes
+#'@return A MODifieR class object with disease module and settings
 #'@export
-correlation_clique <- function (pval_matrix, correlation_matrix, ppi_network,
-                                frequency_cutoff = .5,cutOffRank = 700,
+correlation_clique <- function(MODifieR_input, ppi_network,
+                                frequency_cutoff = .5, cutOffRank = 700,
                                 probabilityScaleFactor = 0.6,
-                                pertubation = 10, cliqueTestCritera = "FisherTest"){
-
+                                iteration = 50, signif_cutoff = 0.01, 
+                                gene_significance = 0.05,
+                                dataset_name = NULL){
+  
   # Retrieve settings
   default_args <- formals()
   user_args <- as.list(match.call(expand.dots = T)[-1])
   settings <- c(user_args, default_args[!names(default_args) %in% names(user_args)])
-
-  springConnection <- springConnection[,1:3]
-
-  ## Script
-  probabilityMatrix <- SortDataForCliqueFunction(springConnection, pValueMatrix, corrPvalues, cutOffRank)
-  pValueMatrix$V2 <- -log(pValueMatrix$V2)
-  zeroRows_finder <- rowSums(probabilityMatrix , na.rm = T)
-
-  zeroRows <- which(zeroRows_finder == 0)
-  probabilityMatrix <- probabilityMatrix[!(rownames(probabilityMatrix) %in% names(zeroRows)) ,!(colnames(probabilityMatrix) %in% names(zeroRows))]
-
-  pValueMatrix <- pValueMatrix[!(pValueMatrix$V1 %in% names(zeroRows)) ,]
-
-  probabilityMatrix <- probabilityMatrix*probabilityScaleFactor
-
-
-  allCliqueData <- list()
-  allCliqueCellSignificant <- list()
-  allTotalNumberOfChances <- list()
-  rand_allCliqueData <- list()
-  rand_allCliqueCellSignificant <- list()
-  rand_allTotalNumberOfChances <- list()
-  for (h in 1:pertubation){
-    SigClique5_data <- SigCliqueFunction5(probabilityMatrix, pValueMatrix, cliqueTestCritera)
-    allCliqueData[[h]] <- SigClique5_data[[1]]
-    allCliqueCellSignificant[[h]] <- SigClique5_data[[2]]
-    allTotalNumberOfChances[[h]] <- SigClique5_data[[3]]
+  
+  if (!is.null(dataset_name)){
+    settings$MODifieR_input <- dataset_name
   }
+  
+  springConnection <- ppi_network[,1:3]
+  
+  pValueMatrix <- na.omit(MODifieR_input$correlation_p_values)
 
-  tabled_frequencies <- table(unlist(allCliqueCellSignificant)) / pertubation
+  overlap <- springConnection[,1] %in% pValueMatrix[,1]
+  
+  springConnection <- springConnection[overlap,]
+  
+  overlap <- springConnection[,2] %in% pValueMatrix[,1]
+  
+  springConnection <- springConnection[overlap,]
+  
+  springConnection <- springConnection[springConnection[,3] > cutOffRank,]
+  
+  springConnection[,3] <- springConnection[,3] / 1000
+  #Calculates (1- p value) for all relevent connections in the PPi network, and is stored in column 1.
+  #Column 2 will contain the PPi score from the PPi network
+  corrPvalues <- cbind(apply(X = springConnection, MARGIN = 1, FUN = calculate_correlation, 
+                             expression_matrix = MODifieR_input$annotated_exprs_matrix),
+                       springConnection[,3])
+  #Calculates square root of P value * PPi score. This is then scaled by probabilityScaleFactor. 
+  pval_score <- apply(X = corrPvalues, MARGIN = 1, FUN = function(x){sqrt(x[1] * x[2]) * probabilityScaleFactor})
+  #Get the significant genes
+  signifgenes <- pValueMatrix$gene[pValueMatrix$pvalue < gene_significance]
+  n_unsignif <- sum(pValueMatrix$pvalue > gene_significance)
+  
 
+  module_list <- list() 
+  #For every iteration:
+  for (i in 1:iteration){
+    #Compare computed scores to random scores 
+    to_pass <- pval_score > runif(n = length(pval_score)) * 1
+    #Get a graphed object for the edges that have a higher score than random (to_pass vector)
+    graphed_adjeceny <- graph_score(adjecency_list = cbind(springConnection[,1:2], to_pass))
+    #Get maximal cliques from the graphed object
+    cliques <- igraph::max_cliques(graph = graphed_adjeceny, min = 2)
+    #Infer modules using the maximal cliques
+    module_list[[i]] <- infer_module(cliques = cliques, signifgenes = signifgenes, n_unsignif = n_unsignif, signif_cutoff = signif_cutoff )
+  }
+  #Get the frequency of each gene that has been present in a module, expressed in fraction
+  tabled_frequencies <- table(unlist(module_list)) / iteration
+  #The resulting module is going to consist of all genes that have are seen more frequently in the iterations
+  #than the frequency cutoff (default 0.5, so present in 50% of all iterations) 
   module_genes <- names(tabled_frequencies[tabled_frequencies >= frequency_cutoff])
-
+  
   new_correlation_clique_module <- list("module_genes" = module_genes,
-                                        "settings" = settings)
-
+                                        "settings" = settings,
+                                        "frequency_table" = tabled_frequencies)
+  
   class( new_correlation_clique_module) <- c("MODifieR_module", "Correlation_clique")
-
+  
   return( new_correlation_clique_module)
 }
 
+#Calculate fisher exact test for each clique. Returns a vector with all 
+#genes in significant clique
+infer_module <- function(cliques, signifgenes, n_unsignif, signif_cutoff){
+  #Total number of significant genes
+  n_signif <- length(signifgenes)
+  #Total number of not significant genes
+  n_unsignif <- n_unsignif - n_signif
+  #Clique table, matrix with dimensions: 4 columns, number of cliques = number of rows:
+  #Column 1 Number of significant genes in clique
+  #Column 2 Number of unsignificant genes in clique
+  #Column 3 Number of significant genes NOT in clique
+  #Column 4 Number of unsignficant genes NOT in clique
+  
+  #Columns 1+2 
+  clique_table <- cbind(sapply(X = cliques, FUN = function(x) sum(as.vector(x) %in% signifgenes)), 
+                        sapply(X = cliques, FUN = function(x) sum(!as.vector(x) %in% signifgenes)))
+  #cbind column 3
+  clique_table <- cbind(clique_table, n_signif - clique_table[,1])
+  #Get indici of cliques with at least 1 significant gene
+  #Avoids calculating Fisher exact for cliques with no significant gene
+  cliques_with_signif <- clique_table[ ,1] != 0
 
-## Functions
-SortDataForCliqueFunction <- function(springConnection, pValueMatrix, corrPvalues, cutOffRank){
-  p1 <- corrPvalues
-  colnames(p1) <- p1[1,]
-  rownames(p1) <- p1[,1]
-  pValueData <- pValueMatrix
-  pValueData[,2] <- -log(pValueData[,2])
-  overlap <- springConnection$V1 %in% pValueData$V1
-  overlap_true <- which(overlap == TRUE)
-  springConnection <- springConnection[overlap_true,]
-  overlap <- springConnection$V2 %in% pValueData$V1
-  overlap_true <- which(overlap == TRUE)
-  springConnection <- springConnection[overlap_true,]
-
-  #cutOffRank <- info_var$cutOffRank
-  springConnection <- springConnection[which(springConnection$V3 > cutOffRank),]
-  springConnection$V3 <- springConnection$V3/1000
-  print("Creating matrix from list")
-  networkMatrix = adjecentMatrixCreator(springConnection)
-  #networkMatrix[1,1] <- 0
-  p1 <- p1[-1 , -1]
-  p2 <- as.data.frame(matrix(NA, ncol = length(p1), nrow = length(p1)))
-  rownames(p2) <- rownames(p1)
-  colnames(p2) <- colnames(p1)
-
-
-  p2[rownames(networkMatrix) , colnames(networkMatrix)] <- networkMatrix
-
-  probabilityMatrix = sqrt(p1*p2)
-
-  return(probabilityMatrix)
+  #cbind column 4
+  clique_table <- cbind(clique_table, n_unsignif - clique_table[,2])
+  
+  #Subset clique table w
+  clique_table <- clique_table[cliques_with_signif,]
+  #Subset cliques
+  cliques <- cliques[cliques_with_signif]
+  
+  #Get fisher exact test p values for each cliqiue. A, B, C and D are in column 1:4
+  clique_pvals <- apply(X = clique_table, MARGIN = 1, FUN = fisher_pval)
+  
+  #Logical vector, TRUE is significant
+  indici_signif_cliques <- clique_pvals < signif_cutoff
+  #Unlist, unique and vectorize all significant cliques
+  module <- unique(names(unlist(cliques[indici_signif_cliques])))
+  
+  return (module)
+  
 }
-adjecentMatrixCreator <- function(springConnection){
-  springConnection <- springConnection[with(springConnection, order(springConnection[,2])),]
-  springConnection <- springConnection[with(springConnection, order(springConnection[,1])),]
-  g <- igraph::graph.data.frame(springConnection)
-  networkMatrix <- igraph::get.adjacency(g , attr = "V3")
-  networkMatrix <- as.data.frame(as.matrix(networkMatrix))
+#Pval Helper function
+fisher_pval <- function(clique_row){
+  fisher.test(x = matrix(data = clique_row, nrow = 2, byrow = T), alternative = "g")$p.value
 }
-maximalCliques2 <- function(networkMatrix){
-
-  rownames(networkMatrix) <- 1:length(networkMatrix)
-  colnames(networkMatrix) <- 1:length(networkMatrix)
-
-  for (i in 2:length(networkMatrix)){
-    networkMatrix[i,2:i] <- 0
-  }
-
-  z <- igraph::graph.adjacency(as.matrix(networkMatrix[-1,-1]))
+#This function takes as the first argument a row from a PPi network, retrieves the corresponding row and column
+#by row and column name and computes (1- correlation P value). 
+calculate_correlation <- function(row, expression_matrix){
+  row <- as.character(row)
+  
+  x_y <- c(which(rownames(expression_matrix) == row[1]), which(rownames(expression_matrix) == row[2]))
+  
+  1 - round(cor.test(x = expression_matrix[x_y[1],], y = expression_matrix[x_y[2],])$p.value, 3)
+}
+#Convert edge list to igraph object, and convert to adjacency matrix. This matrix will be converted to an adjacency graph.
+#As this adjecency matrix will be used to search for maximal cliques, the mode is undirected
+graph_score <- function(adjecency_list){
+  g <- igraph::graph.data.frame(adjecency_list)
+  score_matrix <- as.matrix(igraph::get.adjacency(g , attr = colnames(adjecency_list)[3]))
+  
+  #Remove rows that do not have a score of at least 1 in scoreMatrix
+  rows_to_keep <- rowSums(x = score_matrix) != 0
+  
+  score_matrix <- score_matrix[rows_to_keep, rows_to_keep]
+  #Set lower triangle to 0. 
+  score_matrix[lower.tri(score_matrix)] <- 0
+  
+  z <- igraph::graph.adjacency(adjmatrix = score_matrix, mode = "undirected")
   z1 <- igraph::simplify(z)
-  z2 <- igraph::maximal.cliques(z1)
-
-  cliques <- list()
-  cliques_len <- c()
-  for (i in 1:length(z2)){
-    cliques[[i]] <- as.numeric(rownames(as.matrix(unlist(z2[[i]]))))
-  }
-
-  return(cliques)
-
+  
+  return(z1)
 }
-CreateBackGround_pvalues <- function(clique_distribtuion,pValueMatrix,bootstrapValue,sig_value){
-  clique_dist_wide <- dim(clique_distribtuion)
-  tmp_pval <- matrix(0,bootstrapValue,clique_dist_wide[1])
 
-  for (i in 1:bootstrapValue){
-    for (j in 1:clique_dist_wide[1]){
-      tmp <- sample(pValueMatrix[,2], clique_distribtuion[j,1])
-      tmp_pval[i,clique_dist_wide[1]-j+1] <- mean(tmp)
-    }
-  }
-  backGround_pValue <- tmp_pval
-  numberOfHigher <- bootstrapValue * sig_value
-
-  pValueToBeat <- c()
-  for (i in 1:clique_dist_wide[1]){
-    backGround_pValue[,i] <- sort(backGround_pValue[,i], decreasing = TRUE)
-    #pValueToBeat[i] <- backGround_pValue[numberOfHigher,i]
-  }
-
-  return(apply(t(backGround_pValue),2,rev))
-}
-SigCliqueFunction5 <- function(probabilityMatrix, pValueMatrix, cliqueTestCritera){
-
-  len <- length(probabilityMatrix)-1
-  randomMatrix <- matrix(runif(len*len), len, len)
-  randomMatrix <- as.data.frame((randomMatrix + t(randomMatrix))/2)
-
-
-  networkMatrix = as.data.frame(matrix(0, ncol = length(probabilityMatrix), nrow = length(probabilityMatrix)))
-  networkMatrix[,1] <- probabilityMatrix[,1]
-  networkMatrix[1,] <- probabilityMatrix[1,]
-
-  networkMatrix[-1,-1] <- (probabilityMatrix[-1,-1] > randomMatrix)*1
-
-  numberOfChances <- as.data.frame(matrix(0, nrow = length(randomMatrix), ncol = 3))
-  numberOfChances[,1] <- as.numeric(networkMatrix[1,-1])
-  interaction_counter <- c()
-  for (i in 1:length(networkMatrix)-1){
-    interaction_counter[i] <- sum(networkMatrix[i+1,-1])
-  }
-  numberOfChances[,2] <- interaction_counter
-  numberOfChances[,3][which(numberOfChances[,2] > 0)] <- 1
-
-  zeroRows2 <- which(numberOfChances[,3] < 1)
-  numberOfChances <- numberOfChances[-c(zeroRows2),]
-  networkMatrix <- networkMatrix[-c(zeroRows2),]
-  networkMatrix <- networkMatrix[,-c(zeroRows2)]
-
-  MC <- maximalCliques2(networkMatrix)
-  clique_distribtuion <- as.data.frame(matrix(0, nrow = length(networkMatrix), ncol = 2))
-  clique_distribtuion$V1 <- c(1:length(networkMatrix))
-
-  counter <- 1
-  cliqueCell <- list()
-  for (j in 1:length(MC)){
-    clique <- MC[[j]]
-    clique_len <- length(clique)
-    clique_distribtuion[clique_len,2] <- clique_distribtuion[clique_len,2]+1
-    if (clique_len > 2){
-      cliqueCell$clique[[counter]] <- networkMatrix[c(clique),1]
-      cliqueCell$pVal[[counter]] <- sum(pValueMatrix[which(pValueMatrix$V1 %in% c(networkMatrix[c(clique),1]) == TRUE),2])/clique_len
-      counter <- counter + 1
-    }
-  }
-  clique_dist_pos <- which(clique_distribtuion$V2 >0)
-  clique_dist_pos <- tail(clique_dist_pos, n=1)
-  clique_distribtuion <- clique_distribtuion[1:clique_dist_pos,]
-
-  ## Create background p-Values and sort p-Values
-  bootstrapValue <- 10000
-
-
-  backGround_pValue <- CreateBackGround_pvalues(clique_distribtuion, pValueMatrix, bootstrapValue, 0.01)
-
-  cliqueCell[[3]] <- 0
-  cliqueCell[[4]] <- 0
-  for (k in 1:length(cliqueCell[[1]])){
-    aveX <- cliqueCell[[2]][k]
-    yrand <- backGround_pValue[length(cliqueCell[[1]][[k]])-1,]
-    nrand <- 10000
-
-    p <- length(which(yrand > aveX))/length(yrand)
-    z <- (aveX - mean(yrand))/sd(yrand)
-    or <- aveX / mean(yrand)
-
-    if ( p < 10/nrand){
-      p <- one.sample.z(data = z, null.mu = 0, sigma = 1, "upper.tail")
-    }
-
-    cliqueCell[[3]][k] <- p
-    cliqueCell[[4]][k] <- 0
-
-
-  }
-
-  Q <- fdrtool::fdrtool(cliqueCell[[3]], statistic = "pvalue", plot = FALSE, cutoff.method = "fndr")
-  for (p in 1:length(Q)){
-    cliqueCell[[4]][p] <- Q$qval[p]
-  }
-  cliqueCell[[5]] <- 0
-  for(j in 1:length(cliqueCell$clique)){
-    clique <- unlist(cliqueCell$clique[j])
-    clique_pvals <- pValueMatrix[which(pValueMatrix[,1] %in% clique == TRUE),2]
-
-    a <- sum(clique_pvals > -log(0.05))
-    b <- sum(clique_pvals < -log(0.05))
-    c <- sum(pValueMatrix[which(!(pValueMatrix[,1] %in% clique) == TRUE),2] > -log(0.05))
-    d <- sum(pValueMatrix[which(!(pValueMatrix[,1] %in% clique) == TRUE),2] < -log(0.05))
-
-    fisher_input <- matrix(c(a,b,c,d), ncol=2)
-    fisher_result <- fisher.test(fisher_input, alternative = "greater")
-    cliqueCell[[5]][j] <- fisher_result$p.value
-  }
-  significant_cliques <- which(cliqueCell[[5]] < 0.01)
-
-  cliqueCellSignificant <- matrix(list(), nrow = 5, ncol = length(significant_cliques))
-  if (length(significant_cliques) == 0){
-    cliqueCellSignificant <- 0
-  } else {
-    for (j in 1:length(significant_cliques)){
-      for (l in 1:5){
-        cliqueCellSignificant[[l,j]] <- cliqueCell[[l]][significant_cliques[j]]
-      }
-    }
-  }
-
-  networkMatrixNoIDs <- networkMatrix
-  rownames(networkMatrixNoIDs) <- NULL
-  colnames(networkMatrixNoIDs) <- 1:length(networkMatrixNoIDs)
-  edgeListAfterRandom <- which(networkMatrixNoIDs == 1, arr.ind = T)
-
-
-  return(list(edgeListAfterRandom, cliqueCellSignificant, numberOfChances))
-
-}

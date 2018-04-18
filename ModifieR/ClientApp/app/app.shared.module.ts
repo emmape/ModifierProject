@@ -21,7 +21,7 @@ import { InferModuleComponent } from './infer-module/infer-module.component';
 import { InformationComponent } from './information/information.component';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { ReadFileService } from './services/readFile.service';
-import { InputParametersService } from './services/inputParameters.service';
+import { AnalyzeService } from './services/analyze.service';
 import { MissingDialog } from './components/dialog/missingDialog.component';
 import { NgDragDropModule } from 'ng-drag-drop';
 
@@ -64,7 +64,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
         HttpModule
 
     ],
-     providers: [ReadFileService, InputParametersService],
+     providers: [ReadFileService, AnalyzeService],
 
     //,bootstrap: [AppComponent]
 })

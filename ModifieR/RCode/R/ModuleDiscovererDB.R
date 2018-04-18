@@ -1,77 +1,76 @@
-##<< ##########################################################################################################################
-##<< # ModuleDiscoverer                                                                                                       #
-##<< # Copyright (c) 2015 Leibniz-Institut für Naturstoff-Forschung und Infektionsbiologie e.V. - Hans-Knoell-Institut (HKI). #
-##<< # Contributors: Sebastian Vlaic <Sebastian.Vlaic@hki-jena.de>                                                            #
-##<< # First version: November 2015                                                                                           #
-##<< # Filename: ModuleDiscovererDB.r                                                                                         #
-##<< # Language: R                                                                                                            #
-##<< #                                                                                                                        #
-##<< # This program is free software; you can redistribute it and/or modify it under the terms of the                         #
-##<< # GNU General Public License as published by the Free Software Foundation, Version 3.                                    #
-##<< #                                                                                                                        #
-##<< # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied     #
-##<< # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.  #
-##<< #                                                                                                                        #
-##<< #                                                                                                                        #
-##<< # ModuleDiscoverer is an algorithm for the identification of regulatory modules based on genome-wide, large-scale        #
-##<< # protein-protein interaction networks in conjunction with expression data from high-throughput experiments.             #
-##<< ##########################################################################################################################
-
+##< ##########################################################################################################################
+##< # ModuleDiscoverer                                                                                                       #
+##< # Copyright (c) 2015 Leibniz-Institut für Naturstoff-Forschung und Infektionsbiologie e.V. - Hans-Knoell-Institut (HKI). #
+##< # Contributors: Sebastian Vlaic <Sebastian.Vlaic@hki-jena.de>                                                            #
+##< # First version: November 2015                                                                                           #
+##< # Filename: ModuleDiscovererDB.r                                                                                         #
+##< # Language: R                                                                                                            #
+##< #                                                                                                                        #
+##< # This program is free software; you can redistribute it and/or modify it under the terms of the                         #
+##< # GNU General Public License as published by the Free Software Foundation, Version 3.                                    #
+##< #                                                                                                                        #
+##< # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied     #
+##< # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.  #
+##< #                                                                                                                        #
+##< #                                                                                                                        #
+##< # ModuleDiscoverer is an algorithm for the identification of regulatory modules based on genome-wide, large-scale        #
+##< # protein-protein interaction networks in conjunction with expression data from high-throughput experiments.             #
+##< ##########################################################################################################################
 
 moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, seed=NULL, verbose=FALSE){
   if(!is.null(seed)){
     set.seed(seed)
   }
-
+  
   if(is.null(A)){
     cat(paste('Adjacency matrix has to be given!','\n'))
     stop()
   }else{
     if(verbose){print(dim(A))}
   }
-
+  
   if(is.null(vlist)){
     cat(paste('Vertex list has to be given!','\n'))
     stop()
   }else{
     if(verbose){print(dim(vlist))}
   }
-
+  
   if(!all(colnames(vlist) %in% c("weight","content","degree"))){
     cat(paste('Cols of vertex list have to include "weight", "content", "degree"!','\n'))
     stop()
   }
-
+  
   if(length(unique(c(dim(A),dim(vlist)[1])))!=1){
     cat(paste("Vertex matrix's nrow must equal dim of adjacency matrix!",'\n'))
     stop()
   }
-
+  
   if(nbrOfSeeds>0){
   }else{
     cat(paste('nbrOfSeeds has to be > 0!','\n'))
     stop()
   }
-
+  
   # defines the vector of active nodes!
   currentNodes <- 1:dim(vlist)[1]
-
+  
   # stores nodes that have to be excluded from A and vlist as final result
   exclude <- NULL
-
+  
   # function to compute possible, valid neighbors
   # Only used for the initial search of minimal cliques of size 3.
   ## node: current seed node
   getNeighbors <- function(node){
-
+    
     check <- intersect(which(A[node,]!=0), currentNodes)
     weights <- A[node,check]
     weight <- as.numeric(vlist[node,"weight"])
-
+    
     check <- check[weights==weight]
     rm(weights)
     rm(weight)
-
+    
     # re-order valid candidates!
     if(length(check)!=0){
       check <- check[sample(x=1:length(check), size=length(check))]
@@ -83,16 +82,16 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
     }else{
       return(c())
     }
-
+    
     return(check)
   }
-
+  
   # identification of all three meres
   ## node: seed node
   find3mere <- function(node){
     # get all neighbors of the node
     check <- intersect(getNeighbors(node), currentNodes)
-
+    
     if(length(check)>0){
       # for all neighbors check neighbors
       res = FALSE
@@ -122,30 +121,30 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
     }
     return(as.numeric(strsplit(names(res)[1], split="\\.")[[1]]))
   }
-
+  
   # extend the identified three meres
   ## node: contains one seed three meres
   extend3meres <- function(node){
     # get all neighbors of the clique
     check <- intersect(which(A[node,]!=0), currentNodes)
-
+    
     # get the weights of the edges to all neighbors
     weights <- A[node,check]
-
+    
     # get the weight of the node
     weight <- as.numeric(vlist[node,"weight"])
-
+    
     # get the weights of all neighbors and multiply it by the weight of the node.
     # Why? This is necessary if two n-meres are merged. Consider two 3meres... if
     # two three meres are merged each node within one 3mere must have been initially
     # connected with all nodes of the other 3mere. Thus, the edge weight between the two
     # nodes must equal weight of the node times weight of the neighbor.
     nweight <- as.numeric(vlist[check,"weight"]) * weight
-
+    
     # check only nodes for which their weight times the weight of the node equals the weight
     # of the edge that is connecting them!
     check <- check[weights==nweight]
-
+    
     # If set by the user... randomize the order of the nodes to check!
     if(length(check)!=0){
       return(check[sample(x=1:length(check), size=length(check))][1])
@@ -153,7 +152,7 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
       return(FALSE)
     }
   }
-
+  
   # merges at least two nodes into one! This will be the first node stored in nodes vector
   ## nodes: vector of nodes to be merged
   mergeNodes <- function(nodes){
@@ -165,8 +164,8 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
       return(nbs)
     })
     if(verbose){print(paste("neighbors of",paste(nodes, collapse=", ")));print(nbs);print(paste("length of nodes vector:",length(nodes)))}
-
-
+    
+    
     # extract weights of neighbors
     weights <- rep(0, length(unique(names(unlist(nbs)))))
     names(weights) <- as.character(unique(names(unlist(nbs))))
@@ -178,29 +177,29 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
     if(verbose){print(paste("names:",paste(names,collapse=", ")))}
     if(verbose){print(paste("weights:",paste(weights,collapse=", ")))}
     weight <- sum(as.numeric(vlist[nodes,"weight"]))
-
+    
     # erase all but the first node from the nodes vector
     # this is actually a dangerous step since we alter the variables of the parent environment, but not of the current one!
     currentNodes <<- setdiff(currentNodes, nodes[-1]) # changes currentNodes in the parent environment!
     exclude <<- append(exclude, nodes[-1]) #this step is critical! don't do it anywhere else... # changes exclude in the parent environment!
-
+    
     A[nodes[1],nodes[1]] <<- 0 # changes to A are made in the parent environment!
     A[nodes[1],as.numeric(names(weights))] <<- A[as.numeric(names(weights)),nodes[1]] <<- weights # changes to A are made to the parent environment!
-
+    
     vlist[nodes[1],c("content","weight","degree")] <<- c(names, weight, sum(A[nodes[1],-append(exclude, nodes[-1])][A[nodes[1],-append(exclude, nodes[-1])]!=0])) # changes to A are made to the parent environment! Thats why we have to use the append(exclude, nodes[-1]) command again here. We have reset exclude earlier in the parent environment!
   }
-
+  
   # this is were it all starts!
-
+  
   if(verbose){print("computing all 3-meres...")}
   # step 1 merge all 3 meres... this takes O(n) worst case --> then the algorithm is done!
   tocheck <- sample(x=1:dim(vlist)[1], size=nbrOfSeeds)
   # we can actually exclude all nodes with out-degree 1 in the first search... (they will never form a 3-mere...)
   # also, this explains why the program always reports different numbers of nodes to check...
   tocheck <- tocheck[as.numeric(vlist[tocheck,"degree"])>1]
-
+  
   if(verbose){print(paste("selected seed nodes:",paste(tocheck,collapse=", "),sep=" "))}
-
+  
   if(verbose){print(paste("checking",length(tocheck),"nodes...",sep=" "))}
   if(length(tocheck)!=0){
     max <- length(tocheck)
@@ -222,9 +221,9 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
     }
   }
   if(verbose){print("done...")}
-
-
-
+  
+  
+  
   if(verbose){print("extending 3 meres...")}
   if(length(exclude)==0){
     # now this can happen if no three-mere was formed in the first run. In this case we can stop here and return an empty list.
@@ -232,14 +231,14 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
   }
   # else we proceed...
   max <- dim(vlist)[1]-length(exclude)
-
+  
   changed <- TRUE
   if(verbose){pb <- txtProgressBar(min=0, max=max, initial=0, style=3)}
   while(changed){
     changed <- FALSE
     # step 2 extend all 3 meres now worst case this can be O(n/3)
     tocheck <- sample(x=setdiff(1:dim(vlist)[1],exclude))
-
+    
     # now we restrict the extension towards the identified k-meres. Why?
     # Well, because a single node can only be combined to another single node and build a 2-mere.
     # Otherwise it would have been identified in the 3-mere identification step.
@@ -262,14 +261,18 @@ moduleDiscoverer.fragmentGraph <- function(A=NULL, vlist=NULL, nbrOfSeeds=1, see
     if(verbose){setTxtProgressBar(pb, value=max-length(tocheck))}
   }
   if(verbose){close(pb)}
-
+  
   vlist <- vlist[-exclude,,drop=FALSE]
   vlist <- vlist[as.numeric(vlist[,"weight"])>1,,drop=FALSE]
   return(vlist)
 }
 
-moduleDiscoverer.createDatabase <- function(results=NULL, proteins=NULL){
 
+
+
+
+moduleDiscoverer.createDatabase <- function(results=NULL, proteins=NULL){
+ 
   if(is.null(results)){
     cat(paste('results is null','\n'))
     stop()
@@ -281,10 +284,10 @@ moduleDiscoverer.createDatabase <- function(results=NULL, proteins=NULL){
   }
 
   cat(paste('INFO: indexing results...','\n'))
-  pb <- txtProgressBar(min = 0, max = length(results), style = 3)
+  #pb <- txtProgressBar(min = 0, max = length(results), style = 3)
   proteinsInClique <<- c()
   results.indexed <- do.call(rbind, lapply(1:length(results), function(run){
-    setTxtProgressBar(pb, run)
+    #setTxtProgressBar(pb, run)
     if(dim(results[[run]])[1]!=0){
       cbind("content"=sapply(results[[run]][,"content"], function(clique){
         x <- sort(as.numeric(unlist(strsplit(clique, split=" "))))
@@ -296,7 +299,7 @@ moduleDiscoverer.createDatabase <- function(results=NULL, proteins=NULL){
     }
   }))
   proteinsInClique <- unique(proteinsInClique)
-  close(pb)
+  #close(pb)
 
   cat(paste('INFO: indexing cliques...','\n'))
   uniqueCliqueId <- unique(results.indexed[,1])
@@ -462,7 +465,7 @@ moduleDiscoverer.db.create_MD_object <- function(foregrounds=NULL, background=NU
   fgs <- as.numeric(unique(unlist(sapply(1:numberOfForegrounds, function(i){return(foregrounds[[i]])}))))
   counter <- 1
   select <- rep(FALSE, total)
-  pb <- txtProgressBar(min = counter, max = total, style = 3)
+  #pb <- txtProgressBar(min = counter, max = total, style = 3)
   while(counter<=total){
     end = counter+chunks-1
     if(end>total){
@@ -472,12 +475,12 @@ moduleDiscoverer.db.create_MD_object <- function(foregrounds=NULL, background=NU
       return(processCliques(clique))
     }
     counter <- counter+chunks
-    setTxtProgressBar(pb, counter)
+    #setTxtProgressBar(pb, counter)
     if(counter==total){
       counter <- counter+1
     }
   }
-  close(pb)
+  #close(pb)
   relevantCliques <- which(select)
   rm(fgs)
   relevantCliques <- setdiff(relevantCliques, -1)
@@ -571,7 +574,7 @@ moduleDiscoverer.db.testForCliqueEnrichment <- function(database=NULL, input=NUL
     p.value <- matrix(NA, nrow=length(relevantCliques), ncol=length(foregrounds))
   }
   cat(paste("INFO: done!",'\n'))
-  pb <- txtProgressBar(min = 0, max = length(relevantCliques), style = 3)
+  #pb <- txtProgressBar(min = 0, max = length(relevantCliques), style = 3)
   counter <- 0
 
   makeTest <- function(clique){
@@ -645,10 +648,10 @@ moduleDiscoverer.db.testForCliqueEnrichment <- function(database=NULL, input=NUL
     }
 
     counter <- counter + dim(query.result)[1]
-    setTxtProgressBar(pb, counter)
+    #setTxtProgressBar(pb, counter)
   }
-  close(pb)
-  rm(pb)
+  #close(pb)
+  #rm(pb)
   cat(paste("INFO: done!",'\n'))
 
   cat("INFO: stopping parallel environment...")
@@ -729,15 +732,15 @@ moduleDiscoverer.db.extractEnrichedCliques <- function(database=NULL, result=NUL
   if(length(ids)>0){
     query.result <- database$uniqueCliqueId[ids]
 
-    pb <- txtProgressBar(min = 1, max = length(query.result), style = 3)
+    #pb <- txtProgressBar(min = 1, max = length(query.result), style = 3)
     cliques = append(cliques, lapply(1:length(query.result), function(i){
-      setTxtProgressBar(pb, i)
+      #setTxtProgressBar(pb, i)
       members <- as.numeric(unlist(strsplit(query.result[i], split=" ")))
       members <- database$proteins[members]
       return(members)
     }))
 
-    close(pb)
+    #close(pb)
     rm(query.result)
   }
 
@@ -817,7 +820,7 @@ moduleDiscoverer.db.testNetworkEnrichment <- function(database=NULL, result=NULL
 
     if(result$numberOfRandomDataSets[j]!=0){
       cat(paste('INFO: processing randomDataSets...','\n'))
-      pb <- txtProgressBar(min = 1, max = result$numberOfRandomDataSets[j], style = 3)
+      #pb <- txtProgressBar(min = 1, max = result$numberOfRandomDataSets[j], style = 3)
       tmp <- rep(-1, result$numberOfRandomDataSets[j])
       counter <- 1
       while(counter<=result$numberOfRandomDataSets[j]){
@@ -829,12 +832,12 @@ moduleDiscoverer.db.testNetworkEnrichment <- function(database=NULL, result=NULL
           return(sum(result$randomDataSets[[j]][[i]] %in% nodes))
         }
         counter <- counter+chunks
-        setTxtProgressBar(pb, counter)
+        #setTxtProgressBar(pb, counter)
         if(counter==result$numberOfRandomDataSets[j]){
           counter <- counter + 1
         }
       }
-      close(pb)
+      #close(pb)
       cat(paste('done!','\n'))
       tmp <- 1-(sum(tmp<=(sum(result$foregrounds[[j]] %in% nodes)))/result$numberOfRandomDataSets[j])
       if(tmp==0){
@@ -1175,9 +1178,9 @@ moduleDiscoverer.module.performEnrichmentTest <- function(module=NULL, nodeDisea
 
   diseaseIDs = levels(nodeDiseaseAssociation$diseaseId)
   cat(paste("INFO: testing",length(diseaseIDs),"diseases...",'\n'))
-  pb <- txtProgressBar(min = 0, max = length(diseaseIDs), style = 3)
+  #pb <- txtProgressBar(min = 0, max = length(diseaseIDs), style = 3)
   diseases = lapply(1:length(diseaseIDs), function(i){
-    setTxtProgressBar(pb, i)
+    #setTxtProgressBar(pb, i)
     id = diseaseIDs[i]
     members = unique(as.character(nodeDiseaseAssociation$geneId[nodeDiseaseAssociation$diseaseId == id]))
     MD = intersect(om.nodes,members)
@@ -1189,7 +1192,7 @@ moduleDiscoverer.module.performEnrichmentTest <- function(module=NULL, nodeDisea
       return(c(id,1,length(MD),length(MnD),length(nMD),length(om.background)-length(MD)-length(MnD)-length(nMD)))
     }
   })
-  close(pb)
+  #close(pb)
   cat(paste("INFO: preparing results...",'\n'))
   diseases <- as.data.frame(do.call(rbind, diseases))
   colnames(diseases) <- c("diseaseId","p.value","MD","MnD","nMD","nMnD")

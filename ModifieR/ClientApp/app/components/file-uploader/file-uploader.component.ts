@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReadFileService } from '../../services/readFile.service';
 import { ReadFile } from '../../models/readFile.model';
-import { InputParametersService } from '../../services/inputParameters.service';
+import { AnalyzeService } from '../../services/analyze.service';
 
 @Component({
     selector: 'app-file-uploader',
@@ -24,7 +24,7 @@ export class FileUploaderComponent implements OnInit {
     iconColor: any;
     filename = 'Drag a file here';
 
-    constructor(private readFileService: ReadFileService, public inputParametersService: InputParametersService) { }
+    constructor(private readFileService: ReadFileService, public analyzeService: AnalyzeService) { }
     ngOnInit() {
 
     }

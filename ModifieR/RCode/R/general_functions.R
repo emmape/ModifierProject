@@ -5,10 +5,9 @@
 #' @import doParallel
 #' @import WGCNA
 #' @importFrom Rcpp sourceCpp
-#' @importFrom fdrtool fdrtool
 #' @importFrom flashClust flashClust
 #' @importFrom dynamicTreeCut printFlush
-#' @useDynLib MODifieR
+#' @useDynLib MODifieRDev
 #'
 #' @export
 symbol_to_entrez <- function(module){
@@ -97,8 +96,8 @@ extract_module_class <- function(module){
 }
 #' @export
 print_super_module <- function(super_module, output_file){
-  sapply(X = 1:length(new_mod), FUN =  function(i){
-  write.table(x = t(c(names(super_module[i]), super_module[[i]])),
+  sapply(X = 1:length(super_module), FUN =  function(i){
+  invisible(write.table(x = t(c(names(super_module[i]), "", super_module[[i]])),
                   file = output_file, append = T, row.names = F,
-                  col.names = F, sep = "\t", quote = F)})
+                  col.names = F, sep = "\t", quote = F))})
 }

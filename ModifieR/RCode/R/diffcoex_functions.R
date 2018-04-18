@@ -109,3 +109,19 @@ plotMatrix<-function(mat)
   text(apply(matrix(0:(nrow(mat)-1)/(nrow(mat)-1)),1,rep,ncol(mat)),rep(0:(ncol(mat)-1)/(ncol(mat)-1),nrow(mat)),as.numeric(t(mat)),col="white",cex=1.5)
 }
 
+construct_modules <- function(module, annotation_table, settings){
+  
+  probes <- names(module)
+  
+  module_genes <- annotation_table$ENTREZID[annotation_table$PROBEID %in% probes]
+  
+  module_genes <- module_genes[!is.na(module_genes)]
+  
+  new_diffcoex_module <- list("module_genes" =  module_genes,
+                              "settings" = settings)
+  
+  class(new_diffcoex_module) <- c("MODifieR_module", "DiffCoEx")
+  
+  
+  return (new_diffcoex_module)
+}

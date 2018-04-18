@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FileUploaderComponent } from '../components/file-uploader/file-uploader.component';
 import { ReadFileService } from '../services/readFile.service';
-import { InputParametersService } from '../services/inputParameters.service';
+import { AnalyzeService } from '../services/analyze.service';
 import { MissingDialog } from '../components/dialog/missingDialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -21,10 +21,6 @@ export class InferModuleComponent implements OnInit {
     result: string = '';
 
     selectedNetwork = '';
-    //diamond = false;
-    //mcode = false;
-    //md = false;
-    //barrenas = false;
     comboChoice = false;
     countSelected = 0;
     firstFormGroup: FormGroup;
@@ -45,7 +41,7 @@ export class InferModuleComponent implements OnInit {
     ];
 
     constructor(private readFileService: ReadFileService, public dialog: MatDialog,
-        private _formBuilder: FormBuilder, public inputParametersService: InputParametersService) {
+        private _formBuilder: FormBuilder, public analyzeService: AnalyzeService) {
         readFileService.file$.subscribe(
             file => {
                 if (file.fileType === 'genes') {
@@ -143,12 +139,12 @@ export class InferModuleComponent implements OnInit {
         }
         this.setSecondFormGroupValid();
     }
-    barrenasChbChanged() {
-        if (this.algorithms.barrenas === false) {
-            this.algorithms.barrenas = true;
+    cliquesumChbChanged() {
+        if (this.algorithms.cliquesum === false) {
+            this.algorithms.cliquesum = true;
             this.countSelected++;
         } else {
-            this.algorithms.barrenas = false;
+            this.algorithms.cliquesum = false;
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -158,6 +154,67 @@ export class InferModuleComponent implements OnInit {
         }
         this.setSecondFormGroupValid();
     }
+    correlationcliqueChbChanged() {
+        if (this.algorithms.correlationclique === false) {
+            this.algorithms.correlationclique = true;
+            this.countSelected++;
+        } else {
+            this.algorithms.correlationclique = false;
+            this.countSelected--;
+        }
+        if (this.countSelected > 1) {
+            this.comboChoice = true;
+        } else {
+            this.comboChoice = false;
+        }
+        this.setSecondFormGroupValid();
+    }
+    diffcoexChbChanged() {
+        if (this.algorithms.diffcoex === false) {
+            this.algorithms.diffcoex = true;
+            this.countSelected++;
+        } else {
+            this.algorithms.diffcoex = false;
+            this.countSelected--;
+        }
+        if (this.countSelected > 1) {
+            this.comboChoice = true;
+        } else {
+            this.comboChoice = false;
+        }
+        this.setSecondFormGroupValid();
+    }
+    modaChbChanged() {
+        if (this.algorithms.moda === false) {
+            this.algorithms.moda = true;
+            this.countSelected++;
+        } else {
+            this.algorithms.moda = false;
+            this.countSelected--;
+        }
+        if (this.countSelected > 1) {
+            this.comboChoice = true;
+        } else {
+            this.comboChoice = false;
+        }
+        this.setSecondFormGroupValid();
+    }
+    dimeChbChanged() {
+        if (this.algorithms.dime === false) {
+            this.algorithms.dime = true;
+            this.countSelected++;
+        } else {
+            this.algorithms.dime = false;
+            this.countSelected--;
+        }
+        if (this.countSelected > 1) {
+            this.comboChoice = true;
+        } else {
+            this.comboChoice = false;
+        }
+        this.setSecondFormGroupValid();
+    }
+
     clickNextFirst(stepper: any): void {
         if (this.modifierInputObject.expressionMatrixContent === '' || this.modifierInputObject.probeMapContent === '' || (this.networkFile === '' && this.selectedNetwork === 'upload')) {
             const dialogRef = this.dialog.open(MissingDialog, {
@@ -173,7 +230,7 @@ export class InferModuleComponent implements OnInit {
     async clickNextSecond(stepper: any) {
         this.setSecondFormGroupValid();
         if (this.secondFormGroup.valid) {
-            this.result = await this.inputParametersService.performAnalysis(this.modifierInputObject, this.algorithms);
+            this.result = await this.analyzeService.performAnalysis(this.modifierInputObject, this.algorithms);
             stepper.next();
         }
     }

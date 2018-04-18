@@ -7,37 +7,18 @@ import { Algorithms } from '../models/Algorithms';
 
 
 @Injectable()
-export class InputParametersService {
+export class AnalyzeService {
   constructor(private _httpService: Http) { }
-
-   inputExpressionMatrix(file: any): Promise<string> {
-      let formData = new FormData();
-      formData.append("file", file);
-      let sampleNames: any;
-      const post: any = this._httpService.post("/api/input/expressionMatrix", formData)
-      return post.toPromise()
-        .then((response: any)=> response.text());
-  }
-   inputProbeMap(file: any): Promise<string> {
-       console.log('uploading probe map!!!');
-       let formData = new FormData();
-       formData.append("file", file);
-       const post: any = this._httpService.post("/api/input/probeMap", formData)
-       return post.toPromise()
-           .then((response: any) => response.text());
-   }
 
    performAnalysis(modifierInput: ModifierInput, algorithms: Algorithms): Promise<string> {
        console.log('Uploading input data :)' + modifierInput.group1Label);
-       //let formData = new FormData();
-       //formData.append("file", file);
        let resp: string = '';
        if (algorithms.diamond === true) {
            const post: any = this._httpService.post("/api/analysis/diamond", modifierInput)
            return post.toPromise()
                .then((response: any) => response.text());
-       } else if (algorithms.barrenas === true) {
-           const post: any = this._httpService.post("/api/analysis/barrenas", modifierInput)
+       } else if (algorithms.cliquesum === true) {
+           const post: any = this._httpService.post("/api/analysis/cliquesum", modifierInput)
            return post.toPromise()
                .then((response: any) => response.text());
        } else if (algorithms.mcode === true) {
@@ -45,13 +26,33 @@ export class InputParametersService {
            return post.toPromise()
                .then((response: any) => response.text());
        } else if (algorithms.md === true) {
-           const post: any = this._httpService.post("/api/analysis/md", modifierInput)
+           const post: any = this._httpService.post("/api/analysis/modulediscoverer", modifierInput)
            return post.toPromise()
                .then((response: any) => response.text());
-       } else {
-           const post: any = this._httpService.post("/api/input/probeMap", modifierInput)
+       } else if (algorithms.correlationclique === true) {
+           const post: any = this._httpService.post("/api/analysis/correlationclique", modifierInput)
            return post.toPromise()
                .then((response: any) => response.text());
+       }
+       else if (algorithms.moda === true) {
+           const post: any = this._httpService.post("/api/analysis/moda", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       }
+       else if (algorithms.dime === true) {
+           const post: any = this._httpService.post("/api/analysis/dime", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       }
+       else if (algorithms.diffcoex === true) {
+           const post: any = this._httpService.post("/api/analysis/diffcoex", modifierInput)
+           return post.toPromise()
+               .then((response: any) => response.text());
+       } else {       
+           return Promise.resolve(123)
+               .then((res) => {
+                   return "Error";
+               })
        }
        
    }

@@ -5,39 +5,45 @@
 #' @param datExpr1 A dataframe of the microarray matrix of the Control samples
 #' @param datExpr2 A dataframe of the microarray matrix of the Control samples
 #' @export
-moda <- function(datExpr1, datExpr2,
+moda <- function(MODifieR_input,
                  CuttingCriterion = "Density",
-                 indicator_datExpr1 = "control",
-                 indicator_datExpr2 = "patient",
                  specificTheta = 0.1, conservedTheta = 0.1,
-                 result_folder){
+                 result_folder, dataset_name = NULL){
   # Retrieve settings
   default_args <- formals()
   user_args <- as.list(match.call(expand.dots = T)[-1])
   settings <- c(user_args, default_args[!names(default_args) %in% names(user_args)])
+  
+  if (!is.null(dataset_name)){
+    settings$MODifieR_input <- dataset_name
+  }
+  
+  datExpr1 <- t(MODifieR_input$annotated_exprs_matrix[,MODifieR_input$group_indici[[1]]])
+  datExpr2 <- t(MODifieR_input$annotated_exprs_matrix[,MODifieR_input$group_indici[[2]]])
+  
 
-  CuttingCriterion = CuttingCriterion # could be Density or Modularity
-  indicator1 = indicator_datExpr1     # indicator for data profile 1
-  indicator2 = indicator_datExpr2   # indicator for data profile 2
+
+  indicator1 = names(MODifieR_input$group_indici)[1]     # indicator for data profile 1
+  indicator2 = names(MODifieR_input$group_indici)[2]  # indicator for data profile 2
   specificTheta = specificTheta #threshold to define condition specific modules
   conservedTheta = conservedTheta #threshold to define conserved modules
 
-  ResultFolder = result_folder
+  dir.create(result_folder, showWarnings = F)
 
-  intModules1 <- MODA::WeightedModulePartitionDensity(datExpr1,ResultFolder,
-                                                      indicator1,CuttingCriterion)
+  intModules1 <- MODA::WeightedModulePartitionHierarchical(datExpr = datExpr1, foldername = result_folder, 
+                                                           indicatename = indicator1, cutmethod = CuttingCriterion)
 
-  intModules2 <- MODA::WeightedModulePartitionDensity(datExpr2,ResultFolder,
+  intModules2 <- MODA::WeightedModulePartitionHierarchical(datExpr2,result_folder,
                                                       indicator2,CuttingCriterion)
   print("WMPD Indicators 1 done")
 
-  MODA::CompareAllNets(ResultFolder,intModules1,indicator1,intModules2,
+  MODA::CompareAllNets(result_folder,intModules1,indicator1,intModules2,
                        indicator2,specificTheta,conservedTheta)
-  setwd(paste0(ResultFolder, indicator2))
+  setwd(paste(result_folder, indicator2, sep = "/"))
   sep_moduleIDs = read.table("sepcificModuleid.txt", sep = "\n");
   cons_moduleIDs = read.table("conservedModuleid.txt", sep = "\n");
 
-  setwd(ResultFolder)
+  setwd(result_folder)
   modules_control_sep = list()
   modules_patient_sep = list()
   for (i in 1: length(t(sep_moduleIDs))){

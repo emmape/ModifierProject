@@ -92,7 +92,17 @@
                     </div>
                     <div class="leftCheckboxDiv">
                         <mat-checkbox [(checked)]="algorithms.md" (change)="mdChbChanged()" color="primary" class="checkbox">Module Discoverer</mat-checkbox>
-                        <mat-checkbox [(checked)]="algorithms.barrenas" (change)="barrenasChbChanged()" color="primary" class="checkbox">Barrenäs</mat-checkbox>
+                        <mat-checkbox [(checked)]="algorithms.cliquesum" (change)="cliquesumChbChanged()" color="primary" class="checkbox">Clique Sum</mat-checkbox>
+                    </div>
+                </div>
+                <div class="row-div">
+                    <div class="leftCheckboxDiv">
+                        <mat-checkbox [(checked)]="algorithms.correlationclique" (change)="correlationcliqueChbChanged()" color="primary" class="checkbox">Correlation Clique</mat-checkbox>
+                        <mat-checkbox [(checked)]="algorithms.diffcoex" (change)="diffcoexChbChanged()" color="primary" class="checkbox">DiffCoEx</mat-checkbox>
+                    </div>
+                    <div class="leftCheckboxDiv">
+                        <mat-checkbox [(checked)]="algorithms.moda" (change)="modaChbChanged()" color="primary" class="checkbox">Moda</mat-checkbox>
+                        <mat-checkbox [(checked)]="algorithms.dime" (change)="dimeChbChanged()" color="primary" class="checkbox">Dime</mat-checkbox>
                     </div>
                 </div>
                 <div class="sliderErrorDiv">
