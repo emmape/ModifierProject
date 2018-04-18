@@ -117,19 +117,6 @@
         </form>
     </mat-step>
 
-    <!-- Set parameters -->
-    <!--<mat-step [stepControl]="fourthFormGroup">
-        <ng-template matStepLabel>Set parameters</ng-template>
-        <mat-card class="selector-content-card">
-            <mat-card-title>Set additional parameters</mat-card-title>
-            <mat-card-subtitle>Choose maximum size of output gene list</mat-card-subtitle>
-            <br>
-            <mat-divider class="stepper-divider"></mat-divider>
-            <button class="next-button" mat-button matStepperPrevious>Back</button>
-            <button class="next-button" mat-button (click)="clickNextFourth(stepper)">Perform Analysis</button>
-        </mat-card>
-    </mat-step>-->
-
     <!-- Results -->
     <mat-step>
         <ng-template matStepLabel>Done</ng-template>
@@ -137,6 +124,7 @@
             <mat-card-title>Analysis is done!</mat-card-title>
             <br>
             {{result}}
+            <br>
             <mat-divider class="stepper-divider"></mat-divider>
             <button class="next-button" mat-button matStepperPrevious>Back</button>
         </mat-card>

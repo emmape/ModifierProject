@@ -10,7 +10,7 @@ namespace ModifieR.RCode
 {
     public class RScriptRunner
     {
-        public static string RunFromCmd(string filename, ModifierInputObject modifierInputObject, string methodOfAnalysis)
+        public static string RunFromCmd(string filename, ModifierInputObject modifierInputObject, string methodOfAnalysis, string id)
         {
             string sampleGroup1="";
             string sampleGroup2="";
@@ -28,7 +28,8 @@ namespace ModifieR.RCode
                     + sampleGroup1 + " " + sampleGroup2 + " "
                     + modifierInputObject.group1Label + " " + modifierInputObject.group2Label + " " 
                     + methodOfAnalysis + " "
-                    + Directory.GetCurrentDirectory() + @"\RCode\";
+                    + Directory.GetCurrentDirectory() + @"\RCode\"
+                    + " " + id;
 
                 info.RedirectStandardInput = false;
                 info.RedirectStandardOutput = true;
@@ -49,10 +50,17 @@ namespace ModifieR.RCode
                 throw new Exception("R Script failed: " + result, ex);
             }
         }
-        public static void saveFiles(string expressionMatrixContent, string probeMapContent)
+        public static string saveFiles(string expressionMatrixContent, string probeMapContent)
         {
-            File.WriteAllText(Directory.GetCurrentDirectory() + @"\RCode\expressionMatrix.txt", expressionMatrixContent);
-            File.WriteAllText(Directory.GetCurrentDirectory() + @"\RCode\probeMap.txt", probeMapContent);
+            string fileID = Guid.NewGuid().ToString();
+            File.WriteAllText(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\expressionMatrix" + fileID+".txt", expressionMatrixContent);
+            File.WriteAllText(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + fileID + ".txt", probeMapContent);
+            return fileID;
+        }
+        public static void deleteFiles(string id)
+        {
+            File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\expressionMatrix" + id + ".txt");
+            File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + id + ".txt");
         }
     }
 }

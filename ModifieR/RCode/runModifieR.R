@@ -2,8 +2,8 @@ args = commandArgs(trailingOnly=TRUE)
 setwd(args[6])
 source("create_input.R")
 
-exprMatrix <- read.csv("expressionMatrix.txt", stringsAsFactors=FALSE, sep=" ")
-probeMap <- read.csv("probeMap.txt", sep=" ")
+exprMatrix <- read.csv(paste("tmpFilestorage/expressionMatrix",args[7],".txt", sep=""), stringsAsFactors=FALSE, sep=" ")
+probeMap <- read.csv(paste("tmpFilestorage/probeMap",args[7],".txt", sep=""), sep=" ")
 probeMap <- data.frame(probeMap)
 
 indici1 <- strsplit(args[1], ";")
