@@ -30,6 +30,13 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\dist\89889688147bd7575d6327160d64e760.svg" />
+    <None Include="wwwroot\dist\main-client.js" />
+    <None Include="wwwroot\dist\main-client.js.map" />
+    <None Include="wwwroot\dist\vendor.js" />
+  </ItemGroup>
+
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

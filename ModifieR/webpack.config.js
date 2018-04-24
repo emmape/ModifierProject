@@ -25,7 +25,11 @@ module.exports = (env) => {
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]
         },
-        plugins: [new CheckerPlugin()]
+        plugins: [new CheckerPlugin()],
+        watchOptions: {
+            aggregateTimeout: 10000,
+            poll: 1000
+        }
     };
 
     // Configuration for client-side bundle suitable for running in browsers

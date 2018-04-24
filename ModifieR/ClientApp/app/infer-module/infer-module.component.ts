@@ -32,7 +32,9 @@ export class InferModuleComponent implements OnInit {
     groupName2Ctrl = new FormControl('', [Validators.required]);
     algorithmCtrl = new FormControl('');
     samples: string[] = ['S1', 'S2', 'S3', 'S4'];
+    originalSamples: string[] = ['S1', 'S2', 'S3', 'S4'];
     dragItem: any = null;
+    selectedForDrag: string[] = [];
 
     networks = [
         { value: 'upload', viewValue: 'Upload a New Network' },
@@ -48,6 +50,7 @@ export class InferModuleComponent implements OnInit {
                     this.modifierInputObject.expressionMatrixContent = file.file;
                     console.log(this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' '));
                     this.samples = this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' ');
+                    this.originalSamples = this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' ');
                 } else if (file.fileType === 'network') {
                     this.networkFile = file.file;
                 } else if (file.fileType === 'probeMap') {
@@ -77,21 +80,43 @@ export class InferModuleComponent implements OnInit {
     }
 
     recieveDropG1(e: any) {
-        this.modifierInputObject.sampleGroup1.push(this.dragItem);
+        //this.modifierInputObject.sampleGroup1.push(this.dragItem);
+        //this.modifierInputObject.sampleGroup1.push((this.originalSamples.indexOf(this.dragItem, 0) + 1).toString());
+        for (let i of this.selectedForDrag){
+            this.modifierInputObject.sampleGroup1.push((this.originalSamples.indexOf(i, 0) + 1).toString());
+        }
         this.dragItem = null;
+        this.selectedForDrag = [];
     }
     recieveDropG2(e: any) {
-        this.modifierInputObject.sampleGroup2.push(this.dragItem);
+        //this.modifierInputObject.sampleGroup2.push((this.originalSamples.indexOf(this.dragItem, 0)+1).toString());
+        for (let i of this.selectedForDrag) {
+            this.modifierInputObject.sampleGroup2.push((this.originalSamples.indexOf(i, 0) + 1).toString());
+        }
         this.dragItem = null;
+        this.selectedForDrag = [];
     }
     dragSample(e: any) {
         if (this.dragItem == null) {
             this.dragItem = e;
             var index = this.samples.indexOf(this.dragItem, 0);
-            if (index > -1) {
-                this.samples.splice(index, 1);
+            //if (index > -1) {
+            //    this.samples.splice(index, 1);
+            //}
+            for (let i of this.selectedForDrag) {
+                this.samples.splice(this.samples.indexOf(i, 0), 1)
             }
         }
+    }
+    sampleSelected(event: any, item: any) {
+        if (event.checked === true) {
+            this.selectedForDrag.push(item);
+            console.log('pushing: ' + item);
+        } else {
+            this.selectedForDrag.splice(this.selectedForDrag.indexOf(item, 0), 1);
+            console.log('popping: ' + item);
+        }
+        
     }
 
     diamondChbChanged() {

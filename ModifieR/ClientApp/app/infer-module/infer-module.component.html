@@ -51,7 +51,7 @@
                     <div class="dropArea">
                         <mat-card-subtitle class="sampleLabel">Your Samples</mat-card-subtitle>
                         <mat-chip-list role="list">
-                            <mat-chip class="sampleChip" draggable (dragleave)="dragSample(item)" *ngFor="let item of samples">{{item}}</mat-chip>
+                            <mat-chip class="sampleChip" draggable (dragleave)="dragSample(item)" *ngFor="let item of samples" disabled="true"><mat-checkbox (change)="sampleSelected($event, item)">{{item}}</mat-checkbox></mat-chip>
                         </mat-chip-list>
                     </div>
                     <div class="dropArea" droppable (drop)="recieveDropG1($event)">

@@ -2,17 +2,32 @@ args = commandArgs(trailingOnly=TRUE)
 setwd(args[6])
 source("create_input.R")
 
+######## Formatting input #####################
 exprMatrix <- read.csv(paste("tmpFilestorage/expressionMatrix",args[7],".txt", sep=""), stringsAsFactors=FALSE, sep=" ")
 probeMap <- read.csv(paste("tmpFilestorage/probeMap",args[7],".txt", sep=""), sep=" ")
 probeMap <- data.frame(probeMap)
+#indici1 <- strsplit(args[1], ";")
+#indici2 <- strsplit(args[2], ";")
+#label1 <- args[3]
+#label2 <- args[4]
+indici1 <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)
+indici2 <- c(16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33, 34)
+label1 <- 'Control'
+label2 <- "Disease"
+modifierInput <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
 
-indici1 <- strsplit(args[1], ";")
-indici2 <- strsplit(args[2], ";")
-label1 <- args[3]
-label2 <- args[4]
+####### Creating a modifierInput object ###############
 
 #i <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
+print("After input creation!")
+
+######## Getting PPI network, local or download ###########
 #network <- read.csv("network.txt", stringsAsFactors=FALSE, sep=" ")
+#source("general_functions.R")
+#library("STRINGdb")
+#network <- get_string_DB_ppi()
+
+####### Performing selected analysis ######################
 if(args[5] == "diamond"){
 	source("R/diamond.R")
 	#diamond <- diamond(network, i)
@@ -55,3 +70,4 @@ if(args[5] == "diamond"){
 	print("ModuleDiscoverer output!")
 }
 
+print(geterrmessage())
