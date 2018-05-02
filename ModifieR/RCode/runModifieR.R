@@ -6,19 +6,16 @@ source("create_input.R")
 exprMatrix <- read.csv(paste("tmpFilestorage/expressionMatrix",args[7],".txt", sep=""), stringsAsFactors=FALSE, sep=" ")
 probeMap <- read.csv(paste("tmpFilestorage/probeMap",args[7],".txt", sep=""), sep=" ")
 probeMap <- data.frame(probeMap)
-#indici1 <- strsplit(args[1], ";")
-#indici2 <- strsplit(args[2], ";")
-#label1 <- args[3]
-#label2 <- args[4]
-indici1 <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)
-indici2 <- c(16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33, 34)
-label1 <- 'Control'
-label2 <- "Disease"
-modifierInput <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
+indici1 <- strsplit(args[1], ";")
+indici2 <- strsplit(args[2], ";")
+label1 <- args[3]
+label2 <- args[4]
 
 ####### Creating a modifierInput object ###############
 
-#i <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
+#modifierInput <- MODifieRDev::create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
+modifierInput <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
+write.csv(modifierInput$diff_genes, file = "tmpFilestorage/output.csv")
 print("After input creation!")
 
 ######## Getting PPI network, local or download ###########
@@ -30,42 +27,42 @@ print("After input creation!")
 ####### Performing selected analysis ######################
 if(args[5] == "diamond"){
 	source("R/diamond.R")
-	#diamond <- diamond(network, i)
+	#diamond <- diamond(network, modifierInput)
 	#print(diamond$module_genes)
 	print("diamond output!")
 } else if(args[5] == "cliqueSum"){
 	source("R/clique_sum.R")
-	#cliqueSum <- clique_sum(i, network)
+	#cliqueSum <- clique_sum(modifierInput, network)
 	#print(cliqueSum)
 	print("cliqueSum output!")
 }else if(args[5] == "correlationClique"){
 	source("R/correlation_clique.R")
-	#correlationClique <- correlation_clique(i, network)
+	#correlationClique <- correlation_clique(modifierInput, network)
 	#print(correlationClique)
 	print("correlationClique output!")
 }else if(args[5] == "diffCoEx"){
 	source("R/diffcoex.R")
-	#diffcoex <- diffcoex(i)
+	#diffcoex <- diffcoex(modifierInput)
 	#print(diffcoex)
 	print("DiffCoEx output!")
 }else if(args[5] == "dime"){
 	source("R/dime.R")
-	#dime <- dime(i)
+	#dime <- dime(modifierInput)
 	#print(dime)
 	print("Dime output!")  
 }else if(args[5] == "mcode"){
 	source("R/mcode.R")
-	#mcode <- mcode(i, network)
+	#mcode <- mcode(modifierInput, network)
 	#print(mcode)
 	print("Mcode output!")
 }else if(args[5] == "moda"){
 	source("R/moda.R")
-	#moda <- moda(i)
+	#moda <- moda(modifierInput)
 	#print(moda)
 	print("Moda output!")
 }else if(args[5] == "moduleDiscoverer"){
   	source("R/modulediscoverer.R")
-	#modulediscoverer <- modulediscoverer(i, network)
+	#modulediscoverer <- modulediscoverer(modifierInput, network)
 	#print(modulediscoverer)
 	print("ModuleDiscoverer output!")
 }

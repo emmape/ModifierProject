@@ -27,7 +27,6 @@
     <Folder Include="ClientApp\Images\" />
     <Folder Include="ClientApp\CSS\" />
     <Folder Include="RCode\tmpFilestorage\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

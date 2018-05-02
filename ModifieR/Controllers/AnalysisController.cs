@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModifieR.Models;
 using ModifieR.RCode;
+using ModifieR.Services;
 
 namespace ModifieR.Controllers
 {
@@ -15,13 +16,16 @@ namespace ModifieR.Controllers
     [Route("api/analysis")]
     public class AnalysisController : Controller
     {
+        MailService mailService = new MailService();
         [HttpPost("diamond")]
         public async Task<IActionResult> analyseDiamond([FromBody] ModifierInputObject input)
         {
-            string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", id);
-            RScriptRunner.deleteFiles(id);
-            return Ok("ResultFrom R-script: " + result);
+            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            //string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", id);
+            //RScriptRunner.deleteFiles(id);
+            mailService.sendEmail();
+            //return Ok("ResultFrom R-script: " + result);
+            return Ok("Email Sent! ");
         }
 
         [HttpPost("cliquesum")]
