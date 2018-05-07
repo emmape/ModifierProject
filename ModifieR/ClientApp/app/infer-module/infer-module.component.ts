@@ -120,6 +120,7 @@ export class InferModuleComponent implements OnInit {
     }
 
     diamondChbChanged() {
+        console.log(this.algorithms.diamond);
         if (this.algorithms.diamond === false) {
             this.algorithms.diamond = true;
             this.countSelected++;
@@ -255,8 +256,8 @@ export class InferModuleComponent implements OnInit {
     async clickNextSecond(stepper: any) {
         this.setSecondFormGroupValid();
         if (this.secondFormGroup.valid) {
-            this.result = await this.analyzeService.performAnalysis(this.modifierInputObject, this.algorithms);
             stepper.next();
+            this.result = await this.analyzeService.performAnalysis(this.modifierInputObject, this.algorithms);
         }
     }
     clickNextThird(stepper: any): void {

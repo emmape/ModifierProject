@@ -15,6 +15,7 @@ import {
     MatSidenavModule, MatCheckboxModule, MatToolbarModule, MatDialogModule, MatTooltipModule,
     MatChipsModule
 } from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InferModuleComponent } from './infer-module/infer-module.component';
@@ -58,6 +59,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
         //MatDividerModule,
         MatListModule,
         MatTooltipModule,
+        MatProgressSpinnerModule,
         FormsModule,
         ReactiveFormsModule,
         NgDragDropModule.forRoot(),

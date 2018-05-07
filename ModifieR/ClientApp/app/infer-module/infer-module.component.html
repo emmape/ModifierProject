@@ -105,10 +105,21 @@
                         <mat-checkbox [(checked)]="algorithms.dime" (change)="dimeChbChanged()" color="primary" class="checkbox">Dime</mat-checkbox>
                     </div>
                 </div>
-                <div class="sliderErrorDiv">
+                <!--<div class="sliderErrorDiv">
                     <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">Create a Combined Result</mat-slide-toggle>
                     <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
-                </div>
+                </div>-->
+
+                <section *ngIf="this.algorithms.diamond===true">
+                    <mat-card-subtitle>The algorithm you chose will take some time to calculate. 
+                    Please enter your email address, and we will send you the results once they are done.</mat-card-subtitle>
+                    <mat-form-field class="sampleInput">
+                        <input matInput placeholder="Enter your Email Address"  [(ngModel)] = "modifierInputObject.email" [ngModelOptions]="{standalone: true}">
+                        <!--<mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                            Please enter a valid email address
+                        </mat-error>-->
+                    </mat-form-field>
+                </section>
 
                 <!--<mat-divider class="stepper-divider"></mat-divider>-->
                 <button class="next-button" mat-button matStepperPrevious>Back</button>
@@ -121,12 +132,17 @@
     <mat-step>
         <ng-template matStepLabel>Done</ng-template>
         <mat-card>
-            <mat-card-title>Analysis is done!</mat-card-title>
-            <br>
-            {{result}}
-            <br>
+            <section *ngIf="result === ''">
+                <mat-spinner ></mat-spinner>
+            </section>
+            <section  *ngIf="result !== ''">
+                <mat-card-title>Done!</mat-card-title>
+                <br>
+                {{result}}
+                <br>
+            </section>
             <mat-divider class="stepper-divider"></mat-divider>
-            <button class="next-button" mat-button matStepperPrevious>Back</button>
+           <!-- <button class="next-button" mat-button matStepperPrevious>Back</button>-->
         </mat-card>
     </mat-step>
 </mat-horizontal-stepper>

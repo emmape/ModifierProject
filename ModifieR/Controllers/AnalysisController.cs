@@ -23,9 +23,9 @@ namespace ModifieR.Controllers
             //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
             //string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", id);
             //RScriptRunner.deleteFiles(id);
-            mailService.sendEmail();
+            mailService.sendEmail(input.email);
             //return Ok("ResultFrom R-script: " + result);
-            return Ok("Email Sent! ");
+            return Ok("An email containing your results has been sent!");
         }
 
         [HttpPost("cliquesum")]

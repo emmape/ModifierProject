@@ -15,8 +15,11 @@ export class AnalyzeService {
        let resp: string = '';
        if (algorithms.diamond === true) {
            const post: any = this._httpService.post("/api/analysis/diamond", modifierInput)
-           return post.toPromise()
-               .then((response: any) => response.text());
+           let s: Promise<string> = post.toPromise().then((response: any) => response.text());
+           return Promise.resolve(123)
+               .then((res) => {
+                   return "An email will be sent to you once the results are finished :) \n This could take a while, up to 24 hours. \ If you have any questions, please send an email to modifiermail@gmail.com";
+               })
        } else if (algorithms.cliquesum === true) {
            const post: any = this._httpService.post("/api/analysis/cliquesum", modifierInput)
            return post.toPromise()

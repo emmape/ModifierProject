@@ -13,7 +13,6 @@ namespace ModifieR.Models
         public string group2Label { get; set; }
         public List<string> sampleGroup1 { get; set; }
         public List<string> sampleGroup2 { get; set; }
-
-
+        public string email { get; set; }
     }
 }
