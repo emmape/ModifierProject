@@ -11,7 +11,7 @@ namespace ModifieR.Services
     public class MailService
     {
 
-        public async void sendEmail(string email)
+        public async void sendEmail(string email, string id)
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
             client.UseDefaultCredentials = false;
@@ -21,7 +21,7 @@ namespace ModifieR.Services
             mailMessage.From = new MailAddress("modifiermail@gmail.com");
             mailMessage.To.Add(email);
 
-            string file = "RCode/tmpFilestorage/probeMap409bc0ad-6c33-4bba-a480-2b36149c370d.txt";
+            string file = "RCode/tmpFilestorage/output"+ id+".csv";
             Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
             ContentDisposition disposition = data.ContentDisposition;
             disposition.CreationDate = System.IO.File.GetCreationTime(file);

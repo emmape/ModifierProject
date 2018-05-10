@@ -10,7 +10,7 @@ namespace ModifieR.RCode
 {
     public class RScriptRunner
     {
-        public static string RunFromCmd(string filename, ModifierInputObject modifierInputObject, string methodOfAnalysis, string id)
+        public static async Task<string> RunFromCmd(string filename, ModifierInputObject modifierInputObject, string methodOfAnalysis, string id)
         {
             string sampleGroup1="";
             string sampleGroup2="";

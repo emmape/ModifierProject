@@ -133,16 +133,25 @@
         <ng-template matStepLabel>Done</ng-template>
         <mat-card>
             <section *ngIf="result === ''">
-                <mat-spinner ></mat-spinner>
-            </section>
-            <section  *ngIf="result !== ''">
+                <section *ngIf="algorithms.cliquesum">
+                    <mat-card-subtitle>Please wait for a few minutes. Your files are being analyzed.</mat-card-subtitle>
+                    </section>
+                    <div class="progressSpinner">
+                        <mat-spinner></mat-spinner>
+                    </div>
+                </section>
+            <section *ngIf="result !== ''">
                 <mat-card-title>Done!</mat-card-title>
                 <br>
-                {{result}}
-                <br>
-            </section>
-            <mat-divider class="stepper-divider"></mat-divider>
-           <!-- <button class="next-button" mat-button matStepperPrevious>Back</button>-->
-        </mat-card>
+                <section *ngIf="algorithms.diamond">
+                    {{result}}
+                </section>
+                <section *ngIf="algorithms.cliquesum">
+                    <button class="next-button" mat-button (click)="result.click()">Download result</button>
+                    </section>
+                    <br>
+                </section>
+                <mat-divider class="stepper-divider"></mat-divider>
+</mat-card>
     </mat-step>
 </mat-horizontal-stepper>

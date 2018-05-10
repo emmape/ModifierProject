@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using ModifieR.Models;
 using ModifieR.RCode;
 using ModifieR.Services;
+using System.IO;
 
 namespace ModifieR.Controllers
 {
@@ -20,10 +22,10 @@ namespace ModifieR.Controllers
         [HttpPost("diamond")]
         public async Task<IActionResult> analyseDiamond([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            //string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", id);
-            //RScriptRunner.deleteFiles(id);
-            mailService.sendEmail(input.email);
+            string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", id);
+            RScriptRunner.deleteFiles(id);
+            mailService.sendEmail(input.email, id);
             //return Ok("ResultFrom R-script: " + result);
             return Ok("An email containing your results has been sent!");
         }
@@ -32,15 +34,22 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseCliquesum([FromBody] ModifierInputObject input)
         {
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "cliqueSum", id);
+            //string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "cliqueSum", id);
             RScriptRunner.deleteFiles(id);
-            return Ok("ResultFrom R-script: " + result);
+
+            IFileProvider provider = new PhysicalFileProvider(Directory.GetCurrentDirectory()+"\\RCode\\tmpFilestorage");
+            IFileInfo fileInfo = provider.GetFileInfo("probeMap409bc0ad-6c33-4bba-a480-2b36149c370d.txt");
+            var readStream = fileInfo.CreateReadStream();
+            var mimeType = "application/vnd.ms-excel";
+            return File(readStream, mimeType, "probeMap409bc0ad-6c33-4bba-a480-2b36149c370d.txt");
+            //return File(stream, "tmpFilestorage\\probeMap409bc0ad-6c33-4bba-a480-2b36149c370d.txt");
+            //return Ok("tmpFilestorage\\probeMap409bc0ad-6c33-4bba-a480-2b36149c370d.txt");
         }
         [HttpPost("correlationclique")]
         public async Task<IActionResult> analysecorrelationClique([FromBody] ModifierInputObject input)
         {
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "correlationClique", id);
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "correlationClique", id);
             RScriptRunner.deleteFiles(id);
             return Ok("ResultFrom R-script: " + result);
         }
@@ -48,7 +57,7 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analysediffCoEx([FromBody] ModifierInputObject input)
         {
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "diffCoEx", id);
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "diffCoEx", id);
             RScriptRunner.deleteFiles(id);
             return Ok("ResultFrom R-script: " + result);
         }
@@ -56,7 +65,7 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseDime([FromBody] ModifierInputObject input)
         {
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "dime", id);
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "dime", id);
             RScriptRunner.deleteFiles(id);
             return Ok("ResultFrom R-script: " + result);
         }
@@ -64,7 +73,7 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseModa([FromBody] ModifierInputObject input)
         {
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "moda", id);
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "moda", id);
             RScriptRunner.deleteFiles(id);
             return Ok("ResultFrom R-script: " + result);
         }
@@ -72,7 +81,7 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseMcode([FromBody] ModifierInputObject input)
         {
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "mcode", id);
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "mcode", id);
             RScriptRunner.deleteFiles(id);
             return Ok("ResultFrom R-script: " + result);
         }
@@ -80,7 +89,7 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseMd([FromBody] ModifierInputObject input)
         {
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
-            string result = RScriptRunner.RunFromCmd("runModifieR.R", input, "moduleDiscoverer", id);
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "moduleDiscoverer", id);
             RScriptRunner.deleteFiles(id);
             return Ok("ResultFrom R-script: " + result);
         }

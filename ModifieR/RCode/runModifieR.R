@@ -3,19 +3,20 @@ setwd(args[6])
 source("create_input.R")
 
 ######## Formatting input #####################
-exprMatrix <- read.csv(paste("tmpFilestorage/expressionMatrix",args[7],".txt", sep=""), stringsAsFactors=FALSE, sep=" ")
-probeMap <- read.csv(paste("tmpFilestorage/probeMap",args[7],".txt", sep=""), sep=" ")
-probeMap <- data.frame(probeMap)
-indici1 <- strsplit(args[1], ";")
-indici2 <- strsplit(args[2], ";")
-label1 <- args[3]
-label2 <- args[4]
+#exprMatrix <- read.csv(paste("tmpFilestorage/expressionMatrix",args[7],".txt", sep=""), stringsAsFactors=FALSE, sep=" ")
+#probeMap <- read.csv(paste("tmpFilestorage/probeMap",args[7],".txt", sep=""), sep=" ")
+#probeMap <- data.frame(probeMap)
+#indici1 <- strsplit(args[1], ";")
+#indici2 <- strsplit(args[2], ";")
+#label1 <- args[3]
+#label2 <- args[4]
 
 ####### Creating a modifierInput object ###############
 
 #modifierInput <- MODifieRDev::create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
-modifierInput <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
-write.csv(modifierInput$diff_genes, file = "tmpFilestorage/output.csv")
+#modifierInput <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
+#write.csv(modifierInput$diff_genes, file = "tmpFilestorage/output",args[7],".csv")
+write.csv("Testing testing", file = "tmpFilestorage/output",args[7],".csv")
 print("After input creation!")
 
 ######## Getting PPI network, local or download ###########

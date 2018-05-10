@@ -23,7 +23,9 @@ export class AnalyzeService {
        } else if (algorithms.cliquesum === true) {
            const post: any = this._httpService.post("/api/analysis/cliquesum", modifierInput)
            return post.toPromise()
-               .then((response: any) => response.text());
+               .then((response: any) =>
+                   this.downloadFile(response.text()));
+                   //response.text());
        } else if (algorithms.mcode === true) {
            const post: any = this._httpService.post("/api/analysis/mcode", modifierInput)
            return post.toPromise()
@@ -58,6 +60,17 @@ export class AnalyzeService {
                })
        }
        
+  }
+
+   downloadFile(data: Response): any {
+       var blob = new Blob([data], { type: 'text/csv' });
+       var url = window.URL.createObjectURL(blob);
+       var anchor = document.createElement("a");
+       anchor.download = "ModifieRanalysis.csv";
+       anchor.href = url;
+       return anchor; 
+       //anchor.click()
+      // window.open(url);
    }
 
  
