@@ -11,7 +11,7 @@ namespace ModifieR.Services
     public class MailService
     {
 
-        public async void sendEmail(string email, string id)
+        public async void sendEmail(string email, string id, string algorithm)
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
             client.UseDefaultCredentials = false;
@@ -21,7 +21,7 @@ namespace ModifieR.Services
             mailMessage.From = new MailAddress("modifiermail@gmail.com");
             mailMessage.To.Add(email);
 
-            string file = "RCode/tmpFilestorage/output"+ id+".csv";
+            string file = "RCode/tmpFilestorage/output"+algorithm+ id+".csv";
             Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
             ContentDisposition disposition = data.ContentDisposition;
             disposition.CreationDate = System.IO.File.GetCreationTime(file);
@@ -30,8 +30,8 @@ namespace ModifieR.Services
             // Add the file attachment to this e-mail message.
             mailMessage.Attachments.Add(data);
 
-            mailMessage.Body = "Hi, \n Your Modifier analysis is now done! \n Please find attatched a file containing your results. \n \n Best Regards \n Modifier Web";
-            mailMessage.Subject = "Your ModifieR Analysis is done!";
+            mailMessage.Body = "Hi, \n Your Modifier analysis using "+algorithm+"-algorithm is now done! \n Please find attatched a file containing your results. \n \n Best Regards \n Modifier Web";
+            mailMessage.Subject = "Your ModifieR "+algorithm+" Analysis is done!";
             //client.Send(mailMessage);
             using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
             {

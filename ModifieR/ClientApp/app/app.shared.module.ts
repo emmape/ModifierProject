@@ -13,7 +13,7 @@ import {
     MatButtonModule, MatRadioModule, MatListModule,
     MatIconModule, MatCardModule, MatSlideToggleModule,
     MatSidenavModule, MatCheckboxModule, MatToolbarModule, MatDialogModule, MatTooltipModule,
-    MatChipsModule
+    MatChipsModule, MatTabsModule
 } from '@angular/material';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -56,6 +56,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
         MatStepperModule,
         MatCardModule,
         MatChipsModule,
+        MatTabsModule,
         //MatDividerModule,
         MatListModule,
         MatTooltipModule,

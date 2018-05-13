@@ -25,7 +25,7 @@ namespace ModifieR.Controllers
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", id);
             RScriptRunner.deleteFiles(id);
-            mailService.sendEmail(input.email, id);
+            mailService.sendEmail(input.email, id, "diamond");
             //return Ok("ResultFrom R-script: " + result);
             return Ok("An email containing your results has been sent!");
         }
@@ -38,10 +38,10 @@ namespace ModifieR.Controllers
             RScriptRunner.deleteFiles(id);
             
             IFileProvider provider = new PhysicalFileProvider(Directory.GetCurrentDirectory()+"\\RCode\\tmpFilestorage");
-            IFileInfo fileInfo = provider.GetFileInfo("output"+id+".csv");
+            IFileInfo fileInfo = provider.GetFileInfo("outputcliqueSum"+id+".csv");
             var readStream = fileInfo.CreateReadStream();
             var mimeType = "application/vnd.ms-excel";
-            return File(readStream, mimeType, "output" + id + ".csv");
+            return File(readStream, mimeType, "outputcliqueSum" + id + ".csv");
             //return File(stream, "tmpFilestorage\\probeMap409bc0ad-6c33-4bba-a480-2b36149c370d.txt");
             //return Ok("tmpFilestorage\\probeMap409bc0ad-6c33-4bba-a480-2b36149c370d.txt");
         }

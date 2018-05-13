@@ -21,7 +21,6 @@ export class InferModuleComponent implements OnInit {
     algorithms: Algorithms = new Algorithms();
     chosenAlgorithms: string[] = [];
     result: any = '';
-    results: any[] = [];
 
     selectedNetwork = '';
     comboChoice = false;
@@ -126,11 +125,11 @@ export class InferModuleComponent implements OnInit {
         console.log(this.algorithms.diamond);
         if (this.algorithms.diamond === false) {
             this.algorithms.diamond = true;
-            this.chosenAlgorithms.push('diamond');
+            this.chosenAlgorithms.push('Diamond');
             this.countSelected++;
         } else {
             this.algorithms.diamond = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('diamond', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('Diamond', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -143,11 +142,11 @@ export class InferModuleComponent implements OnInit {
     mcodeChbChanged() {
         if (this.algorithms.mcode === false) {
             this.algorithms.mcode = true;
-            this.chosenAlgorithms.push('mcode');
+            this.chosenAlgorithms.push('MCODE');
             this.countSelected++;
         } else {
             this.algorithms.mcode = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('mcode', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('MCODE', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -160,11 +159,11 @@ export class InferModuleComponent implements OnInit {
     mdChbChanged() {
         if (this.algorithms.md === false) {
             this.algorithms.md = true;
-            this.chosenAlgorithms.push('md');
+            this.chosenAlgorithms.push('ModuleDiscoverer');
             this.countSelected++;
         } else {
             this.algorithms.md = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('md', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('ModuleDiscoverer', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -177,11 +176,11 @@ export class InferModuleComponent implements OnInit {
     cliquesumChbChanged() {
         if (this.algorithms.cliquesum === false) {
             this.algorithms.cliquesum = true;
-            this.chosenAlgorithms.push('cliqueSum');
+            this.chosenAlgorithms.push('CliqueSum');
             this.countSelected++;
         } else {
             this.algorithms.cliquesum = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('cliqueSum', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('CliqueSum', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -194,11 +193,11 @@ export class InferModuleComponent implements OnInit {
     correlationcliqueChbChanged() {
         if (this.algorithms.correlationclique === false) {
             this.algorithms.correlationclique = true;
-            this.chosenAlgorithms.push('correlationClique');
+            this.chosenAlgorithms.push('CorrelationClique');
             this.countSelected++;
         } else {
             this.algorithms.correlationclique = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('correlationClique', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('CorrelationClique', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -211,11 +210,11 @@ export class InferModuleComponent implements OnInit {
     diffcoexChbChanged() {
         if (this.algorithms.diffcoex === false) {
             this.algorithms.diffcoex = true;
-            this.chosenAlgorithms.push('diffCoEx');
+            this.chosenAlgorithms.push('DiffCoEx');
             this.countSelected++;
         } else {
             this.algorithms.diffcoex = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('diffCoEx', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('DiffCoEx', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -228,11 +227,11 @@ export class InferModuleComponent implements OnInit {
     modaChbChanged() {
         if (this.algorithms.moda === false) {
             this.algorithms.moda = true;
-            this.chosenAlgorithms.push('moda');
+            this.chosenAlgorithms.push('Moda');
             this.countSelected++;
         } else {
             this.algorithms.moda = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('moda', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('Moda', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -245,11 +244,11 @@ export class InferModuleComponent implements OnInit {
     dimeChbChanged() {
         if (this.algorithms.dime === false) {
             this.algorithms.dime = true;
-            this.chosenAlgorithms.push('dime');
+            this.chosenAlgorithms.push('Dime');
             this.countSelected++;
         } else {
             this.algorithms.dime = false;
-            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('dime', 0), 1)
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('Dime', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -324,14 +323,5 @@ export class InferModuleComponent implements OnInit {
         } else {
             this.algorithmCtrl.setErrors({ 'incorrect': true });
         }
-    }
-    downloadResult() {
-        //let res: any = this.result[0];
-        //console.log('result: ' + res);
-        //window.open(res.href);
-        //res.click();
-        //this.result[1].a.click();
-        
-        
     }
 }

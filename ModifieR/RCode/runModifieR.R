@@ -23,7 +23,7 @@ label2 <- args[4]
 #modifierInput <- MODifieRDev::create_input(exprMatrix, probeMap, indici1, indici2, label1, label2, T, T, T)
 #modifierInput <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
 #write.csv(modifierInput$diff_genes, file = paste("tmpFilestorage/output","50b52162-5427-4876-96ed-f9c54beee1a2",".csv", sep=""))
-write.csv("Testing testing", file = paste("tmpFilestorage/output",args[7],".csv", sep=""))
+#write.csv("Testing testing", file = paste("tmpFilestorage/output",args[7],".csv", sep=""))
 #print(args[7])
 
 ######## Getting PPI network, local or download ###########
@@ -38,41 +38,49 @@ if(args[5] == "diamond"){
 	#source("R/diamond.R")
 	#diamond <- MODifieRDev::diamond(modifierInput, network)
 	#print(diamond$module_genes)
+	write.csv("Testing diamond", file = paste("tmpFilestorage/outputdiamond",args[7],".csv", sep=""))
 	print("diamond output!")
 } else if(args[5] == "cliqueSum"){
 #	source("R/clique_sum.R")
 	#cliqueSum <- MODifieRDev::clique_sum(modifierInput, network)
 	#print(cliqueSum)
+	write.csv("Testing cliquesum", file = paste("tmpFilestorage/outputcliqueSum",args[7],".csv", sep=""))
 	print("cliqueSum output!")
 }else if(args[5] == "correlationClique"){
 	#source("R/correlation_clique.R")
 	#correlationClique <- MODifieRDev::correlation_clique(modifierInput, network)
 	#print(correlationClique)
+	write.csv("Testing correlationClique", file = paste("tmpFilestorage/outputcorrelationClique",args[7],".csv", sep=""))
 	print("correlationClique output!")
 }else if(args[5] == "diffCoEx"){
 	#source("R/diffcoex.R")
 	#diffcoex <- MODifieRDev::diffcoex(modifierInput)
 	#print(diffcoex)
+	write.csv("Testing diffcoex", file = paste("tmpFilestorage/outputdiffCoEx",args[7],".csv", sep=""))
 	print("DiffCoEx output!")
 }else if(args[5] == "dime"){
 	#source("R/dime.R")
 	#dime <- MODifieRDev::dime(modifierInput)
 	#print(dime)
+	write.csv("Testing dime", file = paste("tmpFilestorage/outputdime",args[7],".csv", sep=""))
 	print("Dime output!")  
 }else if(args[5] == "mcode"){
 	#source("R/mcode.R")
 	#mcode <- MODifieRDev::mod_mcode(modifierInput, network)
 	#print(mcode)
+	write.csv("Testing mcode", file = paste("tmpFilestorage/outputmcode",args[7],".csv", sep=""))
 	print("Mcode output!")
 }else if(args[5] == "moda"){
 	#source("R/moda.R")
 	#moda <- MODifieRDev::moda(modifierInput, "Density", 0.1, 0.1, "tmpFilestorage" )
 	#print(moda)
+	write.csv("Testing moda", file = paste("tmpFilestorage/outputmoda",args[7],".csv", sep=""))
 	print("Moda output!")
 }else if(args[5] == "moduleDiscoverer"){
   #source("R/modulediscoverer.R")
 	#modulediscoverer <- MODifieRDev::modulediscoverer(modifierInput, network)
 	#print(modulediscoverer)
+	write.csv("Testing MD", file = paste("tmpFilestorage/outputmoduleDiscoverer",args[7],".csv", sep=""))
 	print("ModuleDiscoverer output!")
 }
 

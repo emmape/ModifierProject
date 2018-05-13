@@ -90,7 +90,7 @@ export class AnalyzeService {
        anchor.download = "ModifieRanalysis.csv";
        anchor.href = url;
       
-       anchor.click();
+       //anchor.click();
        return anchor; 
        //window.open(url);
       // return "some return";
