@@ -1,5 +1,5 @@
 
 export class ReadFile  {
-  fileType: string
+    fileType: string = '';
   file: any
 }

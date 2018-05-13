@@ -10,7 +10,7 @@ import { AnalyzeService } from '../../services/analyze.service';
     //  inputs:['activeColor','baseColor','overlayColor']
 })
 export class FileUploaderComponent implements OnInit {
-    @Input() filetype: string;
+    @Input() filetype: string='';
     activeColor = 'green';
     baseColor = '#ccc';
     overlayColor = 'rgba(255,255,255,0.5)';

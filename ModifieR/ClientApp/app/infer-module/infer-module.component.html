@@ -144,10 +144,10 @@
                 <mat-card-title>Done!</mat-card-title>
                 <br>
                 <section *ngIf="algorithms.diamond">
-                    {{result}}
+                    {{result[0]}}
                 </section>
                 <section *ngIf="algorithms.cliquesum">
-                    <button class="next-button" mat-button (click)="result.click()">Download result</button>
+                    <button class="next-button" mat-button (click)="result[1].click()" >Download result</button>
                     </section>
                     <br>
                 </section>

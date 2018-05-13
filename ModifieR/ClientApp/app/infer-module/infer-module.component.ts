@@ -7,6 +7,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModifierInput } from '../models/ModifierInput';
 import { Algorithms } from '../models/Algorithms';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -18,7 +19,9 @@ export class InferModuleComponent implements OnInit {
 
     modifierInputObject: ModifierInput = new ModifierInput();
     algorithms: Algorithms = new Algorithms();
-    result: string = '';
+    chosenAlgorithms: string[] = [];
+    result: any = '';
+    results: any[] = [];
 
     selectedNetwork = '';
     comboChoice = false;
@@ -123,9 +126,11 @@ export class InferModuleComponent implements OnInit {
         console.log(this.algorithms.diamond);
         if (this.algorithms.diamond === false) {
             this.algorithms.diamond = true;
+            this.chosenAlgorithms.push('diamond');
             this.countSelected++;
         } else {
             this.algorithms.diamond = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('diamond', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -138,9 +143,11 @@ export class InferModuleComponent implements OnInit {
     mcodeChbChanged() {
         if (this.algorithms.mcode === false) {
             this.algorithms.mcode = true;
+            this.chosenAlgorithms.push('mcode');
             this.countSelected++;
         } else {
             this.algorithms.mcode = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('mcode', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -153,9 +160,11 @@ export class InferModuleComponent implements OnInit {
     mdChbChanged() {
         if (this.algorithms.md === false) {
             this.algorithms.md = true;
+            this.chosenAlgorithms.push('md');
             this.countSelected++;
         } else {
             this.algorithms.md = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('md', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -168,9 +177,11 @@ export class InferModuleComponent implements OnInit {
     cliquesumChbChanged() {
         if (this.algorithms.cliquesum === false) {
             this.algorithms.cliquesum = true;
+            this.chosenAlgorithms.push('cliqueSum');
             this.countSelected++;
         } else {
             this.algorithms.cliquesum = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('cliqueSum', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -183,9 +194,11 @@ export class InferModuleComponent implements OnInit {
     correlationcliqueChbChanged() {
         if (this.algorithms.correlationclique === false) {
             this.algorithms.correlationclique = true;
+            this.chosenAlgorithms.push('correlationClique');
             this.countSelected++;
         } else {
             this.algorithms.correlationclique = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('correlationClique', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -198,9 +211,11 @@ export class InferModuleComponent implements OnInit {
     diffcoexChbChanged() {
         if (this.algorithms.diffcoex === false) {
             this.algorithms.diffcoex = true;
+            this.chosenAlgorithms.push('diffCoEx');
             this.countSelected++;
         } else {
             this.algorithms.diffcoex = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('diffCoEx', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -213,9 +228,11 @@ export class InferModuleComponent implements OnInit {
     modaChbChanged() {
         if (this.algorithms.moda === false) {
             this.algorithms.moda = true;
+            this.chosenAlgorithms.push('moda');
             this.countSelected++;
         } else {
             this.algorithms.moda = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('moda', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -228,9 +245,11 @@ export class InferModuleComponent implements OnInit {
     dimeChbChanged() {
         if (this.algorithms.dime === false) {
             this.algorithms.dime = true;
+            this.chosenAlgorithms.push('dime');
             this.countSelected++;
         } else {
             this.algorithms.dime = false;
+            this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('dime', 0), 1)
             this.countSelected--;
         }
         if (this.countSelected > 1) {
@@ -257,7 +276,22 @@ export class InferModuleComponent implements OnInit {
         this.setSecondFormGroupValid();
         if (this.secondFormGroup.valid) {
             stepper.next();
-            this.result = await this.analyzeService.performAnalysis(this.modifierInputObject, this.algorithms);
+            //for (let algorithm of this.chosenAlgorithms){
+            //    this.result = await this.analyzeService.performAnalysis(this.modifierInputObject, algorithm);
+            //    this.results.push(this.result);
+            //}
+            await Promise.all([
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'diamond', this.algorithms),
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'cliqueSum', this.algorithms),
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'mcode', this.algorithms),
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'md', this.algorithms),
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'correlationClique', this.algorithms),
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'moda', this.algorithms),
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'dime', this.algorithms),
+                this.analyzeService.performAnalysis(this.modifierInputObject, 'diffCoEx', this.algorithms)
+            ]).then(r => this.result = r);
+
+            console.log('result: '+ this.result);
         }
     }
     clickNextThird(stepper: any): void {
@@ -290,5 +324,14 @@ export class InferModuleComponent implements OnInit {
         } else {
             this.algorithmCtrl.setErrors({ 'incorrect': true });
         }
+    }
+    downloadResult() {
+        //let res: any = this.result[0];
+        //console.log('result: ' + res);
+        //window.open(res.href);
+        //res.click();
+        //this.result[1].a.click();
+        
+        
     }
 }
