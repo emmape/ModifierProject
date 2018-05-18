@@ -37,11 +37,12 @@ export class InferModuleComponent implements OnInit {
     originalSamples: string[] = ['S1', 'S2', 'S3', 'S4'];
     dragItem: any = null;
     selectedForDrag: string[] = [];
+    group1Samples: any = [];
+    group2Samples: any = [];
 
     networks = [
         { value: 'upload', viewValue: 'Upload a New Network' },
         { value: 'StringPPI', viewValue: 'String PPI' },
-        { value: 'other', viewValue: 'Other PPI' }
     ];
 
     constructor(private readFileService: ReadFileService, public dialog: MatDialog,
@@ -50,30 +51,23 @@ export class InferModuleComponent implements OnInit {
             file => {
                 if (file.fileType === 'genes') {
                     this.modifierInputObject.expressionMatrixContent = file.file;
-                    console.log(this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' '));
                     this.samples = this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' ');
                     this.originalSamples = this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' ');
                 } else if (file.fileType === 'network') {
-                    this.networkFile = file.file;
+                    this.modifierInputObject.networkContent = file.file;
                 } else if (file.fileType === 'probeMap') {
                     this.modifierInputObject.probeMapContent = file.file;
                 }
             });
-        //readFileService.samples$.subscribe(
-        //    sample => {
-        //        this.samples = sample.split(' ');
-        //    });
         this.setSecondFormGroupValid();
     }
 
     ngOnInit() {
         this.firstFormGroup = this._formBuilder.group({
-            // geneFileCtrl: this.geneFileCtrl,
             networkCtrl: this.networkCtrl,
         });
         this.secondFormGroup = this._formBuilder.group({
             algorithmCtrl: this.algorithmCtrl,
-            // diamondCB: this.diamondCB,
         });
         this.thirdFormGroup = this._formBuilder.group({
             groupName1Ctrl: this.groupName1Ctrl,
@@ -82,47 +76,66 @@ export class InferModuleComponent implements OnInit {
     }
 
     recieveDropG1(e: any) {
-        //this.modifierInputObject.sampleGroup1.push(this.dragItem);
-        //this.modifierInputObject.sampleGroup1.push((this.originalSamples.indexOf(this.dragItem, 0) + 1).toString());
-        for (let i of this.selectedForDrag){
-            this.modifierInputObject.sampleGroup1.push((this.originalSamples.indexOf(i, 0) + 1).toString());
+        if (this.dragItem != null) {
+            if (this.selectedForDrag.indexOf(this.dragItem) < 0) {
+                this.selectedForDrag.push(this.dragItem);
+            }
+            for (let i of this.selectedForDrag) {
+                this.modifierInputObject.sampleGroup1.push((this.originalSamples.indexOf(i, 0) + 1).toString());
+                this.group1Samples.push(i);
+                if (this.group2Samples.indexOf(this.dragItem) < 0) {
+                    this.samples.splice(this.samples.indexOf(i, 0), 1);
+                } else {
+                    this.group2Samples.splice(this.group2Samples.indexOf(i, 0), 1);
+                    this.modifierInputObject.sampleGroup1.splice(this.modifierInputObject.sampleGroup1.indexOf((this.originalSamples.indexOf(i, 0)+1).toString()), 1);
+                }
+                
+            }
         }
+        
         this.dragItem = null;
         this.selectedForDrag = [];
     }
     recieveDropG2(e: any) {
-        //this.modifierInputObject.sampleGroup2.push((this.originalSamples.indexOf(this.dragItem, 0)+1).toString());
-        for (let i of this.selectedForDrag) {
-            this.modifierInputObject.sampleGroup2.push((this.originalSamples.indexOf(i, 0) + 1).toString());
-        }
+        if (this.dragItem != null) {
+            if (this.selectedForDrag.indexOf(this.dragItem) < 0) {
+                this.selectedForDrag.push(this.dragItem);
+            }
+            for (let i of this.selectedForDrag) {
+                this.modifierInputObject.sampleGroup2.push((this.originalSamples.indexOf(i, 0) + 1).toString());
+                this.group2Samples.push(i);
+                if (this.group1Samples.indexOf(this.dragItem) < 0) {
+                    this.samples.splice(this.samples.indexOf(i, 0), 1);
+                } else {
+                    this.group1Samples.splice(this.group1Samples.indexOf(i, 0), 1);
+                    this.modifierInputObject.sampleGroup2.splice(this.modifierInputObject.sampleGroup2.indexOf((this.originalSamples.indexOf(i, 0)+1).toString()), 1);
+
+                }
+                
+            }
+        }     
         this.dragItem = null;
         this.selectedForDrag = [];
     }
-    dragSample(e: any) {
+    dragSample(e: any, event: any) {
         if (this.dragItem == null) {
             this.dragItem = e;
-            var index = this.samples.indexOf(this.dragItem, 0);
-            //if (index > -1) {
-            //    this.samples.splice(index, 1);
-            //}
-            for (let i of this.selectedForDrag) {
-                this.samples.splice(this.samples.indexOf(i, 0), 1)
-            }
         }
     }
+    dropSample(e: any) {
+        this.dragItem = null;
+    }
+
     sampleSelected(event: any, item: any) {
         if (event.checked === true) {
             this.selectedForDrag.push(item);
-            console.log('pushing: ' + item);
         } else {
             this.selectedForDrag.splice(this.selectedForDrag.indexOf(item, 0), 1);
-            console.log('popping: ' + item);
         }
         
     }
 
     diamondChbChanged() {
-        console.log(this.algorithms.diamond);
         if (this.algorithms.diamond === false) {
             this.algorithms.diamond = true;
             this.chosenAlgorithms.push('Diamond');
@@ -260,13 +273,14 @@ export class InferModuleComponent implements OnInit {
     }
 
     clickNextFirst(stepper: any): void {
-        if (this.modifierInputObject.expressionMatrixContent === '' || this.modifierInputObject.probeMapContent === '' || (this.networkFile === '' && this.selectedNetwork === 'upload')) {
+        if (this.modifierInputObject.expressionMatrixContent === '' || this.modifierInputObject.probeMapContent === '' || (this.modifierInputObject.networkContent === '' && this.selectedNetwork === 'upload')) {
             const dialogRef = this.dialog.open(MissingDialog, {
                 width: '380px',
                 data: 'You need to upload the required files before moving to the next step.'
             });
             dialogRef.afterClosed().subscribe(result => {
             });
+         
         } else {
             stepper.next();
         }
@@ -275,10 +289,7 @@ export class InferModuleComponent implements OnInit {
         this.setSecondFormGroupValid();
         if (this.secondFormGroup.valid) {
             stepper.next();
-            //for (let algorithm of this.chosenAlgorithms){
-            //    this.result = await this.analyzeService.performAnalysis(this.modifierInputObject, algorithm);
-            //    this.results.push(this.result);
-            //}
+     
             await Promise.all([
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'diamond', this.algorithms),
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'cliqueSum', this.algorithms),
@@ -311,7 +322,10 @@ export class InferModuleComponent implements OnInit {
         //    this.groupName2Ctrl.setErrors(null);
         //}
         if (this.thirdFormGroup.valid) {
+            console.log('SampleGroup1: ', this.modifierInputObject.sampleGroup1);
+            console.log('SampleGroup2: ', this.modifierInputObject.sampleGroup2);
             stepper.next();
+
         }
     }
     clickNextFourth(stepper: any): void {

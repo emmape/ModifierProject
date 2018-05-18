@@ -14,5 +14,6 @@ namespace ModifieR.Models
         public List<string> sampleGroup1 { get; set; }
         public List<string> sampleGroup2 { get; set; }
         public string email { get; set; }
+        public string networkContent { get; set; }
     }
 }

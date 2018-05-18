@@ -50,17 +50,25 @@ namespace ModifieR.RCode
                 throw new Exception("R Script failed: " + result, ex);
             }
         }
-        public static string saveFiles(string expressionMatrixContent, string probeMapContent)
+        public static string saveFiles(string expressionMatrixContent, string probeMapContent, string networkContent)
         {
             string fileID = Guid.NewGuid().ToString();
             File.WriteAllText(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\expressionMatrix" + fileID+".txt", expressionMatrixContent);
             File.WriteAllText(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + fileID + ".txt", probeMapContent);
+            if (networkContent !="")
+            {
+                File.WriteAllText(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\network" + fileID + ".txt", networkContent);
+            }
             return fileID;
         }
         public static void deleteFiles(string id)
         {
             File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\expressionMatrix" + id + ".txt");
             File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + id + ".txt");
+            if (File.Exists(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + id + ".txt"))
+            {
+                File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + id + ".txt");
+            }
         }
     }
 }

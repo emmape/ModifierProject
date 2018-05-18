@@ -27,11 +27,11 @@ label2 <- args[4]
 #print(args[7])
 
 ######## Getting PPI network, local or download ###########
-#network <- read.csv("network.txt", stringsAsFactors=FALSE, sep=" ")
-#networkDF <- data.frame(network)
-#source("general_functions.R")
-#library("STRINGdb")
-#network <- MODifieRDev::get_string_DB_ppi()
+#if(file.exists(paste("tmpFilestorage/network",args[7],".txt", sep=""))){
+#  network <- read.csv(paste("tmpFilestorage/network",args[7],".txt", sep="")), stringsAsFactors=FALSE, sep=" ")
+#}else{
+#  network <- MODifieRDev::get_string_DB_ppi()
+#}
 
 ####### Performing selected analysis ######################
 if(args[5] == "diamond"){

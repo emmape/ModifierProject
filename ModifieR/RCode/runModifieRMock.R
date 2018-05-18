@@ -5,9 +5,9 @@ setwd("C:/Users/emmae/Programmering/ModifieR/ModifierFrontAndBackend/ModifierPro
 
 ######## Formatting input #####################
 #exprMatrix <- read.csv(paste("tmpFilestorage/expressionMatrix",args[7],".txt", sep=""), stringsAsFactors=FALSE, sep=" ")
-exprMatrix <- read.csv("tmpFilestorage/expressionMatrix50b52162-5427-4876-96ed-f9c54beee1a2.txt", stringsAsFactors=FALSE, sep=" ")
+exprMatrix <- read.csv("tmpFilestorage/expressionMatrixbcc3e775-8325-45da-88c1-5c411b6ef7e5.txt", stringsAsFactors=FALSE, sep=" ")
 #probeMap <- read.csv(paste("tmpFilestorage/probeMap",args[7],".txt", sep=""), sep=" ")
-probeMap <- read.csv("tmpFilestorage/probeMap50b52162-5427-4876-96ed-f9c54beee1a2.txt", sep=" ")
+probeMap <- read.csv("tmpFilestorage/probeMapbcc3e775-8325-45da-88c1-5c411b6ef7e5.txt", sep=" ")
 probeMap <- data.frame(probeMap)
 #indici1 <- strsplit(args[1], ";")
 indici1 <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)
@@ -19,7 +19,8 @@ label1 <- "Control"
 label2 <- "Disease"
 
 ####### Creating a modifierInput object ###############
-
+exampleInput <- readRDS("C:/Users/emmae/Documents/Emmas/Bioinformatik/Master Thesis/FreshFolderForModifier/modifier_stuff180516/example_input.rds", refhook = NULL)
+examplePpi <- readRDS("C:/Users/emmae/Documents/Emmas/Bioinformatik/Master Thesis/FreshFolderForModifier/modifier_stuff180516/example_ppi.rds", refhook = NULL)
 modifierInput <- MODifieRDev::create_input(exprMatrix, probeMap, indici1, indici2, label1, label2, T, T, T)
 #modifierInput <- create_input(exprMatrix, probeMap, indici1, indici2, label1, label2)
 write.csv(modifierInput$diff_genes, file = paste("tmpFilestorage/output","50b52162-5427-4876-96ed-f9c54beee1a2",".csv", sep=""))
@@ -38,12 +39,12 @@ args[5]
 ####### Performing selected analysis ######################
 if(args[5] == "diamond"){
 	#source("R/diamond.R")
-	diamond <- MODifieRDev::diamond(modifierInput, network)
+	diamond <- MODifieRDev::diamond(exampleInput, examplePpi)
 	#print(diamond$module_genes)
 	print("diamond output!")
 } else if(args[5] == "cliqueSum"){
 #	source("R/clique_sum.R")
-	cliqueSum <- MODifieRDev::clique_sum(modifierInput, network)
+	cliqueSum <- MODifieRDev::clique_sum(exampleInput, examplePpi)
 	#print(cliqueSum)
 	print("cliqueSum output!")
 }else if(args[5] == "correlationClique"){
@@ -53,7 +54,7 @@ if(args[5] == "diamond"){
 	print("correlationClique output!")
 }else if(args[5] == "diffCoEx"){
 	#source("R/diffcoex.R")
-	diffcoex <- MODifieRDev::diffcoex(modifierInput)
+	diffcoex <- MODifieRDev::diffcoex (modifierInput)
 	#print(diffcoex)
 	print("DiffCoEx output!")
 }else if(args[5] == "dime"){
@@ -63,7 +64,8 @@ if(args[5] == "diamond"){
 	print("Dime output!")  
 }else if(args[5] == "mcode"){
 	#source("R/mcode.R")
-	mcode <- MODifieRDev::mod_mcode(modifierInput, network)
+	mcode <- MODifieRDev::mod_mcode(exampleInput, examplePpi)
+	mcode
 	#print(mcode)
 	print("Mcode output!")
 }else if(args[5] == "moda"){

@@ -45,13 +45,15 @@
             <ng-template matStepLabel>Set groups</ng-template>
             <mat-card class="selector-content-card">
                 <mat-card-title>Set groups for expression matrix samples</mat-card-title>
-                <mat-card-subtitle>Drag your samples to the correct group</mat-card-subtitle>
+                <mat-card-subtitle>Name your groups, and drag your samples to the correct group. You can select multiple samples and drag them all at once.</mat-card-subtitle>
                 <br>
                 <div class="row-div">
                     <div class="dropArea">
                         <mat-card-subtitle class="sampleLabel">Your Samples</mat-card-subtitle>
                         <mat-chip-list role="list">
-                            <mat-chip class="sampleChip" draggable (dragleave)="dragSample(item)" *ngFor="let item of samples" disabled="true"><mat-checkbox (change)="sampleSelected($event, item)">{{item}}</mat-checkbox></mat-chip>
+                            <mat-chip class="sampleChip" draggable (dragleave)="dragSample(item, $event)" (dragend)="dropSample(item)" *ngFor="let item of samples" disabled="true">
+                                <mat-checkbox (change)="sampleSelected($event, item)">{{item}}</mat-checkbox>
+                            </mat-chip>
                         </mat-chip-list>
                     </div>
                     <div class="dropArea" droppable (drop)="recieveDropG1($event)">
@@ -60,7 +62,10 @@
                             <mat-error *ngIf="groupName1Ctrl.invalid">Please, enter a group name</mat-error>
                         </mat-form-field>
                         <mat-chip-list role="list">
-                            <mat-chip class="sampleChip" *ngFor="let drop of modifierInputObject.sampleGroup1">{{drop}}</mat-chip>
+                            <mat-chip class="sampleChip" draggable (dragleave)="dragSample(drop, $event)" (dragend)="dropSample(item)" *ngFor="let drop of group1Samples" disabled="true">
+                                <!--<mat-chip class="sampleChip" *ngFor="let drop of group1Samples">-->
+                                {{drop}}
+                            </mat-chip>
                         </mat-chip-list>
                     </div>
                     <div class="dropArea" droppable (drop)="recieveDropG2($event)">
@@ -69,14 +74,18 @@
                             <mat-error *ngIf="groupName2Ctrl.invalid">Please, enter a group name</mat-error>
                         </mat-form-field>
                         <mat-chip-list role="list">
-                            <mat-chip class="sampleChip" *ngFor="let drop of modifierInputObject.sampleGroup2">{{drop}}</mat-chip>
+                            <!--<mat-chip class="sampleChip" *ngFor="let drop of group2Samples">{{drop}}</mat-chip>-->
+                            <mat-chip class="sampleChip" draggable (dragleave)="dragSample(drop, $event)" (dragend)="dropSample(item)" *ngFor="let drop of group2Samples" disabled="true">
+                                <!--<mat-chip class="sampleChip" *ngFor="let drop of group1Samples">-->
+                                {{drop}}
+                            </mat-chip>
                         </mat-chip-list>
                     </div>
                 </div>
                 <button class="next-button" mat-button matStepperPrevious>Back</button>
                 <button class="next-button" mat-button (click)="clickNextThird(stepper)">Next</button>
             </mat-card>
-            </form>
+        </form>
     </mat-step>
 
     <!-- Choose algorithms -->
@@ -110,11 +119,13 @@
                     <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
                 </div>-->
 
-                <section *ngIf="this.algorithms.diamond===true">
-                    <mat-card-subtitle>The algorithm you chose will take some time to calculate. 
-                    Please enter your email address, and we will send you the results once they are done.</mat-card-subtitle>
+                <section *ngIf="this.algorithms.md===true || this.algorithms.cliquesum===true || this.algorithms.correlationclique===true || this.algorithms.diffcoex===true || this.algorithms.dime===true || this.algorithms.moda===true ">
+                    <mat-card-subtitle>
+                        The algorithm you chose will take some time to calculate.
+                        Please enter your email address, and we will send you the results once they are done.
+                    </mat-card-subtitle>
                     <mat-form-field class="sampleInput">
-                        <input matInput placeholder="Enter your Email Address"  [(ngModel)] = "modifierInputObject.email" [ngModelOptions]="{standalone: true}">
+                        <input matInput placeholder="Enter your Email Address" [(ngModel)]="modifierInputObject.email" [ngModelOptions]="{standalone: true}">
                         <!--<mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
                             Please enter a valid email address
                         </mat-error>-->
@@ -134,9 +145,9 @@
         <mat-card>
             <section *ngIf="result === ''">
                 <!--<mat-card>-->
-                    <mat-card-title>Your analysis is in progress.</mat-card-title>
-                    <mat-card-subtitle>Please wait while we get your results.</mat-card-subtitle>
-                    <div class="progressSpinner"><mat-spinner></mat-spinner></div>
+                <mat-card-title>Your analysis is in progress.</mat-card-title>
+                <mat-card-subtitle>Please wait while we get your results.</mat-card-subtitle>
+                <div class="progressSpinner"><mat-spinner></mat-spinner></div>
                 <!--</mat-card>-->
             </section>
             <section *ngIf="result !== ''">
@@ -146,21 +157,44 @@
                             <mat-card-title>Your analysis has been initiated.</mat-card-title>
                             <mat-card-subtitle>Please find the results for each algorithm in the respective tab.</mat-card-subtitle>
                         </mat-card>
-                            </mat-tab>
+                    </mat-tab>
                     <mat-tab *ngFor="let tab of chosenAlgorithms" label={{tab}}>
+
                         <section *ngIf="tab ==='Diamond'">
                             <mat-card>
-                                <mat-card-subtitle> {{result[0]}}</mat-card-subtitle>
+                                <button class="download-button" mat-button (click)="result[0].click()">Download Diamond results</button>
                             </mat-card>
-                            </section>
-                        <section *ngIf="tab === 'CliqueSum'">
-                            <button class="download-button" mat-button (click)="result[1].click()">Download CliqueSum results</button>
                         </section>
+                        <section *ngIf="tab === 'CliqueSum'">
+                            <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                        </section>
+                        <section *ngIf="tab === 'MCODE'">
+                            <mat-card>
+                                <button class="download-button" mat-button (click)="result[2].click()">Download Mcode results</button>
+                            </mat-card>
+                        </section>
+                        <section *ngIf="tab === 'ModuleDiscoverer'">
+                            <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                        </section>
+                        <section *ngIf="tab === 'CorrelationClique'">
+                            <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                        </section>
+                        <section *ngIf="tab === 'Moda'">
+                            <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+
+                        </section>
+                        <section *ngIf="tab === 'Dime'">
+                            <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                        </section>
+                        <section *ngIf="tab === 'DiffCoEx'">
+                            <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                        </section>
+
                     </mat-tab>
                 </mat-tab-group>
-                </section>
-               
-                <mat-divider class="stepper-divider"></mat-divider>
+            </section>
+
+            <mat-divider class="stepper-divider"></mat-divider>
         </mat-card>
     </mat-step>
 </mat-horizontal-stepper>

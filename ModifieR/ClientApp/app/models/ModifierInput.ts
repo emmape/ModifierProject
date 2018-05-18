@@ -7,4 +7,5 @@ export class ModifierInput {
     sampleGroup1: string[]=[];
     sampleGroup2: string[] = [];
     email: string = "modifiermail@gmail.com";
+    networkContent: any = '';
 }
