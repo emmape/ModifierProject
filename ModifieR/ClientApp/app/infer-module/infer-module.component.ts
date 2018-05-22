@@ -87,7 +87,9 @@ export class InferModuleComponent implements OnInit {
                     this.samples.splice(this.samples.indexOf(i, 0), 1);
                 } else {
                     this.group2Samples.splice(this.group2Samples.indexOf(i, 0), 1);
-                    this.modifierInputObject.sampleGroup1.splice(this.modifierInputObject.sampleGroup1.indexOf((this.originalSamples.indexOf(i, 0)+1).toString()), 1);
+                    console.log('Original Sample: ', (this.originalSamples.indexOf(i, 0) + 1).toString());
+                    console.log('Removing: ', this.modifierInputObject.sampleGroup1.indexOf((this.originalSamples.indexOf(i, 0) + 1).toString()));
+                    this.modifierInputObject.sampleGroup2.splice(this.modifierInputObject.sampleGroup2.indexOf((this.originalSamples.indexOf(i, 0)+1).toString()), 1);
                 }
                 
             }
@@ -108,7 +110,7 @@ export class InferModuleComponent implements OnInit {
                     this.samples.splice(this.samples.indexOf(i, 0), 1);
                 } else {
                     this.group1Samples.splice(this.group1Samples.indexOf(i, 0), 1);
-                    this.modifierInputObject.sampleGroup2.splice(this.modifierInputObject.sampleGroup2.indexOf((this.originalSamples.indexOf(i, 0)+1).toString()), 1);
+                    this.modifierInputObject.sampleGroup1.splice(this.modifierInputObject.sampleGroup1.indexOf((this.originalSamples.indexOf(i, 0)+1).toString()), 1);
 
                 }
                 

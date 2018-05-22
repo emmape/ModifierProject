@@ -114,10 +114,10 @@
                         <mat-checkbox [(checked)]="algorithms.dime" (change)="dimeChbChanged()" color="primary" class="checkbox">Dime</mat-checkbox>
                     </div>
                 </div>
-                <!--<div class="sliderErrorDiv">
+                <div class="sliderErrorDiv">
                     <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">Create a Combined Result</mat-slide-toggle>
                     <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
-                </div>-->
+                </div>
 
                 <section *ngIf="this.algorithms.md===true || this.algorithms.cliquesum===true || this.algorithms.correlationclique===true || this.algorithms.diffcoex===true || this.algorithms.dime===true || this.algorithms.moda===true ">
                     <mat-card-subtitle>

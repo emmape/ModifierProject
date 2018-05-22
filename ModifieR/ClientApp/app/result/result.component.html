@@ -1,0 +1,54 @@
+﻿<mat-card>
+    <section *ngIf="result === ''">
+        <!--<mat-card>-->
+        <mat-card-title>Your analysis is in progress.</mat-card-title>
+        <mat-card-subtitle>Please wait while we get your results.</mat-card-subtitle>
+        <div class="progressSpinner"><mat-spinner></mat-spinner></div>
+        <!--</mat-card>-->
+    </section>
+    <section *ngIf="result !== ''">
+        <mat-tab-group>
+            <mat-tab label="Results">
+                <mat-card>
+                    <mat-card-title>Your analysis has been initiated.</mat-card-title>
+                    <mat-card-subtitle>Please find the results for each algorithm in the respective tab.</mat-card-subtitle>
+                </mat-card>
+            </mat-tab>
+            <mat-tab *ngFor="let tab of chosenAlgorithms" label={{tab}}>
+
+                <section *ngIf="tab ==='Diamond'">
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="result[0].click()">Download Diamond results</button>
+                    </mat-card>
+                </section>
+                <section *ngIf="tab === 'CliqueSum'">
+                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                </section>
+                <section *ngIf="tab === 'MCODE'">
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="result[2].click()">Download Mcode results</button>
+                    </mat-card>
+                </section>
+                <section *ngIf="tab === 'ModuleDiscoverer'">
+                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                </section>
+                <section *ngIf="tab === 'CorrelationClique'">
+                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                </section>
+                <section *ngIf="tab === 'Moda'">
+                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+
+                </section>
+                <section *ngIf="tab === 'Dime'">
+                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                </section>
+                <section *ngIf="tab === 'DiffCoEx'">
+                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
+                </section>
+
+            </mat-tab>
+        </mat-tab-group>
+    </section>
+
+    <mat-divider class="stepper-divider"></mat-divider>
+</mat-card>

@@ -19,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InferModuleComponent } from './infer-module/infer-module.component';
+import { ResultComponent } from './result/result.component';
 import { InformationComponent } from './information/information.component';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { ReadFileService } from './services/readFile.service';
@@ -33,7 +34,8 @@ import { NgDragDropModule } from 'ng-drag-drop';
         InferModuleComponent,
         InformationComponent,
         FileUploaderComponent,
-        MissingDialog
+        MissingDialog,
+        ResultComponent
     ],
     entryComponents: [
         MissingDialog
