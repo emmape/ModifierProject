@@ -8,6 +8,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ModifierInput } from '../models/ModifierInput';
 import { Algorithms } from '../models/Algorithms';
 import { forEach } from '@angular/router/src/utils/collection';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -46,7 +47,8 @@ export class InferModuleComponent implements OnInit {
     ];
 
     constructor(private readFileService: ReadFileService, public dialog: MatDialog,
-        private _formBuilder: FormBuilder, public analyzeService: AnalyzeService) {
+        private _formBuilder: FormBuilder, public analyzeService: AnalyzeService, public router: Router) {
+
         readFileService.file$.subscribe(
             file => {
                 if (file.fileType === 'genes') {
@@ -290,8 +292,13 @@ export class InferModuleComponent implements OnInit {
     async clickNextSecond(stepper: any) {
         this.setSecondFormGroupValid();
         if (this.secondFormGroup.valid) {
-            stepper.next();
-     
+            await Promise.resolve(
+                this.analyzeService.saveFiles(this.modifierInputObject)
+            ).then(r => this.modifierInputObject.id = r);
+            console.log('Created id: ', this.modifierInputObject.id);
+           // stepper.next();
+            this.router.navigateByUrl('/result/'+ this.modifierInputObject.id);
+
             await Promise.all([
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'diamond', this.algorithms),
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'cliqueSum', this.algorithms),
@@ -303,7 +310,11 @@ export class InferModuleComponent implements OnInit {
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'diffCoEx', this.algorithms)
             ]).then(r => this.result = r);
 
-            console.log('result: '+ this.result);
+            await Promise.resolve(
+                this.analyzeService.deleteFiles(this.modifierInputObject)
+            ).then(r => console.log('Deleted files with id: ', r));
+
+            
         }
     }
     clickNextThird(stepper: any): void {

@@ -28,6 +28,11 @@ write.csv(modifierInput$diff_genes, file = paste("tmpFilestorage/output","50b521
 #print(args[7])
 
 ######## Getting PPI network, local or download ###########
+if(file.exists("network.txt")){
+  network <- read.csv("network.txt", stringsAsFactors=FALSE, sep=" ")
+}else{
+  network <- MODifieRDev::get_string_DB_ppi()
+}
 network <- read.csv("network.txt", stringsAsFactors=FALSE, sep=" ")
 networkDF <- data.frame(network)
 #source("general_functions.R")
@@ -45,21 +50,22 @@ if(args[5] == "diamond"){
 } else if(args[5] == "cliqueSum"){
 #	source("R/clique_sum.R")
 	cliqueSum <- MODifieRDev::clique_sum(exampleInput, examplePpi)
+	cliqueSum
 	#print(cliqueSum)
 	print("cliqueSum output!")
 }else if(args[5] == "correlationClique"){
 	#source("R/correlation_clique.R")
-	correlationClique <- MODifieRDev::correlation_clique(modifierInput, network)
+	correlationClique <- MODifieRDev::correlation_clique(exampleInput, examplePpi)
 	#print(correlationClique)
 	print("correlationClique output!")
 }else if(args[5] == "diffCoEx"){
 	#source("R/diffcoex.R")
-	diffcoex <- MODifieRDev::diffcoex (modifierInput)
+	diffcoex <- MODifieRDev::diffcoex(exampleInput)
 	#print(diffcoex)
 	print("DiffCoEx output!")
 }else if(args[5] == "dime"){
 	#source("R/dime.R")
-	dime <- MODifieRDev::dime(modifierInput)
+	dime <- MODifieRDev::dime(exampleInput)
 	#print(dime)
 	print("Dime output!")  
 }else if(args[5] == "mcode"){
@@ -70,12 +76,12 @@ if(args[5] == "diamond"){
 	print("Mcode output!")
 }else if(args[5] == "moda"){
 	#source("R/moda.R")
-	moda <- MODifieRDev::moda(modifierInput, "Density", 0.1, 0.1, "tmpFilestorage" )
+	moda <- MODifieRDev::moda(exampleInput, "Density", 0.1, 0.1, "tmpFilestorage" )
 	#print(moda)
 	print("Moda output!")
 }else if(args[5] == "moduleDiscoverer"){
   #source("R/modulediscoverer.R")
-	modulediscoverer <- MODifieRDev::modulediscoverer(modifierInput, network)
+	modulediscoverer <- MODifieRDev:::modulediscoverer(exampleInput, examplePpi)
 	#print(modulediscoverer)
 	print("ModuleDiscoverer output!")
 }

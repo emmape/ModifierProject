@@ -18,33 +18,44 @@
 
                 <section *ngIf="tab ==='Diamond'">
                     <mat-card>
-                        <button class="download-button" mat-button (click)="result[0].click()">Download Diamond results</button>
+                        <button class="download-button" mat-button (click)="resultDiamond.click()">Download results</button>
                     </mat-card>
                 </section>
                 <section *ngIf="tab === 'CliqueSum'">
-                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
-                </section>
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="resultCliquesum.click()">Download results</button>
+                        </mat-card>
+</section>
                 <section *ngIf="tab === 'MCODE'">
                     <mat-card>
-                        <button class="download-button" mat-button (click)="result[2].click()">Download Mcode results</button>
+                        <button class="download-button" mat-button (click)="resultMcode.click()">Download results</button>
                     </mat-card>
                 </section>
                 <section *ngIf="tab === 'ModuleDiscoverer'">
-                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
-                </section>
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="resultModuleDiscoverer.click()">Download results</button>
+                        </mat-card>
+</section>
                 <section *ngIf="tab === 'CorrelationClique'">
-                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
-                </section>
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="resultCorrelationClique.click()">Download results</button>
+                        </mat-card>
+</section>
                 <section *ngIf="tab === 'Moda'">
-                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
-
-                </section>
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="resultModa.click()">Download results</button>
+                        </mat-card>
+</section>
                 <section *ngIf="tab === 'Dime'">
-                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
-                </section>
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="resultDime.click()">Download results</button>
+                        </mat-card>
+</section>
                 <section *ngIf="tab === 'DiffCoEx'">
-                    <mat-card-subtitle> This analysis method will take some time to perform. We will send you an email containing the anaysis results once they are done!</mat-card-subtitle>
-                </section>
+                    <mat-card>
+                        <button class="download-button" mat-button (click)="resultDiffCoEx.click()">Download results</button>
+                        </mat-card>
+</section>
 
             </mat-tab>
         </mat-tab-group>

@@ -8,6 +8,6 @@ export const appRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: InformationComponent },
     { path: 'analyze', component: InferModuleComponent },
-    { path: 'result', component: ResultComponent },
+    { path: 'result/:id', component: ResultComponent },
   { path: '**', redirectTo: 'home' },
 ]

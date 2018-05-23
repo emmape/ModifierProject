@@ -90,9 +90,7 @@ export class AnalyzeService {
                    return "NotActive";
                })
         }
-
-        //return returns;
-       
+        //return returns;      
   }
 
    downloadFile(data: Response): any {
@@ -101,12 +99,39 @@ export class AnalyzeService {
        var anchor = document.createElement("a");
        anchor.download = "ModifieRanalysis.csv";
        anchor.href = url;
-      
-       //anchor.click();
        return anchor; 
-       //window.open(url);
-      // return "some return";
-   }
+    }
+
+    async saveFiles(modifierInput: ModifierInput): Promise<string> {
+        const post: any = this._httpService.post("/api/analysis/saveFiles", modifierInput)
+        return await post.toPromise().then((response: any) => response.text());
+    }
+    async deleteFiles(modifierInput: ModifierInput): Promise<string> {
+        const post: any = this._httpService.post("/api/analysis/deleteFiles", modifierInput.id)
+        return await post.toPromise().then((response: any) => response.text());
+    }
+
+    async getResults(id: string[]): Promise<string>{
+        const post: any = this._httpService.post("/api/analysis/results", id)
+        let res = '';
+        await post.toPromise()
+            .then((response: any) =>
+                res = response.text());
+        if (res != '') {
+                return await post.toPromise()
+            .then((response: any) =>
+                this.downloadFile(response.text()));
+        }
+        else {
+            return await Promise.resolve(123)
+                .then((res) => {
+                    return "";
+                })
+        }
+        //return await post.toPromise()
+        //    .then((response: any) =>
+        //        this.downloadFile(response.text()));
+    }
 
  
 }
