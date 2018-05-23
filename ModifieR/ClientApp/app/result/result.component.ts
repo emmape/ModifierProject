@@ -9,6 +9,7 @@ import { ModifierInput } from '../models/ModifierInput';
 import { Algorithms } from '../models/Algorithms';
 import { forEach } from '@angular/router/src/utils/collection';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 
 
 @Component({
@@ -25,7 +26,8 @@ export class ResultComponent implements OnInit {
     resultModuleDiscoverer: any='';
     resultCorrelationClique: any='';
     resultDime: any='';
-    resultDiffCoEx: any='';
+    resultDiffCoEx: any = '';
+    result: string = '!';
 
     id: string = '';
 
@@ -34,43 +36,48 @@ export class ResultComponent implements OnInit {
         }
     
 
-   async ngOnInit() {
+    ngOnInit() {
         this.activatedRoute.params.subscribe((params: Params) => {
             this.id = params['id'];
             console.log(this.id);
-        });
-
+        });   
+        this.getResults();
+       Observable.interval(2000 * 60).subscribe(x => {
+           this.getResults();
+       });
+    }
+    async getResults() {
         await Promise.resolve(
             this.analyzeService.getResults(['diamond', this.id])
         ).then(r => this.resultDiamond = r);
-      
-       await Promise.resolve(
-           this.analyzeService.getResults(['cliqueSum', this.id])
-       ).then(r => this.resultCliquesum = r);
 
-       await Promise.resolve(
-           this.analyzeService.getResults(['correlationClique', this.id])
-       ).then(r => this.resultCorrelationClique = r);
+        await Promise.resolve(
+            this.analyzeService.getResults(['cliqueSum', this.id])
+        ).then(r => this.resultCliquesum = r);
 
-       await Promise.resolve(
-           this.analyzeService.getResults(['diffCoEx', this.id])
-       ).then(r => this.resultDiffCoEx = r);
+        await Promise.resolve(
+            this.analyzeService.getResults(['correlationClique', this.id])
+        ).then(r => this.resultCorrelationClique = r);
 
-       await Promise.resolve(
-           this.analyzeService.getResults(['dime', this.id])
-       ).then(r => this.resultDime = r);
+        await Promise.resolve(
+            this.analyzeService.getResults(['diffCoEx', this.id])
+        ).then(r => this.resultDiffCoEx = r);
 
-       await Promise.resolve(
-           this.analyzeService.getResults(['mcode', this.id])
-       ).then(r => this.resultMcode = r);
+        await Promise.resolve(
+            this.analyzeService.getResults(['dime', this.id])
+        ).then(r => this.resultDime = r);
 
-       await Promise.resolve(
-           this.analyzeService.getResults(['moda', this.id])
-       ).then(r => this.resultModa = r);
-    
-       await Promise.resolve(
-           this.analyzeService.getResults(['moduleDiscoverer', this.id])
-       ).then(r => this.resultModuleDiscoverer = r);
+        await Promise.resolve(
+            this.analyzeService.getResults(['mcode', this.id])
+        ).then(r => this.resultMcode = r);
+
+        await Promise.resolve(
+            this.analyzeService.getResults(['moda', this.id])
+        ).then(r => this.resultModa = r);
+
+        await Promise.resolve(
+            this.analyzeService.getResults(['moduleDiscoverer', this.id])
+        ).then(r => this.resultModuleDiscoverer = r);
 
         if (this.resultDiamond != '') {
             this.chosenAlgorithms.push('Diamond');
@@ -97,4 +104,5 @@ export class ResultComponent implements OnInit {
             this.chosenAlgorithms.push('CliqueSum');
         }
     }
+    
 }

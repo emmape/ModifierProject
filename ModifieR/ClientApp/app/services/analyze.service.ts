@@ -107,7 +107,8 @@ export class AnalyzeService {
         return await post.toPromise().then((response: any) => response.text());
     }
     async deleteFiles(modifierInput: ModifierInput): Promise<string> {
-        const post: any = this._httpService.post("/api/analysis/deleteFiles", modifierInput.id)
+        console.log('inputting id: ', modifierInput.id);
+        const post: any = this._httpService.post("/api/analysis/deleteFiles", modifierInput)
         return await post.toPromise().then((response: any) => response.text());
     }
 

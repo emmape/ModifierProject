@@ -124,10 +124,10 @@ namespace ModifieR.Controllers
             return Ok(id);          
         }
         [HttpPost("deleteFiles")]
-        public async Task<IActionResult> deleteFiles([FromBody] String id)
+        public async Task<IActionResult> deleteFiles([FromBody] ModifierInputObject input)
         {
-           RScriptRunner.deleteFiles(id);
-           return Ok(id);
+           RScriptRunner.deleteFiles(input.id);
+           return Ok(input.id);
         }
     }
 }
