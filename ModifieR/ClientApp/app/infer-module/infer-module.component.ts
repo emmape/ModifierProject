@@ -292,6 +292,7 @@ export class InferModuleComponent implements OnInit {
     async clickNextSecond(stepper: any) {
         this.setSecondFormGroupValid();
         if (this.secondFormGroup.valid) {
+            this.modifierInputObject.id = 'thinking';
             await Promise.resolve(
                 this.analyzeService.saveFiles(this.modifierInputObject)
             ).then(r => this.modifierInputObject.id = r);

@@ -41,8 +41,11 @@ export class ResultComponent implements OnInit {
             this.id = params['id'];
             console.log(this.id);
         });   
+        console.log('Getting reults');
         this.getResults();
-       Observable.interval(2000 * 60).subscribe(x => {
+        
+        Observable.interval(2000 * 10).subscribe(x => {
+            console.log('Getting reults again...');
            this.getResults();
        });
     }
@@ -79,28 +82,28 @@ export class ResultComponent implements OnInit {
             this.analyzeService.getResults(['moduleDiscoverer', this.id])
         ).then(r => this.resultModuleDiscoverer = r);
 
-        if (this.resultDiamond != '') {
+        if (this.resultDiamond != '' && this.chosenAlgorithms.indexOf('Diamond') < 0) {
             this.chosenAlgorithms.push('Diamond');
         }
-        if (this.resultMcode != '') {
+        if (this.resultMcode != '' && this.chosenAlgorithms.indexOf('MCODE') < 0) {
             this.chosenAlgorithms.push('MCODE');
         }
-        if (this.resultModuleDiscoverer != '') {
+        if (this.resultModuleDiscoverer != '' && this.chosenAlgorithms.indexOf('ModuleDiscoverer') < 0) {
             this.chosenAlgorithms.push('ModuleDiscoverer');
         }
-        if (this.resultModa != '') {
+        if (this.resultModa != '' && this.chosenAlgorithms.indexOf('Moda') < 0) {
             this.chosenAlgorithms.push('Moda');
         }
-        if (this.resultDime != '') {
+        if (this.resultDime != '' && this.chosenAlgorithms.indexOf('Dime') < 0) {
             this.chosenAlgorithms.push('Dime');
         }
-        if (this.resultDiffCoEx != '') {
+        if (this.resultDiffCoEx != '' && this.chosenAlgorithms.indexOf('DiffCoEx') < 0) {
             this.chosenAlgorithms.push('DiffCoEx');
         }
-        if (this.resultCorrelationClique != '') {
+        if (this.resultCorrelationClique != '' && this.chosenAlgorithms.indexOf('CorrelationClique') < 0) {
             this.chosenAlgorithms.push('CorrelationClique');
         }
-        if (this.resultCliquesum != '') {
+        if (this.resultCliquesum != '' && this.chosenAlgorithms.indexOf('CliqueSum') < 0) {
             this.chosenAlgorithms.push('CliqueSum');
         }
     }

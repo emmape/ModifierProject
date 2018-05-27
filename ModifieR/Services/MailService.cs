@@ -30,7 +30,11 @@ namespace ModifieR.Services
             // Add the file attachment to this e-mail message.
             mailMessage.Attachments.Add(data);
 
-            mailMessage.Body = "Hi, \n Your Modifier analysis using "+algorithm+"-algorithm is now done! \n Please find attatched a file containing your results. \n \n Best Regards \n Modifier Web";
+            mailMessage.Body = "Hi, \n \n Your Modifier analysis using "+algorithm+"-algorithm is now done! " +
+                "\n Please find attatched a file containing your results. " +
+                "\n You can find all results as soon as they are done, on the following link: \n " +
+                "http://localhost:62421/#/result/"+id +
+                "\n \n Best Regards \n Modifier Web";
             mailMessage.Subject = "Your ModifieR "+algorithm+" Analysis is done!";
             //client.Send(mailMessage);
             using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))

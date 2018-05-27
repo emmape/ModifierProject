@@ -11,7 +11,9 @@
             <mat-tab label="Results">
                 <mat-card>
                     <mat-card-title>Your analysis has been initiated.</mat-card-title>
-                    <mat-card-subtitle>Please find the results for each algorithm in the respective tab.</mat-card-subtitle>
+                    <mat-card-subtitle>The results for your selected algorithms will appear in separate tabs as soon as they are done. Some of the algorithms takes som time to run. We will send you an email as soon as those results are done.</mat-card-subtitle>
+                
+
                 </mat-card>
             </mat-tab>
             <mat-tab *ngFor="let tab of chosenAlgorithms" label={{tab}}>

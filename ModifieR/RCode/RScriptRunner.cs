@@ -63,11 +63,18 @@ namespace ModifieR.RCode
         }
         public static void deleteFiles(string id)
         {
-            File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\expressionMatrix" + id + ".txt");
-            File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + id + ".txt");
+            if (File.Exists(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\expressionMatrix" + id + ".txt"))
+            {
+                File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\expressionMatrix" + id + ".txt");
+            }
             if (File.Exists(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + id + ".txt"))
             {
                 File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\probeMap" + id + ".txt");
+                }
+
+                if (File.Exists(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\network" + id + ".txt"))
+            {
+                File.Delete(Directory.GetCurrentDirectory() + @"\RCode\tmpFilestorage\network" + id + ".txt");
             }
         }
     }

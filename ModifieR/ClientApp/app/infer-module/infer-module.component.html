@@ -93,62 +93,70 @@
         <form [formGroup]="secondFormGroup">
             <ng-template matStepLabel>Choose Algorithms</ng-template>
             <mat-card class="selector-content-card">
-                <mat-card-title>Choose algorithms for module inference</mat-card-title>
-                <div class="row-div">
-                    <div class="leftCheckboxDiv">
-                        <mat-checkbox formControlName="algorithmCtrl" [(checked)]="algorithms.diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD</mat-checkbox>
-                        <mat-checkbox [(checked)]="algorithms.mcode" (change)="mcodeChbChanged()" color="primary" class="checkbox">MCODE</mat-checkbox>
-                    </div>
-                    <div class="leftCheckboxDiv">
-                        <mat-checkbox [(checked)]="algorithms.md" (change)="mdChbChanged()" color="primary" class="checkbox">Module Discoverer</mat-checkbox>
-                        <mat-checkbox [(checked)]="algorithms.cliquesum" (change)="cliquesumChbChanged()" color="primary" class="checkbox">Clique Sum</mat-checkbox>
-                    </div>
-                </div>
-                <div class="row-div">
-                    <div class="leftCheckboxDiv">
-                        <mat-checkbox [(checked)]="algorithms.correlationclique" (change)="correlationcliqueChbChanged()" color="primary" class="checkbox">Correlation Clique</mat-checkbox>
-                        <mat-checkbox [(checked)]="algorithms.diffcoex" (change)="diffcoexChbChanged()" color="primary" class="checkbox">DiffCoEx</mat-checkbox>
-                    </div>
-                    <div class="leftCheckboxDiv">
-                        <mat-checkbox [(checked)]="algorithms.moda" (change)="modaChbChanged()" color="primary" class="checkbox">Moda</mat-checkbox>
-                        <mat-checkbox [(checked)]="algorithms.dime" (change)="dimeChbChanged()" color="primary" class="checkbox">Dime</mat-checkbox>
-                    </div>
-                </div>
-                <div class="sliderErrorDiv">
-                    <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">Create a Combined Result</mat-slide-toggle>
-                    <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
-                </div>
 
-                <section *ngIf="this.algorithms.md===true || this.algorithms.cliquesum===true || this.algorithms.correlationclique===true || this.algorithms.diffcoex===true || this.algorithms.dime===true || this.algorithms.moda===true ">
-                    <mat-card-subtitle>
-                        The algorithm you chose will take some time to calculate.
-                        Please enter your email address, and we will send you the results once they are done.
-                    </mat-card-subtitle>
-                    <mat-form-field class="sampleInput">
-                        <input matInput placeholder="Enter your Email Address" [(ngModel)]="modifierInputObject.email" [ngModelOptions]="{standalone: true}">
-                        <!--<mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-                            Please enter a valid email address
-                        </mat-error>-->
-                    </mat-form-field>
+                <section *ngIf="modifierInputObject.id === 'thinking'">
+                    <mat-card-title>Initiating analysis</mat-card-title>
+                    <!--<mat-card-subtitle>Please wait while we get your results.</mat-card-subtitle>-->
+                    <div class="progressSpinner"><mat-spinner></mat-spinner></div>
                 </section>
+                <section *ngIf="modifierInputObject.id === ''">
+                    <mat-card-title>Choose algorithms for module inference</mat-card-title>
+                    <div class="row-div">
+                        <div class="leftCheckboxDiv">
+                            <mat-checkbox formControlName="algorithmCtrl" [(checked)]="algorithms.diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD</mat-checkbox>
+                            <mat-checkbox [(checked)]="algorithms.mcode" (change)="mcodeChbChanged()" color="primary" class="checkbox">MCODE</mat-checkbox>
+                        </div>
+                        <div class="leftCheckboxDiv">
+                            <mat-checkbox [(checked)]="algorithms.md" (change)="mdChbChanged()" color="primary" class="checkbox">Module Discoverer</mat-checkbox>
+                            <mat-checkbox [(checked)]="algorithms.cliquesum" (change)="cliquesumChbChanged()" color="primary" class="checkbox">Clique Sum</mat-checkbox>
+                        </div>
+                    </div>
+                    <div class="row-div">
+                        <div class="leftCheckboxDiv">
+                            <mat-checkbox [(checked)]="algorithms.correlationclique" (change)="correlationcliqueChbChanged()" color="primary" class="checkbox">Correlation Clique</mat-checkbox>
+                            <mat-checkbox [(checked)]="algorithms.diffcoex" (change)="diffcoexChbChanged()" color="primary" class="checkbox">DiffCoEx</mat-checkbox>
+                        </div>
+                        <div class="leftCheckboxDiv">
+                            <mat-checkbox [(checked)]="algorithms.moda" (change)="modaChbChanged()" color="primary" class="checkbox">Moda</mat-checkbox>
+                            <mat-checkbox [(checked)]="algorithms.dime" (change)="dimeChbChanged()" color="primary" class="checkbox">Dime</mat-checkbox>
+                        </div>
+                    </div>
+                    <div class="sliderErrorDiv">
+                        <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">Create a Combined Result</mat-slide-toggle>
+                        <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
+                    </div>
 
-                <!--<mat-divider class="stepper-divider"></mat-divider>-->
-                <button class="next-button" mat-button matStepperPrevious>Back</button>
-                <button class="next-button" mat-button (click)="clickNextSecond(stepper)">Next</button>
+                    <section *ngIf="this.algorithms.md===true || this.algorithms.cliquesum===true || this.algorithms.correlationclique===true || this.algorithms.diffcoex===true || this.algorithms.dime===true || this.algorithms.moda===true ">
+                        <mat-card-subtitle>
+                            The algorithm you chose will take some time to calculate.
+                            Please enter your email address, and we will send you the results once they are done.
+                        </mat-card-subtitle>
+                        <mat-form-field class="sampleInput">
+                            <input matInput placeholder="Enter your Email Address" [(ngModel)]="modifierInputObject.email" [ngModelOptions]="{standalone: true}">
+                            <!--<mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                Please enter a valid email address
+            </mat-error>-->
+                        </mat-form-field>
+                    </section>
+
+                    <!--<mat-divider class="stepper-divider"></mat-divider>-->
+                    <button class="next-button" mat-button matStepperPrevious>Back</button>
+                    <button class="next-button" mat-button (click)="clickNextSecond(stepper)">Next</button>
+                </section>
             </mat-card>
         </form>
     </mat-step>
 
     <!-- Results -->
-    <mat-step>
+    <!--<mat-step>
         <ng-template matStepLabel>Done</ng-template>
         <mat-card>
             <section *ngIf="result === ''">
-                <!--<mat-card>-->
+
                 <mat-card-title>Your analysis is in progress.</mat-card-title>
                 <mat-card-subtitle>Please wait while we get your results.</mat-card-subtitle>
                 <div class="progressSpinner"><mat-spinner></mat-spinner></div>
-                <!--</mat-card>-->
+          
             </section>
             <section *ngIf="result !== ''">
                 <mat-tab-group>
@@ -196,5 +204,5 @@
 
             <mat-divider class="stepper-divider"></mat-divider>
         </mat-card>
-    </mat-step>
+    </mat-step>-->
 </mat-horizontal-stepper>
