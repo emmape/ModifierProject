@@ -117,6 +117,14 @@ namespace ModifieR.Controllers
                 return Ok("");
             }
         }
+
+        [HttpPost("comboResults")]
+        public async Task<IActionResult> comboResults([FromBody] ModifierInputObject input)
+        {
+            string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "combo", input.id);
+            return Ok("got results");
+        }
+
         [HttpPost("saveFiles")]
         public async Task<IActionResult> saveFiles([FromBody] ModifierInputObject input)
         {

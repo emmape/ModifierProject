@@ -311,6 +311,12 @@ export class InferModuleComponent implements OnInit {
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'diffCoEx', this.algorithms)
             ]).then(r => this.result = r);
 
+            if (this.comboChoice === true) {
+                await Promise.resolve(
+                    this.analyzeService.comboResults(this.modifierInputObject)
+                ).then(r => console.log('Created Result Combo!: ', r));
+            }
+
             await Promise.resolve(
                 this.analyzeService.deleteFiles(this.modifierInputObject)
             ).then(r => console.log('Deleted files with id: ', r));

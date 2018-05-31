@@ -10,9 +10,16 @@
         <mat-tab-group>
             <mat-tab label="Results">
                 <mat-card>
-                    <mat-card-title>Your analysis has been initiated.</mat-card-title>
-                    <mat-card-subtitle>The results for your selected algorithms will appear in separate tabs as soon as they are done. Some of the algorithms takes som time to run. We will send you an email as soon as those results are done.</mat-card-subtitle>
-                
+                    <section *ngIf="resultCombo===''">
+                        <mat-card-title>Your analysis have been initiated.</mat-card-title>
+                        <mat-card-subtitle>The results for your selected algorithms will appear in separate tabs as soon as they are done. Some of the algorithms takes som time to run. We will send you an email as soon as those results are done.</mat-card-subtitle>
+                       </section>
+                        <section *ngIf="resultCombo!==''">
+                            <mat-card-title>Your analysis is done!</mat-card-title>
+                            <mat-card-subtitle>Find the results for each of your algorithms in the respective tab. A supermodule, containing the intersections between your results have been created, and is available for download below.</mat-card-subtitle>
+
+                            <button class="download-button" mat-button (click)="resultCombo.click()">Download Supermodule!</button>
+                        </section>
 
                 </mat-card>
             </mat-tab>

@@ -3,6 +3,10 @@ setwd(args[6])
 #setwd("C:/Users/emmae/Programmering/ModifieR/ModifierFrontAndBackend/ModifierProject/ModifieR/RCode")
 #source("create_input.R")
 
+if(args[5] == "combo"){
+	write.csv("ComboTEST!!!", file = paste("tmpFilestorage/output","combo", args[7],".csv", sep=""))
+}else {
+
 ######## Formatting input #####################
 exprMatrix <- read.csv(paste("tmpFilestorage/expressionMatrix",args[7],".txt", sep=""), stringsAsFactors=FALSE, sep=" ")
 #exprMatrix <- read.csv("tmpFilestorage/expressionMatrix50b52162-5427-4876-96ed-f9c54beee1a2.txt", stringsAsFactors=FALSE, sep=" ")
@@ -84,4 +88,4 @@ if(args[5] == "diamond"){
 	print("ModuleDiscoverer output!")
 }
 
-#print(geterrmessage())
+}

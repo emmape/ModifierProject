@@ -44,7 +44,7 @@ args[5]
 ####### Performing selected analysis ######################
 if(args[5] == "diamond"){
 	#source("R/diamond.R")
-	diamond <- MODifieRDev::diamond(exampleInput, examplePpi)
+	diamond <- MODifieRDev::diamond(modifierInput, examplePpi)
 	#print(diamond$module_genes)
 	print("diamond output!")
 } else if(args[5] == "cliqueSum"){
@@ -70,10 +70,17 @@ if(args[5] == "diamond"){
 	print("Dime output!")  
 }else if(args[5] == "mcode"){
 	#source("R/mcode.R")
-	mcode <- MODifieRDev::mod_mcode(exampleInput, examplePpi)
-	mcode
-	#print(mcode)
-	print("Mcode output!")
+	mcode <- MODifieRDev::mod_mcode(modifierInput, examplePpi)
+	mglist<-list()
+	for(i in 1:length(mcode)){
+	  mg1 <- mcode[[i]]$module_genes
+	  mg1<-mg1[1:1000]
+	  mg1df <- data.frame(mg1)
+	  colnames(mg1df) <- paste("Module", i, sep=" ")
+	  mglist<-c(mglist, mg1df)
+	}
+	write.csv(mglist, file = paste("tmpFilestorage/output","TEST",".csv", sep=""),row.names=FALSE)
+	
 }else if(args[5] == "moda"){
 	#source("R/moda.R")
 	moda <- MODifieRDev::moda(exampleInput, "Density", 0.1, 0.1, "tmpFilestorage" )
@@ -85,5 +92,48 @@ if(args[5] == "diamond"){
 	#print(modulediscoverer)
 	print("ModuleDiscoverer output!")
 }
+
+exampeDiamond <- examplePpi <- readRDS("C:/Users/emmae/Documents/Emmas/Bioinformatik/Master Thesis/FreshFolderForModifier/modifier_stuff180516/diamond_module.rds", refhook = NULL)
+exampeCorrelationClique <- examplePpi <- readRDS("C:/Users/emmae/Documents/Emmas/Bioinformatik/Master Thesis/FreshFolderForModifier/modifier_stuff180516/correlation_module.rds", refhook = NULL)
+exampecliqueSum <- examplePpi <- readRDS("C:/Users/emmae/Documents/Emmas/Bioinformatik/Master Thesis/FreshFolderForModifier/modifier_stuff180516/clique_module.rds", refhook = NULL)
+
+modules <- list(exampeDiamond$module_genes, exampecliqueSum$module_genes, exampecliqueSum$module_genes)
+moduleList <- list(exampecliqueSum, exampecliqueSum, exampeDiamond)
+mcodeList <- c(mcode)
+mcode[[1]]
+class(mcode[[1]])
+resultList <- MODifieRDev::get_module_list(result_list=mcode)
+interssections <- MODifieRDev::get_intersections(c(moduleList, mcode))
+interssections
+exampeDiamond$module_genes
+write.csv(df, file = paste("tmpFilestorage/outputTEST",".csv", sep=""),row.names=FALSE)
+df <- data.frame(exampeDiamond$module_genes)
+
+mglist<-list()
+for(i in 1:length(mcode)){
+  mg1 <- mcode[[i]]$module_genes
+  mg1<-mg1[1:1000]
+  mg1df <- data.frame(mg1)
+  colnames(mg1df) <- paste("Module", i, sep=" ")
+  mglist<-c(mglist, mg1df)
+}
+write.csv(mglist, file = "tmpFilestorage/outputTEST.csv",row.names=FALSE)
+
+
+
+
+
+
+####################################################################
+####################################################################
+if(!file.exists(destfile)){
+  
+}
+
+
+
+
+
+
 
 #print(geterrmessage())

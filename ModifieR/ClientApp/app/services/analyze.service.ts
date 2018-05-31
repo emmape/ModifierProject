@@ -112,6 +112,11 @@ export class AnalyzeService {
         return await post.toPromise().then((response: any) => response.text());
     }
 
+    async comboResults(modifierInput: ModifierInput): Promise<string> {
+        const post: any = this._httpService.post("/api/analysis/comboResults", modifierInput)
+        return await post.toPromise().then((response: any) => response.text());
+    }
+
     async getResults(id: string[]): Promise<string>{
         const post: any = this._httpService.post("/api/analysis/results", id)
         let res = '';

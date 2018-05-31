@@ -50,6 +50,38 @@ namespace ModifieR.RCode
                 throw new Exception("R Script failed: " + result, ex);
             }
         }
+        public static async Task<string> RunFromCmdGeneral(string filename, string id)
+        {
+            string result = string.Empty;
+            try
+            {
+                var info = new ProcessStartInfo();
+                info.FileName = @"C:\Program Files\R\R-3.4.1\bin\Rscript.exe";
+                info.WorkingDirectory = @"C:\Program Files\R\R-3.4.1\bin";
+                info.Arguments =
+                    Directory.GetCurrentDirectory() + @"\RCode\" + filename + " "
+                    + Directory.GetCurrentDirectory() + @"\RCode\"
+                    + " " + id;
+
+                info.RedirectStandardInput = false;
+                info.RedirectStandardOutput = true;
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
+
+                using (var proc = new Process())
+                {
+                    proc.StartInfo = info;
+                    proc.Start();
+                    result = proc.StandardOutput.ReadToEnd();
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("R Script failed: " + result, ex);
+            }
+        }
         public static string saveFiles(string expressionMatrixContent, string probeMapContent, string networkContent)
         {
             string fileID = Guid.NewGuid().ToString();

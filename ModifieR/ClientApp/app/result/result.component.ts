@@ -27,6 +27,7 @@ export class ResultComponent implements OnInit {
     resultCorrelationClique: any='';
     resultDime: any='';
     resultDiffCoEx: any = '';
+    resultCombo: any = '';
     result: string = '!';
 
     id: string = '';
@@ -81,6 +82,10 @@ export class ResultComponent implements OnInit {
         await Promise.resolve(
             this.analyzeService.getResults(['moduleDiscoverer', this.id])
         ).then(r => this.resultModuleDiscoverer = r);
+
+        await Promise.resolve(
+            this.analyzeService.getResults(['combo', this.id])
+        ).then(r => this.resultCombo = r);
 
         if (this.resultDiamond != '' && this.chosenAlgorithms.indexOf('Diamond') < 0) {
             this.chosenAlgorithms.push('Diamond');
