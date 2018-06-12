@@ -2,13 +2,14 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Http } from '@angular/http'
+import { HttpClient } from '@angular/common/http';
 import { ModifierInput } from '../models/ModifierInput';
 import { Algorithms } from '../models/Algorithms';
 
 
 @Injectable()
 export class AnalyzeService {
-  constructor(private _httpService: Http) { }
+    constructor(private _httpService: Http, private httpClient: HttpClient) { }
 
     async performAnalysis(modifierInput: ModifierInput, algorithm: string, algorithms: Algorithms): Promise<string> {
        let returns: any[] = [];
@@ -125,8 +126,9 @@ export class AnalyzeService {
                 res = response.text());
         if (res != '') {
                 return await post.toPromise()
-            .then((response: any) =>
-                this.downloadFile(response.text()));
+                    .then((response: any) =>
+                        [this.downloadFile(response.text()), response.text()])
+                
         }
         else {
             return await Promise.resolve(123)
@@ -134,10 +136,28 @@ export class AnalyzeService {
                     return "";
                 })
         }
+
         //return await post.toPromise()
         //    .then((response: any) =>
         //        this.downloadFile(response.text()));
     }
+
+    getResultImage(id: string[]): Observable<Blob> {
+        var url = 'https://string-db.org/api/image/network?identifiers=';
+        for (let i of id) {
+            url = url + i + '%0d';
+        }
+        url = url.substring(0, (url.length - 3));
+        url = url + '&add_white_nodes=10&add_color_nodes=10&network_flavor=actions&species=9606';
+        return this.httpClient
+            .get('https://string-db.org/api/image/network?identifiers=2288%0d6376&add_white_nodes=10&add_color_nodes=10&network_flavor=actions&species=9606',
+                {
+                responseType: "blob"
+            });
+    }
+
+
+
 
  
 }

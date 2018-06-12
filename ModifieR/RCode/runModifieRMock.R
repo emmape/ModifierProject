@@ -39,8 +39,16 @@ networkDF <- data.frame(network)
 #library("STRINGdb")
 #network <- MODifieRDev::get_string_DB_ppi()
 
-args <- c("0", "1", "2", "3", "cliqueSum", "6")
+args <- c("0", "1", "2", "3", "combo", "6")
 args[5]
+
+if(args[5]=="combo"){
+  print("funkar????")
+}
+else{
+  
+}
+
 ####### Performing selected analysis ######################
 if(args[5] == "diamond"){
 	#source("R/diamond.R")
@@ -70,7 +78,7 @@ if(args[5] == "diamond"){
 	print("Dime output!")  
 }else if(args[5] == "mcode"){
 	#source("R/mcode.R")
-	mcode <- MODifieRDev::mod_mcode(modifierInput, examplePpi)
+	mcode <- MODifieRDev::mod_mcode(exampleInput, examplePpi)
 	mglist<-list()
 	for(i in 1:length(mcode)){
 	  mg1 <- mcode[[i]]$module_genes
@@ -102,8 +110,8 @@ moduleList <- list(exampecliqueSum, exampecliqueSum, exampeDiamond)
 mcodeList <- c(mcode)
 mcode[[1]]
 class(mcode[[1]])
-resultList <- MODifieRDev::get_module_list(result_list=mcode)
-interssections <- MODifieRDev::get_intersections(c(moduleList, mcode))
+resultList <- MODifieRDev::get_module_list(mcode)
+interssections <- MODifieRDev::get_intersections(mcode)
 interssections
 exampeDiamond$module_genes
 write.csv(df, file = paste("tmpFilestorage/outputTEST",".csv", sep=""),row.names=FALSE)
@@ -126,14 +134,54 @@ write.csv(mglist, file = "tmpFilestorage/outputTEST.csv",row.names=FALSE)
 
 ####################################################################
 ####################################################################
-if(!file.exists(destfile)){
-  
+#args = commandArgs(trailingOnly=TRUE)
+#setwd(args[1])
+#source("create_input.R")
+
+resultList<-list()
+
+cliquesumFile <-paste("tmpFilestorage/output","cliqueSum", args[2],".csv", sep="")
+if(file.exists(cliquesumFile)){
+  cliqueSumRes <- read.csv(cliquesumFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, cliqueSumRes)
 }
+correlationCliqueFile <-paste("tmpFilestorage/output","correlationClique", args[2],".csv", sep="")
+if(file.exists(correlationCliqueFile)){
+  correlationCliqueRes <- read.csv(correlationCliqueFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, correlationCliqueRes)
+}
+diamondFile <-paste("tmpFilestorage/output","diamond", args[2],".csv", sep="")
+if(file.exists(diamondFile)){
+  diamondRes <- read.csv(diamondFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, diamondRes)
+}
+diffCoExFile <-paste("tmpFilestorage/output","diffCoEx", args[2],".csv", sep="")
+if(file.exists(diffCoExFile)){
+  diffCoExRes <- read.csv(diffCoExFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, diffCoExRes)
+}
+dimeFile <-paste("tmpFilestorage/output","dime", args[2],".csv", sep="")
+if(file.exists(dimeFile)){
+  dimeRes <- read.csv(dimeFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, dimeRes)
+}
+mcodeFile <-paste("tmpFilestorage/output","mcode", "3a4133af-52ba-482a-9611-cc79998c1efa",".csv", sep="")
+if(file.exists(mcodeFile)){
+  mcodeRes <- read.csv(mcodeFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, mcodeRes)
+}
+modaFile <-paste("tmpFilestorage/output","moda", args[2],".csv", sep="")
+if(file.exists(modaFile)){
+  modaRes <- read.csv(modaFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, modaRes)
+}
+moduleDiscovererFile <-paste("tmpFilestorage/output","moduleDiscoverer", args[2],".csv", sep="")
+if(file.exists(moduleDiscovererFile)){
+  moduleDiscovererRes <- read.csv(moduleDiscovererFile, stringsAsFactors=FALSE, sep=",")
+  resultList <- c(resultList, moduleDiscovererRes)
+}
+genes <- c("2288", "6376")
+write.csv(genes, file = paste("tmpFilestorage/output","combo",".csv", sep=""), row.names=FALSE)
 
+print("in beginning")
 
-
-
-
-
-
-#print(geterrmessage())

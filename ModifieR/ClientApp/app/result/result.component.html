@@ -19,6 +19,9 @@
                             <mat-card-subtitle>Find the results for each of your algorithms in the respective tab. A supermodule, containing the intersections between your results have been created, and is available for download below.</mat-card-subtitle>
 
                             <button class="download-button" mat-button (click)="resultCombo.click()">Download Supermodule!</button>
+                            <img [src]="comboImage"
+                                 alt="Network from STRINGDb" *ngIf="comboImage!==''"
+                                >
                         </section>
 
                 </mat-card>

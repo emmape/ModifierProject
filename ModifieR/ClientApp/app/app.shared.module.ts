@@ -66,7 +66,8 @@ import { NgDragDropModule } from 'ng-drag-drop';
         FormsModule,
         ReactiveFormsModule,
         NgDragDropModule.forRoot(),
-        HttpModule
+        HttpModule,
+        HttpClientModule
 
     ],
      providers: [ReadFileService, AnalyzeService],

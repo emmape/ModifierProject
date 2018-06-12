@@ -18,6 +18,12 @@ export class ReadFileService {
   samples$ = this.samples.asObservable();
   samplesRecieved(s: string) {
       this.samples.next(s);
-  }
+    }
+
+    private combo = new Subject<string>();
+    combo$ = this.combo.asObservable();
+    comboRecieved(s: string) {
+        this.combo.next(s);
+    }
 
 }

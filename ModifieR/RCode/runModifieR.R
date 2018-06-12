@@ -4,7 +4,8 @@ setwd(args[6])
 #source("create_input.R")
 
 if(args[5] == "combo"){
-	write.csv("ComboTEST!!!", file = paste("tmpFilestorage/output","combo", args[7],".csv", sep=""))
+	genes <- c("2288", "6376")
+	write.csv(genes, file = paste("tmpFilestorage/output","combo", args[7],".csv", sep=""), row.names=FALSE)
 }else {
 
 ######## Formatting input #####################
