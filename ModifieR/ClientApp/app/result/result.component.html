@@ -10,19 +10,23 @@
         <mat-tab-group>
             <mat-tab label="Results">
                 <mat-card>
-                    <section *ngIf="resultCombo===''">
+                    <section *ngIf="comboImage==='' && chosenAlgorithms.length<1">
                         <mat-card-title>Your analysis have been initiated.</mat-card-title>
                         <mat-card-subtitle>The results for your selected algorithms will appear in separate tabs as soon as they are done. Some of the algorithms takes som time to run. We will send you an email as soon as those results are done.</mat-card-subtitle>
-                       </section>
-                        <section *ngIf="resultCombo!==''">
-                            <mat-card-title>Your analysis is done!</mat-card-title>
-                            <mat-card-subtitle>Find the results for each of your algorithms in the respective tab. A supermodule, containing the intersections between your results have been created, and is available for download below.</mat-card-subtitle>
+                        <div class="progressSpinner"><mat-spinner></mat-spinner></div>
+                    </section>
+                    <section *ngIf="chosenAlgorithms.length>0  && comboImage ===''">
+                        <mat-card-title>Results have been calculated!</mat-card-title>
+                        <mat-card-subtitle>The results for your selected algorithms will appear in separate tabs as soon as they are done. Some of the algorithms takes som time to run. We will send you an email as soon as those results are done.</mat-card-subtitle>
+                    </section>
+                    <section *ngIf="comboImage!==''">
+                        <mat-card-title>Your analysis is done!</mat-card-title>
+                        <mat-card-subtitle>Find the results for each of your algorithms in the respective tab. A supermodule, containing the intersections between your results have been created, and is available for download below. The image displays the network for the proteins in your supermodule, created from StringDB.</mat-card-subtitle>
 
-                            <button class="download-button" mat-button (click)="resultCombo.click()">Download Supermodule!</button>
-                            <img [src]="comboImage"
-                                 alt="Network from STRINGDb" *ngIf="comboImage!==''"
-                                >
-                        </section>
+                        <button class="download-button" mat-button (click)="resultCombo.click()">Download Supermodule!</button>
+                        <img [src]="comboImage"
+                             alt="Network from STRINGDb" *ngIf="comboImage!==''">
+                    </section>
 
                 </mat-card>
             </mat-tab>
@@ -30,43 +34,58 @@
 
                 <section *ngIf="tab ==='Diamond'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
                         <button class="download-button" mat-button (click)="resultDiamond.click()">Download results</button>
                     </mat-card>
                 </section>
                 <section *ngIf="tab === 'CliqueSum'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
+
                         <button class="download-button" mat-button (click)="resultCliquesum.click()">Download results</button>
-                        </mat-card>
+                    </mat-card>
 </section>
                 <section *ngIf="tab === 'MCODE'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
+
                         <button class="download-button" mat-button (click)="resultMcode.click()">Download results</button>
                     </mat-card>
                 </section>
                 <section *ngIf="tab === 'ModuleDiscoverer'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
+
                         <button class="download-button" mat-button (click)="resultModuleDiscoverer.click()">Download results</button>
-                        </mat-card>
+                    </mat-card>
 </section>
                 <section *ngIf="tab === 'CorrelationClique'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
+
                         <button class="download-button" mat-button (click)="resultCorrelationClique.click()">Download results</button>
-                        </mat-card>
+                    </mat-card>
 </section>
                 <section *ngIf="tab === 'Moda'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
+
                         <button class="download-button" mat-button (click)="resultModa.click()">Download results</button>
-                        </mat-card>
+                    </mat-card>
 </section>
                 <section *ngIf="tab === 'Dime'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
+
                         <button class="download-button" mat-button (click)="resultDime.click()">Download results</button>
-                        </mat-card>
+                    </mat-card>
 </section>
                 <section *ngIf="tab === 'DiffCoEx'">
                     <mat-card>
+                        <mat-card-subtitle>Click the button below to download a file containing the disease module for your gene data.</mat-card-subtitle>
+
                         <button class="download-button" mat-button (click)="resultDiffCoEx.click()">Download results</button>
-                        </mat-card>
+                    </mat-card>
 </section>
 
             </mat-tab>

@@ -133,6 +133,7 @@ export class ResultComponent implements OnInit {
                 console.log(error);
                 });
             this.createImageFromBlob(blobImage);
+   
         }
     }
 

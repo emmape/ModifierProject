@@ -185,3 +185,15 @@ write.csv(genes, file = paste("tmpFilestorage/output","combo",".csv", sep=""), r
 
 print("in beginning")
 
+######################################################
+get_intersections <- function(module_list){
+  intersection_table <- table(unlist(sapply(X = module_list, FUN = function(x)x$module_genes)))
+  intersections <- list()
+  for (i in 1:length(module_list)){
+    intersections[[i]] <- names(intersection_table[intersection_table > i])
+  }
+  names(intersections) <- paste("size", 1:length(module_list), "module", sep = "_")
+  return(intersections)
+}
+
+

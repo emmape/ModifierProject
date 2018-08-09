@@ -149,9 +149,11 @@ export class AnalyzeService {
         }
         url = url.substring(0, (url.length - 3));
         url = url + '&add_white_nodes=10&add_color_nodes=10&network_flavor=actions&species=9606';
+        console.log('Using url: ', url);
         return this.httpClient
-            .get('https://string-db.org/api/image/network?identifiers=2288%0d6376&add_white_nodes=10&add_color_nodes=10&network_flavor=actions&species=9606',
-                {
+            //.get('https://string-db.org/api/image/network?identifiers=2288%0d6376&add_white_nodes=10&add_color_nodes=10&network_flavor=actions&species=9606',
+.get(url,
+        {
                 responseType: "blob"
             });
     }
