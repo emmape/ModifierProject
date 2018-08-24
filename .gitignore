@@ -241,3 +241,8 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+.vs/ModifieR/DesignTimeBuild/.dtbcache
+.vs/ModifieR/DesignTimeBuild/.dtbcache
+.vs/ModifieR/v15/.suo
+.vs/ModifieR/v15/Server/sqlite3/storage.ide-shm
+.vs/ModifieR/v15/Server/sqlite3/storage.ide-wal
