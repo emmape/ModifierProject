@@ -26,10 +26,10 @@ module.exports = (env) => {
             ]
         },
         plugins: [new CheckerPlugin()],
-        watchOptions: {
-            aggregateTimeout: 10000,
-            poll: 1000
-        }
+        //watchOptions: {
+        //    aggregateTimeout: 10000,
+        //    poll: 1000
+        //}
     };
 
     // Configuration for client-side bundle suitable for running in browsers
