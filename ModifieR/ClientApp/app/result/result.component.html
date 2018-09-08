@@ -19,14 +19,14 @@
                         <div class="progressSpinner"><mat-spinner></mat-spinner></div>
                     </section>
                     <section *ngIf="chosenAlgorithms.length>0  && comboImage ===''">
-                        <mat-card-title>Results have been calculated!</mat-card-title>
+                        <mat-card-title>Results have been calculated</mat-card-title>
                         <mat-card-subtitle>The results for your selected algorithms will appear in separate tabs as soon as they are done. Some of the algorithms takes som time to run. We will send you an email as soon as those results are done.</mat-card-subtitle>
                     </section>
                     <section *ngIf="comboImage!==''">
-                        <mat-card-title>Your analysis is done!</mat-card-title>
+                        <mat-card-title>Your analysis is done</mat-card-title>
                         <mat-card-subtitle>Find the results for each of your algorithms in the respective tab. A supermodule, containing the intersections between your results have been created, and is available for download below. The image displays the network for the proteins in your supermodule, created from StringDB.</mat-card-subtitle>
 
-                        <button class="download-button" mat-button (click)="resultCombo.click()">Download Supermodule!</button>
+                        <button class="download-button" mat-button (click)="resultCombo.click()">Download Supermodule</button>
                         <img [src]="comboImage"
                              alt="Network from STRINGDb" *ngIf="comboImage!==''">
                     </section>

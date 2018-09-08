@@ -50,10 +50,10 @@
 
 .background {
     /* background-image: url("../gray.jpg"); */
-    background-image: url("../../Images/triangulation6.png");
+    /*background-image: url("../../Images/triangulation6.png");*/
     height: 89vh;
     width: 99vw;
-    /* background-color: rgba(190, 255, 226, 0.17); */
+    /*background-color: #E5FFE5;*/
     /* background-blend-mode: lighten; */
 }
  

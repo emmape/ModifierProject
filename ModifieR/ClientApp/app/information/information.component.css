@@ -1,8 +1,10 @@
-.info-picture{
-    background-image: url("../../Images/modifier.jpg");
-    height: 340px;;
-    width: 500px;;
-
+.info-picture {
+    /*background-image: url("../../Images/modifier.jpg");*/
+    background-image: url("../../Images/triangulation6.png");
+    height: 340px;
+    ;
+    width: 500px;
+    ;
 }
 .infoTitle{
     margin-top: 50px;
@@ -33,8 +35,9 @@
     margin-right: auto;
 
 }
-.infoCard{
-    background-image: url("../../Images/dna4.png");
+.infoCard {
+    /*background-image: url("../../Images/dna4.png");*/
+    /*background-image: url("../../Images/triangulation6.png");*/
     display: flex;
     flex-flow: column;
     width: 70%;

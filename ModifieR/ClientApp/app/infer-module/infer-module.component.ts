@@ -34,6 +34,7 @@ export class InferModuleComponent implements OnInit {
     groupName1Ctrl = new FormControl('', [Validators.required]);
     groupName2Ctrl = new FormControl('', [Validators.required]);
     algorithmCtrl = new FormControl('');
+    //emailCtrl = new FormControl('', [Validators.required]);
     samples: string[] = ['S1', 'S2', 'S3', 'S4'];
     originalSamples: string[] = ['S1', 'S2', 'S3', 'S4'];
     dragItem: any = null;
@@ -70,6 +71,7 @@ export class InferModuleComponent implements OnInit {
         });
         this.secondFormGroup = this._formBuilder.group({
             algorithmCtrl: this.algorithmCtrl,
+            //emailCtrl: this.emailCtrl,
         });
         this.thirdFormGroup = this._formBuilder.group({
             groupName1Ctrl: this.groupName1Ctrl,
@@ -324,30 +326,22 @@ export class InferModuleComponent implements OnInit {
             
         }
     }
-    clickNextThird(stepper: any): void {
-        //if (this.samples.length > 0) {
-        //    this.groupName2Ctrl.setErrors({ 'incorrect': true });
-        //} else {
-        //    if (this.groupName2 === '') {
-        //        this.groupName2Ctrl.setErrors(null);
-        //        this.groupName2Ctrl.setErrors({ 'required': true });
-        //    } else {
-        //        this.groupName2Ctrl.setErrors(null);
-        //    }
-        //}
-        //if (this.groupName2 === '') {
-        //    this.groupName2Ctrl.setErrors(null);
-        //    this.groupName2Ctrl.setErrors({ 'required': true });
-        //} else {
-        //    this.groupName2Ctrl.setErrors(null);
-        //}
-        if (this.thirdFormGroup.valid) {
-            console.log('SampleGroup1: ', this.modifierInputObject.sampleGroup1);
-            console.log('SampleGroup2: ', this.modifierInputObject.sampleGroup2);
-            stepper.next();
 
-        }
+    clickNextThird(stepper: any): void {
+        if (this.group1Samples.length === 0 || this.group2Samples.length ===0) {
+            const dialogRef = this.dialog.open(MissingDialog, {
+                width: '380px',
+                data: 'Please drag your samples to the appropriate groups before going to the next step'
+            });
+            dialogRef.afterClosed().subscribe(result => {
+            });
+        } else {
+            if (this.thirdFormGroup.valid) {
+                stepper.next();
+            }
+        }     
     }
+
     clickNextFourth(stepper: any): void {
         stepper.next();
     }
@@ -356,6 +350,19 @@ export class InferModuleComponent implements OnInit {
             this.algorithmCtrl.setErrors(null);
         } else {
             this.algorithmCtrl.setErrors({ 'incorrect': true });
+        }
+        //if ((this.needsEmail() === true && this.modifierInputObject.email !== '') || (this.needsEmail() === false)) {
+        //    this.emailCtrl.setErrors(null);
+        //} else {
+        //    this.emailCtrl.setErrors({ 'incorrect': true });
+        //}
+        
+    }
+    needsEmail():boolean {
+        if (this.algorithms.md === true || this.algorithms.cliquesum === true || this.algorithms.correlationclique === true || this.algorithms.diffcoex === true || this.algorithms.dime === true || this.algorithms.moda === true) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

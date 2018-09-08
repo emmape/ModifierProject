@@ -8,14 +8,14 @@
                 <mat-card-title>Upload Data</mat-card-title>
                 <mat-card-subtitle class="fileDesc">
                     Choose an expression matrix for input genes
-                    <mat-icon class="helpSign" matTooltip="Upload a normalized expression matrix with samples as columns and probes as rows">help_outline</mat-icon>
+                    <mat-icon class="helpSign" matTooltip="Upload a CSV-file containing a normalized expression matrix with samples as columns and probes as rows">help_outline</mat-icon>
                 </mat-card-subtitle>
 
                 <app-file-uploader filetype="genes"></app-file-uploader>
 
                 <mat-card-subtitle class="fileDesc">
                     Choose a probe map
-                    <mat-icon class="helpSign" matTooltip="Upload a table with three columns, ProbeID, Gene symbol and Entrez ID">help_outline</mat-icon>
+                    <mat-icon class="helpSign" matTooltip="Upload a CSV file with three columns: ProbeID, Gene symbol and Entrez ID for your genes">help_outline</mat-icon>
                 </mat-card-subtitle>
                 <app-file-uploader filetype="probeMap"></app-file-uploader>
 
@@ -28,11 +28,12 @@
                     <mat-error *ngIf="networkCtrl.invalid">Please, choose a network</mat-error>
                 </mat-form-field>
                 <section *ngIf="selectedNetwork == 'upload'">
-                    <mat-card-subtitle class="fileDescSmall">Choose a network</mat-card-subtitle>
+                    <mat-card-subtitle class="fileDescSmall">
+                        Choose a network  <mat-icon class="helpSign" matTooltip="Upload a CSV file containing your preferred PPI-network">help_outline</mat-icon>
+                    </mat-card-subtitle>
                     <app-file-uploader filetype="network"></app-file-uploader>
                 </section>
                 <div>
-                    <!-- <mat-divider class="stepper-divider"></mat-divider>-->
                     <button class="next-button" mat-button (click)="clickNextFirst(stepper)">Next</button>
                 </div>
             </mat-card>
@@ -103,7 +104,7 @@
                     <mat-card-title>Choose algorithms for module inference</mat-card-title>
                     <div class="row-div">
                         <div class="leftCheckboxDiv">
-                            <mat-checkbox formControlName="algorithmCtrl" [(checked)]="algorithms.diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD</mat-checkbox>
+                            <mat-checkbox formControlName="algorithmCtrl" [(checked)]="algorithms.diamond" (change)="diamondChbChanged()" color="primary" class="checkbox">DIAMOnD </mat-checkbox>
                             <mat-checkbox [(checked)]="algorithms.mcode" (change)="mcodeChbChanged()" color="primary" class="checkbox">MCODE</mat-checkbox>
                         </div>
                         <div class="leftCheckboxDiv">
@@ -122,20 +123,23 @@
                         </div>
                     </div>
                     <div class="sliderErrorDiv">
-                        <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">Create a Combined Result</mat-slide-toggle>
+                        <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">
+                            Create Supermodule    <mat-icon class="helpSign" matTooltip="Create a combined result from all the algorithms you choose">help_outline</mat-icon>
+                        </mat-slide-toggle>
                         <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
                     </div>
 
-                    <section *ngIf="this.algorithms.md===true || this.algorithms.cliquesum===true || this.algorithms.correlationclique===true || this.algorithms.diffcoex===true || this.algorithms.dime===true || this.algorithms.moda===true ">
+                    <section *ngIf="needsEmail()===true">
                         <mat-card-subtitle>
                             The algorithm you chose will take some time to calculate.
                             Please enter your email address, and we will send you the results once they are done.
                         </mat-card-subtitle>
                         <mat-form-field class="sampleInput">
                             <input matInput placeholder="Enter your Email Address" [(ngModel)]="modifierInputObject.email" [ngModelOptions]="{standalone: true}">
+                            <!--<mat-error *ngIf="modifierInputObject.email===''">Please, enter an email address</mat-error>-->
                             <!--<mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-                Please enter a valid email address
-            </mat-error>-->
+        Please enter a valid email address
+    </mat-error>-->
                         </mat-form-field>
                     </section>
 
