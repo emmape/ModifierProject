@@ -14,7 +14,6 @@ using ModifieR.Services;
 
 namespace ModifieR.Controllers
 {
-    //[Produces("application/json")]
     [AllowAnonymous]
     [Route("api/analysis")]
     public class AnalysisController : Controller
@@ -23,9 +22,7 @@ namespace ModifieR.Controllers
         [HttpPost("diamond")]
         public async Task<IActionResult> analyseDiamond([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", input.id);
-            //RScriptRunner.deleteFiles(id);
             IFileProvider provider = new PhysicalFileProvider(Directory.GetCurrentDirectory() + "\\RCode\\tmpFilestorage");
             IFileInfo fileInfo = provider.GetFileInfo("outputdiamond" + input.id + ".csv");
             var readStream = fileInfo.CreateReadStream();
@@ -36,55 +33,42 @@ namespace ModifieR.Controllers
         [HttpPost("cliquesum")]
         public async Task<IActionResult> analyseCliquesum([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "cliqueSum", input.id);
-            //RScriptRunner.deleteFiles(id);
             mailService.sendEmail(input.email, input.id, "cliquesum");
             return Ok("An email containing your results has been sent!");
         }
         [HttpPost("correlationclique")]
         public async Task<IActionResult> analysecorrelationClique([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "correlationClique", input.id);
-            //RScriptRunner.deleteFiles(id);
             mailService.sendEmail(input.email, input.id, "correlationClique");
             return Ok("An email containing your results has been sent!");
         }
         [HttpPost("diffcoex")]
         public async Task<IActionResult> analysediffCoEx([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "diffCoEx", input.id);
-            //RScriptRunner.deleteFiles(id);
             mailService.sendEmail(input.email, input.id, "diffCoEx");
             return Ok("An email containing your results has been sent!");
         }
         [HttpPost("dime")]
         public async Task<IActionResult> analyseDime([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "dime", input.id);
-            //RScriptRunner.deleteFiles(id);
             mailService.sendEmail(input.email, input.id, "dime");
             return Ok("An email containing your results has been sent!");
         }
         [HttpPost("moda")]
         public async Task<IActionResult> analyseModa([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "moda", input.id);
-            //RScriptRunner.deleteFiles(id);
             mailService.sendEmail(input.email, input.id, "moda");
             return Ok("An email containing your results has been sent!");
         }
         [HttpPost("mcode")]
         public async Task<IActionResult> analyseMcode([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "mcode", input.id);
-            //RScriptRunner.deleteFiles(id);
-
             IFileProvider provider = new PhysicalFileProvider(Directory.GetCurrentDirectory() + "\\RCode\\tmpFilestorage");
             IFileInfo fileInfo = provider.GetFileInfo("outputmcode" + input.id + ".csv");
             var readStream = fileInfo.CreateReadStream();
@@ -94,9 +78,7 @@ namespace ModifieR.Controllers
         [HttpPost("modulediscoverer")]
         public async Task<IActionResult> analyseMd([FromBody] ModifierInputObject input)
         {
-            //string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "moduleDiscoverer", input.id);
-            //RScriptRunner.deleteFiles(id);
             mailService.sendEmail(input.email, input.id, "moduleDiscoverer");
             return Ok("An email containing your results has been sent!");
         }

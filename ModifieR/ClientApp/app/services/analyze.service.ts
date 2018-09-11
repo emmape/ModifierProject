@@ -24,7 +24,7 @@ export class AnalyzeService {
         }
         //if (algorithms.cliquesum === true) {
         else if (algorithm === 'cliqueSum' && algorithms.cliquesum === true) {
-           const post: any = this._httpService.post("/api/analysis/cliquesum", modifierInput)
+            const post: any = this._httpService.post("/api/analysis/cliquesum", modifierInput)
             let s: Promise<string> = post.toPromise().then((response: any) => response.text());
             return (await Promise.resolve(123)
                 .then((res) => {
