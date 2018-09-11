@@ -54,12 +54,34 @@ export class InferModuleComponent implements OnInit {
             file => {
                 if (file.fileType === 'genes') {
                     this.modifierInputObject.expressionMatrixContent = file.file;
+                     
+                    if (this.modifierInputObject.expressionMatrixContent.indexOf(',') >= 0) {
+                        var re = /,/gi;
+                        this.modifierInputObject.expressionMatrixContent = this.modifierInputObject.expressionMatrixContent.replace(re, ' ');
+                    }else if (this.modifierInputObject.expressionMatrixContent.indexOf(';') >= 0) {
+                        var re = /;/gi; 
+                        this.modifierInputObject.expressionMatrixContent = this.modifierInputObject.expressionMatrixContent.replace(re, ' ');
+                    }             
                     this.samples = this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' ');
                     this.originalSamples = this.modifierInputObject.expressionMatrixContent.split('\n')[0].split(' ');
                 } else if (file.fileType === 'network') {
                     this.modifierInputObject.networkContent = file.file;
+                    if (this.modifierInputObject.networkContent.indexOf(',') >= 0) {
+                        var re = /,/gi;
+                        this.modifierInputObject.networkContent = this.modifierInputObject.networkContent.replace(re, ' ');
+                    } else if (this.modifierInputObject.networkContent.indexOf(';') >= 0) {
+                        var re = /;/gi;
+                        this.modifierInputObject.networkContent = this.modifierInputObject.networkContent.replace(re, ' ');
+                    }
                 } else if (file.fileType === 'probeMap') {
                     this.modifierInputObject.probeMapContent = file.file;
+                    if (this.modifierInputObject.probeMapContent.indexOf(',') >= 0) {
+                        var re = /,/gi;
+                        this.modifierInputObject.probeMapContent = this.modifierInputObject.probeMapContent.replace(re, ' ');
+                    } else if (this.modifierInputObject.probeMapContent.indexOf(';') >= 0) {
+                        var re = /;/gi;
+                        this.modifierInputObject.probeMapContent = this.modifierInputObject.probeMapContent.replace(re, ' ');
+                    }
                 }
             });
         this.setSecondFormGroupValid();
@@ -91,8 +113,6 @@ export class InferModuleComponent implements OnInit {
                     this.samples.splice(this.samples.indexOf(i, 0), 1);
                 } else {
                     this.group2Samples.splice(this.group2Samples.indexOf(i, 0), 1);
-                    console.log('Original Sample: ', (this.originalSamples.indexOf(i, 0) + 1).toString());
-                    console.log('Removing: ', this.modifierInputObject.sampleGroup1.indexOf((this.originalSamples.indexOf(i, 0) + 1).toString()));
                     this.modifierInputObject.sampleGroup2.splice(this.modifierInputObject.sampleGroup2.indexOf((this.originalSamples.indexOf(i, 0)+1).toString()), 1);
                 }
                 
@@ -278,7 +298,7 @@ export class InferModuleComponent implements OnInit {
         this.setSecondFormGroupValid();
     }
 
-    clickNextFirst(stepper: any): void {
+    clickNextUpload(stepper: any): void {
         if (this.modifierInputObject.expressionMatrixContent === '' || this.modifierInputObject.probeMapContent === '' || (this.modifierInputObject.networkContent === '' && this.selectedNetwork === 'upload')) {
             const dialogRef = this.dialog.open(MissingDialog, {
                 width: '380px',
@@ -291,17 +311,15 @@ export class InferModuleComponent implements OnInit {
             stepper.next();
         }
     }
-    async clickNextSecond(stepper: any) {
+
+    async clickGetResults(stepper: any) {
         this.setSecondFormGroupValid();
         if (this.secondFormGroup.valid) {
             this.modifierInputObject.id = 'thinking';
             await Promise.resolve(
                 this.analyzeService.saveFiles(this.modifierInputObject)
             ).then(r => this.modifierInputObject.id = r);
-            console.log('Created id: ', this.modifierInputObject.id);
-           // stepper.next();
             this.router.navigateByUrl('/result/'+ this.modifierInputObject.id);
-
             await Promise.all([
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'diamond', this.algorithms),
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'cliqueSum', this.algorithms),
@@ -327,7 +345,7 @@ export class InferModuleComponent implements OnInit {
         }
     }
 
-    clickNextThird(stepper: any): void {
+    clickNextSampleSelect(stepper: any): void {
         if (this.group1Samples.length === 0 || this.group2Samples.length ===0) {
             const dialogRef = this.dialog.open(MissingDialog, {
                 width: '380px',
@@ -342,9 +360,6 @@ export class InferModuleComponent implements OnInit {
         }     
     }
 
-    clickNextFourth(stepper: any): void {
-        stepper.next();
-    }
     setSecondFormGroupValid() {
         if (this.countSelected > 0 && this.countSelected !== null) {
             this.algorithmCtrl.setErrors(null);

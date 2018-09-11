@@ -69,6 +69,8 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "core-js": "^2.5.3"
+    "core-js": "^2.5.3",
+    "drag-drop-touch-polyfill": "^1.0.0",
+    "drag-drop-polyfill": "^2.0.0-rc.0"
   }
 }

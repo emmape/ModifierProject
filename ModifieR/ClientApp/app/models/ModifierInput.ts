@@ -2,11 +2,11 @@
 export class ModifierInput {
     expressionMatrixContent: any = '';
     probeMapContent: any = '';
-    group1Label: string = 'Group1';
-    group2Label: string = 'Group2';
+    group1Label: string = '';
+    group2Label: string = '';
     sampleGroup1: string[]=[];
     sampleGroup2: string[] = [];
-    email: string = "modifiermail@gmail.com";
+    email: string = '';
     networkContent: any = '';
     id: string = '';
 }
