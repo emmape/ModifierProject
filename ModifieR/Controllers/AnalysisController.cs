@@ -30,11 +30,11 @@ namespace ModifieR.Controllers
             return File(readStream, mimeType, "outputdiamond" + input.id + ".csv");
         }
 
-        [HttpPost("cliquesum")]
-        public async Task<IActionResult> analyseCliquesum([FromBody] ModifierInputObject input)
+        [HttpPost("cliqueSum")]
+        public async Task<IActionResult> analyseCliqueSum([FromBody] ModifierInputObject input)
         {
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "cliqueSum", input.id);
-            mailService.sendEmail(input.email, input.id, "cliquesum");
+            mailService.sendEmail(input.email, input.id, "cliqueSum");
             return Ok("An email containing your results has been sent!");
         }
         [HttpPost("correlationclique")]

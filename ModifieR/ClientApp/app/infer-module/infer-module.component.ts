@@ -212,13 +212,13 @@ export class InferModuleComponent implements OnInit {
         }
         this.setSecondFormGroupValid();
     }
-    cliquesumChbChanged() {
-        if (this.algorithms.cliquesum === false) {
-            this.algorithms.cliquesum = true;
+    cliqueSumChbChanged() {
+        if (this.algorithms.cliqueSum === false) {
+            this.algorithms.cliqueSum = true;
             this.chosenAlgorithms.push('CliqueSum');
             this.countSelected++;
         } else {
-            this.algorithms.cliquesum = false;
+            this.algorithms.cliqueSum = false;
             this.chosenAlgorithms.splice(this.chosenAlgorithms.indexOf('CliqueSum', 0), 1)
             this.countSelected--;
         }
@@ -374,7 +374,7 @@ export class InferModuleComponent implements OnInit {
         
     }
     needsEmail():boolean {
-        if (this.algorithms.md === true || this.algorithms.cliquesum === true || this.algorithms.correlationclique === true || this.algorithms.diffcoex === true || this.algorithms.dime === true || this.algorithms.moda === true) {
+        if (this.algorithms.md === true || this.algorithms.cliqueSum === true || this.algorithms.correlationclique === true || this.algorithms.diffcoex === true || this.algorithms.dime === true || this.algorithms.moda === true) {
             return true;
         } else {
             return false;
