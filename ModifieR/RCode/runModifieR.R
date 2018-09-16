@@ -6,8 +6,69 @@ log_con <- file("tmpFilestorage/log.txt")
 cat("Starting\n", file = log_con, append = TRUE)
 
 if(args[5] == "combo"){
-  genes <- c("2288", "6376")
-  write.csv(genes, file = paste("tmpFilestorage/output","combo", args[7],".csv", sep=""), row.names=FALSE)
+  resultsFound <- 0
+  moduleList <- ""
+  if(file.exists(paste("tmpFilestorage/outputdiamond",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputdiamond",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    moduleList<-c(moduleList, content[,ncol(content)])
+    resultsFound <- resultsFound+1
+  }  
+  if(file.exists(paste("tmpFilestorage/outputcliqueSum",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputcliqueSum",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    moduleList<-c(moduleList, content[,ncol(content)])
+    resultsFound <- resultsFound+1
+  }  
+  if(file.exists(paste("tmpFilestorage/outputcorrelationClique",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputcorrelationClique",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    moduleList<-c(moduleList, content[,ncol(content)])
+    resultsFound <- resultsFound+1
+  }  
+  if(file.exists(paste("tmpFilestorage/outputdiffCoEx",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputdiffCoEx",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    moduleList<-c(moduleList, content[,ncol(content)])
+    resultsFound <- resultsFound+1
+  }  
+  if(file.exists(paste("tmpFilestorage/outputdime",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputdime",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    moduleList<-c(moduleList, content[,ncol(content)])
+    resultsFound <- resultsFound+1
+  }  
+  if(file.exists(paste("tmpFilestorage/outputmoda",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputmoda",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    moduleList<-c(moduleList, content[,ncol(content)])
+    resultsFound <- resultsFound+1
+  }  
+  if(file.exists(paste("tmpFilestorage/outputmoduleDiscoverer",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputmoduleDiscoverer",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    moduleList<-c(moduleList, content[,ncol(content)])
+    resultsFound <- resultsFound+1
+  }  
+  if(file.exists(paste("tmpFilestorage/outputmcode",args[7],".csv", sep=""))){
+    content <- read.csv(paste("tmpFilestorage/outputmcode",args[7],".csv", sep=""), header = TRUE, sep = ",", quote = "\"",
+                        dec = ".", fill = TRUE)
+    for(col in 1:(ncol(content)-2)){
+      moduleList<-c(moduleList, content[,col])
+      resultsFound <- resultsFound+1
+    }
+    moduleList <- moduleList[!is.na(moduleList)]
+  }
+  
+  n_occur <- data.frame(table(moduleList))
+  multipleOccurances <- ""
+  for(numModule in 1:resultsFound){
+    if(length(n_occur[n_occur$Freq > numModule,]$moduleList)>0){
+      multipleOccurances <- n_occur[n_occur$Freq > numModule,]$moduleList 
+    }
+  }
+  write.csv(multipleOccurances, file = paste("tmpFilestorage/output","combo", args[7],".csv", sep=""), row.names=FALSE)
+  
 }else {
   
   ######## Formatting input #####################
