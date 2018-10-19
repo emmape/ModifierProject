@@ -33,7 +33,7 @@ namespace ModifieR.Services
             mailMessage.Body = "Hi, \n \n Your Modifier analysis using "+algorithm+"-algorithm is now done! " +
                 "\n Please find attatched a file containing your results. " +
                 "\n You can find all results as soon as they are done, on the following link: \n " +
-                "http://localhost:62421/#/result/"+id +
+                "http://modifierweb.ddns.net:8082/#/result/" +id +
                 "\n \n Best Regards \n Modifier Web";
             mailMessage.Subject = "Your ModifieR "+algorithm+" Analysis is done!";
             //client.Send(mailMessage);

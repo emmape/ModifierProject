@@ -34,7 +34,7 @@ export class InferModuleComponent implements OnInit {
     groupName1Ctrl = new FormControl('', [Validators.required]);
     groupName2Ctrl = new FormControl('', [Validators.required]);
     algorithmCtrl = new FormControl('');
-    //emailCtrl = new FormControl('', [Validators.required]);
+    emailControl = new FormControl('', [Validators.email]);
     samples: string[] = ['S1', 'S2', 'S3', 'S4'];
     originalSamples: string[] = ['S1', 'S2', 'S3', 'S4'];
     dragItem: any = null;
@@ -93,7 +93,7 @@ export class InferModuleComponent implements OnInit {
         });
         this.secondFormGroup = this._formBuilder.group({
             algorithmCtrl: this.algorithmCtrl,
-            //emailCtrl: this.emailCtrl,
+            emailControl: this.emailControl,
         });
         this.thirdFormGroup = this._formBuilder.group({
             groupName1Ctrl: this.groupName1Ctrl,

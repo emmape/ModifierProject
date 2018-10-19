@@ -23,11 +23,8 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseDiamond([FromBody] ModifierInputObject input)
         {
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "diamond", input.id);
-            IFileProvider provider = new PhysicalFileProvider(Directory.GetCurrentDirectory() + "\\RCode\\tmpFilestorage");
-            IFileInfo fileInfo = provider.GetFileInfo("outputdiamond" + input.id + ".csv");
-            var readStream = fileInfo.CreateReadStream();
-            var mimeType = "application/vnd.ms-excel";
-            return File(readStream, mimeType, "outputdiamond" + input.id + ".csv");
+            mailService.sendEmail(input.email, input.id, "diamond");
+            return Ok("An email containing your results has been sent!");
         }
 
         [HttpPost("cliqueSum")]
@@ -69,11 +66,8 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analyseMcode([FromBody] ModifierInputObject input)
         {
             string result = await RScriptRunner.RunFromCmd("runModifieR.R", input, "mcode", input.id);
-            IFileProvider provider = new PhysicalFileProvider(Directory.GetCurrentDirectory() + "\\RCode\\tmpFilestorage");
-            IFileInfo fileInfo = provider.GetFileInfo("outputmcode" + input.id + ".csv");
-            var readStream = fileInfo.CreateReadStream();
-            var mimeType = "application/vnd.ms-excel";
-            return File(readStream, mimeType, "outputmcode" + input.id + ".csv");
+            mailService.sendEmail(input.email, input.id, "mcode");
+            return Ok("An email containing your results has been sent!");
         }
         [HttpPost("modulediscoverer")]
         public async Task<IActionResult> analyseMd([FromBody] ModifierInputObject input)

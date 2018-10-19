@@ -64,7 +64,6 @@
                         </mat-form-field>
                         <mat-chip-list role="list">
                             <mat-chip class="sampleChip" draggable (dragleave)="dragSample(drop, $event)" (dragend)="dropSample(item)" *ngFor="let drop of group1Samples" disabled="true">
-                                <!--<mat-chip class="sampleChip" *ngFor="let drop of group1Samples">-->
                                 {{drop}}
                             </mat-chip>
                         </mat-chip-list>
@@ -75,9 +74,7 @@
                             <mat-error *ngIf="groupName2Ctrl.invalid">Please, enter a group name</mat-error>
                         </mat-form-field>
                         <mat-chip-list role="list">
-                            <!--<mat-chip class="sampleChip" *ngFor="let drop of group2Samples">{{drop}}</mat-chip>-->
                             <mat-chip class="sampleChip" draggable (dragleave)="dragSample(drop, $event)" (dragend)="dropSample(item)" *ngFor="let drop of group2Samples" disabled="true">
-                                <!--<mat-chip class="sampleChip" *ngFor="let drop of group1Samples">-->
                                 {{drop}}
                             </mat-chip>
                         </mat-chip-list>
@@ -125,27 +122,24 @@
                         <mat-slide-toggle color="primary" [(checked)]="comboChoice" [disabled]="!comboChoice" class="combine-slide">
                             Create Supermodule    <mat-icon class="helpSign" matTooltip="Create a combined result from all the algorithms you choose">help_outline</mat-icon>
                         </mat-slide-toggle>
-                        <mat-error *ngIf="this.secondFormGroup.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
+                        <mat-error *ngIf="this.algorithmCtrl.valid==false" class="errorText">Please, choose at least one algorithm</mat-error>
                     </div>
 
-                    <section *ngIf="needsEmail()===true">
-                        <mat-card-subtitle>
-                            The algorithm you chose will take some time to calculate.
-                            Please enter your email address, and we will send you the results once they are done.
-                        </mat-card-subtitle>
-                        <mat-form-field class="sampleInput">
-                            <input matInput placeholder="Enter your Email Address" [(ngModel)]="modifierInputObject.email" [ngModelOptions]="{standalone: true}">
-                            <!--<mat-error *ngIf="modifierInputObject.email===''">Please, enter an email address</mat-error>-->
-                            <!--<mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-        Please enter a valid email address
-    </mat-error>-->
-                        </mat-form-field>
-                    </section>
+                    <section >
+                    <mat-card-subtitle>
+                        The algorithms will take some time to calculate.
+                        Please enter your email address, and we will send you the results once they are done.
+                    </mat-card-subtitle>
+                    <mat-form-field class="sampleInput">
+                        <input formControlName="emailControl" matInput placeholder="Enter your Email Address" [(ngModel)]="modifierInputObject.email">
+                        <mat-error *ngIf="emailControl.invalid">Please, enter a valid email address</mat-error>
+                    </mat-form-field>
+                    </section> 
 
-                    <button class="next-button" mat-button matStepperPrevious>Back</button>
-                    <button class="next-button" mat-button (click)="clickGetResults(stepper)">Next</button>
-                </section>
-            </mat-card>
-        </form>
-    </mat-step>
-</mat-horizontal-stepper>
+                        <button class="next-button" mat-button matStepperPrevious>Back</button>
+                        <button class="next-button" mat-button (click)="clickGetResults(stepper)">Next</button>
+                    </section>
+                </mat-card>
+            </form>
+        </mat-step>
+    </mat-horizontal-stepper>
