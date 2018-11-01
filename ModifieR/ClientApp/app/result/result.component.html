@@ -27,8 +27,10 @@
                         <mat-card-subtitle>Find the results for each of your algorithms in the respective tab. A supermodule, containing the intersections between your results have been created, and is available for download below. The image displays the network for the proteins in your supermodule, created from StringDB.</mat-card-subtitle>
 
                         <button class="download-button" mat-button (click)="resultCombo.click()">Download Supermodule</button>
-                        <img [src]="comboImage"
-                             alt="Network from STRINGDb" *ngIf="comboImage!==''">
+                        <div>
+                            <img [src]="comboImage"
+                                 alt="Network from STRINGDb" *ngIf="comboImage!==''">
+                        </div>
                     </section>
 
                 </mat-card>

@@ -115,7 +115,7 @@
                         </div>
                         <div class="leftCheckboxDiv">
                             <mat-checkbox [(checked)]="algorithms.moda" (change)="modaChbChanged()" color="primary" class="checkbox">Moda</mat-checkbox>
-                            <mat-checkbox [(checked)]="algorithms.dime" (change)="dimeChbChanged()" color="primary" class="checkbox">Dime</mat-checkbox>
+                          <!--  <mat-checkbox [(checked)]="algorithms.dime" (change)="dimeChbChanged()" color="primary" class="checkbox">Dime</mat-checkbox>-->
                         </div>
                     </div>
                     <div class="sliderErrorDiv">
@@ -128,7 +128,7 @@
                     <section >
                     <mat-card-subtitle>
                         The algorithms will take some time to calculate.
-                        Please enter your email address, and we will send you the results once they are done.
+                        Please enter your email address, and we will send you a notification as soon as the results are done.
                     </mat-card-subtitle>
                     <mat-form-field class="sampleInput">
                         <input formControlName="emailControl" matInput placeholder="Enter your Email Address" [(ngModel)]="modifierInputObject.email">

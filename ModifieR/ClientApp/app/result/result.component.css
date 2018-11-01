@@ -1,6 +1,7 @@
 ﻿.download-button {
-    margin-top: 50px;
-    margin-left: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /*margin-left: 50px;*/
     background-color: rgba(222, 222, 222, 0.54);
 }
 .progressSpinner {
