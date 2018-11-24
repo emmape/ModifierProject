@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using ModifieR.Models;
 
 namespace ModifieR
 {
@@ -19,6 +20,7 @@ namespace ModifieR
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -27,6 +29,8 @@ namespace ModifieR
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddOptions();
+            services.Configure<RConfig>(Configuration.GetSection("RConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
