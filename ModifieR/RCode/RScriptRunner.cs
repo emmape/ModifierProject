@@ -22,6 +22,7 @@ namespace ModifieR.RCode
             foreach (string s2 in modifierInputObject.sampleGroup2) { sampleGroup2 = sampleGroup2 + ";" + s2; }
 
             string result = string.Empty;
+            string error = string.Empty;
             try
             {
                 var info = new ProcessStartInfo();
@@ -37,6 +38,7 @@ namespace ModifieR.RCode
 
                 info.RedirectStandardInput = false;
                 info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
                 info.UseShellExecute = false;
                 info.CreateNoWindow = true;
 
@@ -44,14 +46,20 @@ namespace ModifieR.RCode
                 {
                     proc.StartInfo = info;
                     proc.Start();
+
+                    error = proc.StandardError.ReadToEnd();
                     result = proc.StandardOutput.ReadToEnd();
                 }
-
+                if (error!="" || result.Contains("Error"))
+                {
+                    
+                    throw new Exception("Error in R script: "+ error);
+                }
                 return result;
             }
             catch (Exception ex)
             {
-                throw new Exception("R Script failed: " + result, ex);
+                throw new Exception("R Script failed: " + error, ex);
             }
         }
         public static async Task<string> RunFromCmdGeneral(RConfig rconfig, string filename, string id)

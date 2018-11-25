@@ -41,6 +41,7 @@ export class InferModuleComponent implements OnInit {
     selectedForDrag: string[] = [];
     group1Samples: any = [];
     group2Samples: any = [];
+    errorInR: String = "";
 
     networks = [
         { value: 'upload', viewValue: 'Upload a New Network' },
@@ -49,6 +50,8 @@ export class InferModuleComponent implements OnInit {
 
     constructor(private readFileService: ReadFileService, public dialog: MatDialog,
         private _formBuilder: FormBuilder, public analyzeService: AnalyzeService, public router: Router) {
+        analyzeService.error$.subscribe(
+            error => {this.errorInR = error });
 
         readFileService.file$.subscribe(
             file => {
@@ -331,12 +334,14 @@ export class InferModuleComponent implements OnInit {
                 this.analyzeService.performAnalysis(this.modifierInputObject, 'diffCoEx', this.algorithms)
             ]).then(r => this.result = r);
 
-            if (this.comboChoice === true) {
-                await Promise.resolve(
-                    this.analyzeService.comboResults(this.modifierInputObject)
-                ).then(r => console.log('Created Result Combo!: ', r));
+            if (this.errorInR === "") {
+                if (this.comboChoice === true) {
+                    await Promise.resolve(
+                        this.analyzeService.comboResults(this.modifierInputObject)
+                    ).then(r => console.log('Created Result Combo!: ', r));
+                }
             }
-
+            
             await Promise.resolve(
                 this.analyzeService.deleteFiles(this.modifierInputObject)
             ).then(r => console.log('Deleted files with id: ', r));

@@ -50,8 +50,9 @@ export class ResultComponent implements OnInit {
 
         this.subscription = Observable.interval(2000 * 10).takeUntil(this.readFileService.combo$).subscribe(x => {
                 console.log('Getting reults again...');
-                this.getResults();
-            });
+                this.getResults().catch();
+        });
+ 
            // this.subscription.unsubscribe();
            // console.log('BLOB: ', this.resultCombo);
        

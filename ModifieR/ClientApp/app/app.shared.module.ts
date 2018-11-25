@@ -24,6 +24,7 @@ import { InformationComponent } from './information/information.component';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { ReadFileService } from './services/readFile.service';
 import { AnalyzeService } from './services/analyze.service';
+import { ErrorComponent } from './error/error.component';
 import { MissingDialog } from './components/dialog/missingDialog.component';
 import { NgDragDropModule } from 'ng-drag-drop';
 
@@ -34,6 +35,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
         InferModuleComponent,
         InformationComponent,
         FileUploaderComponent,
+        ErrorComponent,
         MissingDialog,
         ResultComponent
     ],

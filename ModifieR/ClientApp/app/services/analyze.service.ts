@@ -5,11 +5,21 @@ import { Http } from '@angular/http'
 import { HttpClient } from '@angular/common/http';
 import { ModifierInput } from '../models/ModifierInput';
 import { Algorithms } from '../models/Algorithms';
+import { Router } from '@angular/router';
 
 
 @Injectable()
 export class AnalyzeService {
-    constructor(private _httpService: Http, private httpClient: HttpClient) { }
+    constructor(private _httpService: Http, private httpClient: HttpClient, public router: Router) { }
+
+    private error = new Subject<String>();
+    error$ = this.error.asObservable();
+
+    public async handleError (error: Response) {
+        console.log("Error: ", await error.text());
+        this.router.navigateByUrl('/error');
+        this.error.next(await error.text());
+    }
 
     async performAnalysis(modifierInput: ModifierInput, algorithm: string, algorithms: Algorithms): Promise<string> {
        let returns: any[] = [];
@@ -17,59 +27,44 @@ export class AnalyzeService {
        let resp: string = '';
 
         if (algorithm === 'diamond' && algorithms.diamond === true) {
-           const post: any = this._httpService.post("/api/analysis/diamond", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            const post: any = this._httpService.post("/api/analysis/diamond", modifierInput);
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
+
  
         else if (algorithm === 'cliqueSum' && algorithms.cliqueSum === true) {
             const post: any = this._httpService.post("/api/analysis/cliqueSum", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
 
         else if (algorithm === 'mcode' && algorithms.mcode === true) {
            const post: any = this._httpService.post("/api/analysis/mcode", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
         
         else if (algorithm === 'md' && algorithms.md === true) {
             const post: any = this._httpService.post("/api/analysis/modulediscoverer", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
 
         else if (algorithm === 'correlationClique' && algorithms.correlationclique === true) {
             const post: any = this._httpService.post("/api/analysis/correlationclique", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
 
         else if (algorithm === 'moda' && algorithms.moda === true) {
             const post: any = this._httpService.post("/api/analysis/moda", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
 
         else if (algorithm === 'dime' && algorithms.dime === true) {
             const post: any = this._httpService.post("/api/analysis/dime", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
 
         else if (algorithm === 'diffCoEx' && algorithms.diffcoex === true) {
             const post: any = this._httpService.post("/api/analysis/diffcoex", modifierInput)
-            return await post.toPromise()
-                .then((response: any) =>
-                    this.downloadFile(response.text()));
+            return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
        else {       
            return await Promise.resolve(123)
@@ -100,7 +95,7 @@ export class AnalyzeService {
 
     async comboResults(modifierInput: ModifierInput): Promise<string> {
         const post: any = this._httpService.post("/api/analysis/comboResults", modifierInput)
-        return await post.toPromise().then((response: any) => response.text());
+        return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
     }
 
     async getResults(id: string[]): Promise<string>{
@@ -121,10 +116,6 @@ export class AnalyzeService {
                     return "";
                 })
         }
-
-        //return await post.toPromise()
-        //    .then((response: any) =>
-        //        this.downloadFile(response.text()));
     }
 
     getResultImage(id: string[]): Observable<Blob> {
