@@ -37,8 +37,10 @@ namespace ModifieR.Controllers
         {
             try
             {
+                logger.LogInformation("Recieved request to Diamond");
                 string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "diamond", input.id);
-                mailService.sendEmail(input.email, input.id, "diamond");
+                logger.LogInformation("Got Result: "+result);
+                await mailService.sendEmail(input.email, input.id, "diamond");
                 return Ok("An email containing your results has been sent!");
             }catch(Exception e)
             {
@@ -51,9 +53,11 @@ namespace ModifieR.Controllers
         [HttpPost("cliqueSum")]
         public async Task<IActionResult> analyseCliqueSum([FromBody] ModifierInputObject input)
         {
-            try { 
+            try {
+            logger.LogInformation("Recieved request to CliqueSum");
             string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "cliqueSum", input.id);
-            mailService.sendEmail(input.email, input.id, "cliqueSum");
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(input.email, input.id, "cliqueSum");
             return Ok("An email containing your results has been sent!");
             }
             catch (Exception e)
@@ -65,9 +69,11 @@ namespace ModifieR.Controllers
         [HttpPost("correlationclique")]
         public async Task<IActionResult> analysecorrelationClique([FromBody] ModifierInputObject input)
         {
-            try { 
-            string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "correlationClique", input.id);
-            mailService.sendEmail(input.email, input.id, "correlationClique");
+            try {
+                logger.LogInformation("Recieved request to correlationClique");
+                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "correlationClique", input.id);
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(input.email, input.id, "correlationClique");
             return Ok("An email containing your results has been sent!");
             }
             catch (Exception e)
@@ -80,8 +86,10 @@ namespace ModifieR.Controllers
         public async Task<IActionResult> analysediffCoEx([FromBody] ModifierInputObject input)
         {
             try {
-            string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "diffCoEx", input.id);
-            mailService.sendEmail(input.email, input.id, "diffCoEx");
+                logger.LogInformation("Recieved request to diffcoex");
+                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "diffCoEx", input.id);
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(input.email, input.id, "diffCoEx");
             return Ok("An email containing your results has been sent!");
             }
             catch (Exception e)
@@ -93,9 +101,11 @@ namespace ModifieR.Controllers
         [HttpPost("dime")]
         public async Task<IActionResult> analyseDime([FromBody] ModifierInputObject input)
         {
-            try { 
-            string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "dime", input.id);
-            mailService.sendEmail(input.email, input.id, "dime");
+            try {
+                logger.LogInformation("Recieved request to dime");
+                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "dime", input.id);
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(input.email, input.id, "dime");
             return Ok("An email containing your results has been sent!");
             }
             catch (Exception e)
@@ -107,9 +117,11 @@ namespace ModifieR.Controllers
         [HttpPost("moda")]
         public async Task<IActionResult> analyseModa([FromBody] ModifierInputObject input)
         {
-            try { 
-            string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "moda", input.id);
-            mailService.sendEmail(input.email, input.id, "moda");
+            try {
+                logger.LogInformation("Recieved request to moda");
+                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "moda", input.id);
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(input.email, input.id, "moda");
             return Ok("An email containing your results has been sent!");
             }
             catch (Exception e)
@@ -121,9 +133,11 @@ namespace ModifieR.Controllers
         [HttpPost("mcode")]
         public async Task<IActionResult> analyseMcode([FromBody] ModifierInputObject input)
         {
-            try { 
-            string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "mcode", input.id);
-            mailService.sendEmail(input.email, input.id, "mcode");
+            try {
+                logger.LogInformation("Recieved request to mcode");
+                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "mcode", input.id);
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(input.email, input.id, "mcode");
             return Ok("An email containing your results has been sent!");
             }
             catch (Exception e)
@@ -135,9 +149,11 @@ namespace ModifieR.Controllers
         [HttpPost("modulediscoverer")]
         public async Task<IActionResult> analyseMd([FromBody] ModifierInputObject input)
         {
-            try { 
-            string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "moduleDiscoverer", input.id);
-            mailService.sendEmail(input.email, input.id, "moduleDiscoverer");
+            try {
+                logger.LogInformation("Recieved request to modulediscoverer");
+                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "moduleDiscoverer", input.id);
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(input.email, input.id, "moduleDiscoverer");
             return Ok("An email containing your results has been sent!");
             }
             catch (Exception e)

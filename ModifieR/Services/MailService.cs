@@ -12,7 +12,7 @@ namespace ModifieR.Services
     public class MailService
     {
 
-        public async void sendEmail(string email, string id, string algorithm)
+        public async Task sendEmail(string email, string id, string algorithm)
         {
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
             client.UseDefaultCredentials = false;
@@ -49,7 +49,7 @@ namespace ModifieR.Services
             {
                 throw new Exception("Something went wrong in R-analysis, result file was not generated.");
             }
-            
+
         }
     }
 }

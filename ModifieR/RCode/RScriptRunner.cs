@@ -28,7 +28,7 @@ namespace ModifieR.RCode
                 var info = new ProcessStartInfo();
                 info.FileName = rconfig.rExePath; // @"C:\Program Files\R\R-3.4.1\bin\Rscript.exe";
                 info.WorkingDirectory = rconfig.rLibPath; //@"C:\Program Files\R\R-3.4.1\bin";
-                info.Arguments = 
+                info.Arguments =
                     Directory.GetCurrentDirectory() + @"\RCode\"+filename+" "
                     + sampleGroup1 + " " + sampleGroup2 + " "
                     + modifierInputObject.group1Label + " " + modifierInputObject.group2Label + " " 
