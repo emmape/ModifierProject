@@ -29,11 +29,11 @@ namespace ModifieR.RCode
                 info.FileName = rconfig.rExePath; // @"C:\Program Files\R\R-3.4.1\bin\Rscript.exe";
                 info.WorkingDirectory = rconfig.rLibPath; //@"C:\Program Files\R\R-3.4.1\bin";
                 info.Arguments =
-                    Directory.GetCurrentDirectory() + @"\RCode\"+filename+" "
+                    Path.Combine(Directory.GetCurrentDirectory(), "RCode", filename) + " "
                     + sampleGroup1 + " " + sampleGroup2 + " "
                     + modifierInputObject.group1Label + " " + modifierInputObject.group2Label + " " 
                     + methodOfAnalysis + " "
-                    + Directory.GetCurrentDirectory() + @"\RCode\"
+                    + Path.Combine(Directory.GetCurrentDirectory(), "RCode")
                     + " " + id;
 
                 info.RedirectStandardInput = false;
@@ -50,7 +50,7 @@ namespace ModifieR.RCode
                     error = proc.StandardError.ReadToEnd();
                     result = proc.StandardOutput.ReadToEnd();
                 }
-                if (error!="" || result.Contains("Error"))
+                if (error!="" || result.ToUpper().Contains("ERROR"))
                 {
                     
                     throw new Exception("Error in R script: "+ error);
