@@ -30,7 +30,7 @@ namespace ModifieR
         {
             services.AddMvc();
             services.AddOptions();
-            services.Configure<RConfig>(Configuration.GetSection("RConfig"));
+            services.Configure<Config>(Configuration.GetSection("Config"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

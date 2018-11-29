@@ -22,10 +22,10 @@ namespace ModifieR.Controllers
     [Route("api/analysis")]
     public class AnalysisController : Controller
     {
-        private readonly IOptions<RConfig> config;
+        private readonly IOptions<Config> config;
         private readonly ILogger logger;
 
-        public AnalysisController(IOptions<RConfig> config, ILogger<AnalysisController> logger)
+        public AnalysisController(IOptions<Config> config, ILogger<AnalysisController> logger)
         {
             this.config = config;
             this.logger = logger;
@@ -35,138 +35,54 @@ namespace ModifieR.Controllers
         [HttpPost("diamond")]
         public async Task<IActionResult> analyseDiamond([FromBody] ModifierInputObject input)
         {
-            try
-            {
-                logger.LogInformation("Recieved request to Diamond");
-                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "diamond", input.id);
-                logger.LogInformation("Got Result: "+result);
-                await mailService.sendEmail(input.email, input.id, "diamond");
-                return Ok("An email containing your results has been sent!");
-            }catch(Exception e)
-            {
-                logger.LogError("Error in R-script"+e.Message, e);
-                return StatusCode(500, e.Message);
-            }
-           
+            return await runAnalysis(input, "diamond"); 
         }
 
         [HttpPost("cliqueSum")]
         public async Task<IActionResult> analyseCliqueSum([FromBody] ModifierInputObject input)
         {
-            try {
-            logger.LogInformation("Recieved request to CliqueSum");
-            string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "cliqueSum", input.id);
-                logger.LogInformation("Got Result: " + result);
-                await mailService.sendEmail(input.email, input.id, "cliqueSum");
-            return Ok("An email containing your results has been sent!");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in R-script" + e.Message, e);
-                return StatusCode(500, e.Message);
-            }
+            return await runAnalysis(input, "cliqueSum");
+           
         }
         [HttpPost("correlationclique")]
         public async Task<IActionResult> analysecorrelationClique([FromBody] ModifierInputObject input)
         {
-            try {
-                logger.LogInformation("Recieved request to correlationClique");
-                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "correlationClique", input.id);
-                logger.LogInformation("Got Result: " + result);
-                await mailService.sendEmail(input.email, input.id, "correlationClique");
-            return Ok("An email containing your results has been sent!");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in R-script" + e.Message, e);
-                return StatusCode(500, e.Message);
-            }
+            return await runAnalysis(input, "correlationClique");
+           
         }
         [HttpPost("diffcoex")]
         public async Task<IActionResult> analysediffCoEx([FromBody] ModifierInputObject input)
         {
-            try {
-                logger.LogInformation("Recieved request to diffcoex");
-                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "diffCoEx", input.id);
-                logger.LogInformation("Got Result: " + result);
-                await mailService.sendEmail(input.email, input.id, "diffCoEx");
-            return Ok("An email containing your results has been sent!");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in R-script" + e.Message, e);
-                return StatusCode(500, e.Message);
-            }
+            return await runAnalysis(input, "diffCoEx");
+           
         }
         [HttpPost("dime")]
         public async Task<IActionResult> analyseDime([FromBody] ModifierInputObject input)
         {
-            try {
-                logger.LogInformation("Recieved request to dime");
-                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "dime", input.id);
-                logger.LogInformation("Got Result: " + result);
-                await mailService.sendEmail(input.email, input.id, "dime");
-            return Ok("An email containing your results has been sent!");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in R-script" + e.Message, e);
-                return StatusCode(500, e.Message);
-            }
+            return await runAnalysis(input, "dime");
+           
         }
         [HttpPost("moda")]
         public async Task<IActionResult> analyseModa([FromBody] ModifierInputObject input)
         {
-            try {
-                logger.LogInformation("Recieved request to moda");
-                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "moda", input.id);
-                logger.LogInformation("Got Result: " + result);
-                await mailService.sendEmail(input.email, input.id, "moda");
-            return Ok("An email containing your results has been sent!");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in R-script" + e.Message, e);
-                return StatusCode(500, e.Message);
-            }
+            return await runAnalysis(input, "moda");
+           
         }
         [HttpPost("mcode")]
         public async Task<IActionResult> analyseMcode([FromBody] ModifierInputObject input)
         {
-            try {
-                logger.LogInformation("Recieved request to mcode");
-                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "mcode", input.id);
-                logger.LogInformation("Got Result: " + result);
-                await mailService.sendEmail(input.email, input.id, "mcode");
-            return Ok("An email containing your results has been sent!");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in R-script" + e.Message, e);
-                return StatusCode(500, e.Message);
-            }
+            return await runAnalysis(input, "mcode");
         }
         [HttpPost("modulediscoverer")]
         public async Task<IActionResult> analyseMd([FromBody] ModifierInputObject input)
         {
-            try {
-                logger.LogInformation("Recieved request to modulediscoverer");
-                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, "moduleDiscoverer", input.id);
-                logger.LogInformation("Got Result: " + result);
-                await mailService.sendEmail(input.email, input.id, "moduleDiscoverer");
-            return Ok("An email containing your results has been sent!");
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Error in R-script" + e.Message, e);
-                return StatusCode(500, e.Message);
-            }
+            return await runAnalysis(input, "moduleDiscoverer");
+           
         }
         [HttpPost("results")]
         public async Task<IActionResult> results([FromBody] List<String> id)
         {
-                IFileProvider provider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "RCode", "tmpFilestorage")); //"\\RCode\\tmpFilestorage");
-
+                IFileProvider provider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "RCode", "tmpFilestorage"));
                 IFileInfo fileInfo = provider.GetFileInfo("output" + id[0] + id[1] + ".csv");
             if (fileInfo.Exists)
             {
@@ -200,11 +116,30 @@ namespace ModifieR.Controllers
             string id = RScriptRunner.saveFiles(input.expressionMatrixContent, input.probeMapContent, input.networkContent);
             return Ok(id);          
         }
+
         [HttpPost("deleteFiles")]
         public async Task<IActionResult> deleteFiles([FromBody] ModifierInputObject input)
         {
            RScriptRunner.deleteFiles(input.id);
            return Ok(input.id);
+        }
+
+        private async Task<IActionResult> runAnalysis(ModifierInputObject input, String algorithm)
+        {
+            try
+            {
+                logger.LogInformation("Recieved request to "+ algorithm);
+                string result = await RScriptRunner.RunFromCmd(config.Value, "runModifieR.R", input, algorithm, input.id);
+                logger.LogInformation("Got Result: " + result);
+                await mailService.sendEmail(config.Value, input.email, input.id, algorithm);
+                return Ok("An email containing your results has been sent!");
+            }
+            catch (Exception e)
+            {
+                logger.LogError("Error in R-script" + e.Message, e);
+                return StatusCode(500, e.Message);
+            }
+
         }
     }
 }

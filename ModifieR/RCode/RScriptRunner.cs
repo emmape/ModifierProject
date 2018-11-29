@@ -14,7 +14,7 @@ namespace ModifieR.RCode
     public class RScriptRunner
     {
        
-        public static async Task<string> RunFromCmd(RConfig rconfig, string filename, ModifierInputObject modifierInputObject, string methodOfAnalysis, string id)
+        public static async Task<string> RunFromCmd(Config rconfig, string filename, ModifierInputObject modifierInputObject, string methodOfAnalysis, string id)
         {
             string sampleGroup1="";
             string sampleGroup2="";
@@ -50,10 +50,10 @@ namespace ModifieR.RCode
                     error = proc.StandardError.ReadToEnd();
                     result = proc.StandardOutput.ReadToEnd();
                 }
-                if (error!="" || result.ToUpper().Contains("ERROR"))
+                if (error.ToUpper().Contains("ERROR") || result.ToUpper().Contains("ERROR"))
                 {
                     
-                    throw new Exception("Error in R script: "+ error);
+                    throw new Exception("Error in R script: "+result+ error);
                 }
                 return result;
             }
@@ -62,7 +62,7 @@ namespace ModifieR.RCode
                 throw new Exception("R Script failed: " + error, ex);
             }
         }
-        public static async Task<string> RunFromCmdGeneral(RConfig rconfig, string filename, string id)
+        public static async Task<string> RunFromCmdGeneral(Config rconfig, string filename, string id)
         {
             string result = string.Empty;
             try
