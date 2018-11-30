@@ -24,46 +24,48 @@ export class AnalyzeService {
     async performAnalysis(modifierInput: ModifierInput, algorithm: string, algorithms: Algorithms): Promise<string> {
        let returns: any[] = [];
        console.log('Uploading input data :)' + modifierInput.group1Label);
-       let resp: string = '';
+        let resp: string = '';
+        var location = window.location.href;
+        location = location.substring(0, location.indexOf("#"));
 
         if (algorithm === 'diamond' && algorithms.diamond === true) {
-            const post: any = this._httpService.post("/api/analysis/diamond", modifierInput);
+            const post: any = this._httpService.post(location + "/api/analysis/diamond", modifierInput);
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
 
  
         else if (algorithm === 'cliqueSum' && algorithms.cliqueSum === true) {
-            const post: any = this._httpService.post("/api/analysis/cliqueSum", modifierInput)
+            const post: any = this._httpService.post(location+"/api/analysis/cliqueSum", modifierInput);
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
 
         else if (algorithm === 'mcode' && algorithms.mcode === true) {
-           const post: any = this._httpService.post("/api/analysis/mcode", modifierInput)
+           const post: any = this._httpService.post(location + "/api/analysis/mcode", modifierInput)
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
         
         else if (algorithm === 'md' && algorithms.md === true) {
-            const post: any = this._httpService.post("/api/analysis/modulediscoverer", modifierInput)
+            const post: any = this._httpService.post(location + "/api/analysis/modulediscoverer", modifierInput)
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
         }
 
         else if (algorithm === 'correlationClique' && algorithms.correlationclique === true) {
-            const post: any = this._httpService.post("/api/analysis/correlationclique", modifierInput)
+            const post: any = this._httpService.post(location + "/api/analysis/correlationclique", modifierInput)
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
 
         else if (algorithm === 'moda' && algorithms.moda === true) {
-            const post: any = this._httpService.post("/api/analysis/moda", modifierInput)
+            const post: any = this._httpService.post(location + "/api/analysis/moda", modifierInput)
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
 
         else if (algorithm === 'dime' && algorithms.dime === true) {
-            const post: any = this._httpService.post("/api/analysis/dime", modifierInput)
+            const post: any = this._httpService.post(location + "/api/analysis/dime", modifierInput)
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
 
         else if (algorithm === 'diffCoEx' && algorithms.diffcoex === true) {
-            const post: any = this._httpService.post("/api/analysis/diffcoex", modifierInput)
+            const post: any = this._httpService.post(location + "/api/analysis/diffcoex", modifierInput)
             return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
        }
        else {       
@@ -84,22 +86,30 @@ export class AnalyzeService {
     }
 
     async saveFiles(modifierInput: ModifierInput): Promise<string> {
-        const post: any = this._httpService.post("/api/analysis/saveFiles", modifierInput)
+        var location = window.location.href;
+        location = location.substring(0, location.indexOf("#"));
+        const post: any = this._httpService.post(location + "/api/analysis/saveFiles", modifierInput)
         return await post.toPromise().then((response: any) => response.text());
     }
     async deleteFiles(modifierInput: ModifierInput): Promise<string> {
+        var location = window.location.href;
+        location = location.substring(0, location.indexOf("#"));
         console.log('inputting id: ', modifierInput.id);
-        const post: any = this._httpService.post("/api/analysis/deleteFiles", modifierInput)
+        const post: any = this._httpService.post(location + "/api/analysis/deleteFiles", modifierInput)
         return await post.toPromise().then((response: any) => response.text());
     }
 
     async comboResults(modifierInput: ModifierInput): Promise<string> {
-        const post: any = this._httpService.post("/api/analysis/comboResults", modifierInput)
+        var location = window.location.href;
+        location = location.substring(0, location.indexOf("#"));
+        const post: any = this._httpService.post(location + "/api/analysis/comboResults", modifierInput)
         return await post.toPromise().then((response: any) => response.text()).catch((resp: any) => this.handleError(resp));
     }
 
     async getResults(id: string[]): Promise<string>{
-        const post: any = this._httpService.post("/api/analysis/results", id)
+        var location = window.location.href;
+        location = location.substring(0, location.indexOf("#"));
+        const post: any = this._httpService.post(location + "/api/analysis/results", id)
         let res = '';
         await post.toPromise()
             .then((response: any) =>
