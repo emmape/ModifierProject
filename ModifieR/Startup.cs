@@ -50,16 +50,17 @@ namespace ModifieR
             }
 
             app.UseStaticFiles();
+            app.UsePathBase(Configuration.GetSection("Config")["basePath"]);
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
         }
     }
 }
